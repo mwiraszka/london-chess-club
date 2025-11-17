@@ -19,6 +19,7 @@ import { Injectable } from '@angular/core';
 
 import { BaseImage, IndexedDbImageData, LccError } from '@app/models';
 import { ImageFileService, ImagesApiService } from '@app/services';
+import { AppActions } from '@app/store/app';
 import { ArticlesActions, ArticlesSelectors } from '@app/store/articles';
 import { AuthSelectors } from '@app/store/auth';
 import {
@@ -228,6 +229,7 @@ export class ImagesEffects {
   refetchMetadata$ = createEffect(() => {
     const refetchActions$ = this.actions$.pipe(
       ofType(
+        AppActions.pullToRefreshRequested,
         ImagesActions.addImageSucceeded,
         ImagesActions.addImagesSucceeded,
         ImagesActions.updateImageSucceeded,
@@ -253,6 +255,7 @@ export class ImagesEffects {
   refetchFilteredThumbnails$ = createEffect(() => {
     const refetchActions$ = this.actions$.pipe(
       ofType(
+        AppActions.pullToRefreshRequested,
         ImagesActions.addImageSucceeded,
         ImagesActions.addImagesSucceeded,
         ImagesActions.updateImageSucceeded,
@@ -281,6 +284,7 @@ export class ImagesEffects {
   refetchAlbumCoverThumbnails$ = createEffect(() => {
     const refetchActions$ = this.actions$.pipe(
       ofType(
+        AppActions.pullToRefreshRequested,
         ImagesActions.addImageSucceeded,
         ImagesActions.addImagesSucceeded,
         ImagesActions.updateImageSucceeded,

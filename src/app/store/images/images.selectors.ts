@@ -3,7 +3,7 @@ import { omit, pick, uniq } from 'lodash';
 
 import { INITIAL_IMAGE_FORM_DATA } from '@app/constants';
 import { Article, Id } from '@app/models';
-import { ArticlesSelectors } from '@app/store/articles';
+import * as ArticlesSelectors from '@app/store/articles/articles.selectors';
 import { areSame, isPresignedUrlExpired } from '@app/utils';
 
 import { ImagesState, imagesAdapter } from './images.reducer';

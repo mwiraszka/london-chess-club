@@ -1,0 +1,46 @@
+.pull-indicator {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: var(--primary-colour);
+  border-radius: 0 0 0.5rem 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 3000;
+  transition:
+    transform 0.2s ease-out,
+    opacity 0.2s ease-out;
+  opacity: 0;
+  pointer-events: none;
+
+  &.active {
+    opacity: 1;
+  }
+
+  &.refreshing {
+    transform: translateX(-50%) translateY(0) !important;
+  }
+}
+
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: var(--white);
+  border-radius: 50%;
+  transition: transform 0.2s ease-out;
+
+  &.spinning {
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

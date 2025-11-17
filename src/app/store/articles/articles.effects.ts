@@ -9,6 +9,7 @@ import { Injectable } from '@angular/core';
 
 import { Article, DataPaginationOptions } from '@app/models';
 import { ArticlesApiService } from '@app/services';
+import { AppActions } from '@app/store/app';
 import { AuthSelectors } from '@app/store/auth';
 import { isDefined, isExpired, parseError } from '@app/utils';
 
@@ -74,6 +75,7 @@ export class ArticlesEffects {
   refetchHomePageArticles$ = createEffect(() => {
     const refetchActions$ = this.actions$.pipe(
       ofType(
+        AppActions.pullToRefreshRequested,
         ArticlesActions.publishArticleSucceeded,
         ArticlesActions.updateArticleSucceeded,
         ArticlesActions.deleteArticleSucceeded,
@@ -95,6 +97,7 @@ export class ArticlesEffects {
   refetchFilteredArticles$ = createEffect(() => {
     const refetchActions$ = this.actions$.pipe(
       ofType(
+        AppActions.pullToRefreshRequested,
         ArticlesActions.publishArticleSucceeded,
         ArticlesActions.updateArticleSucceeded,
         ArticlesActions.deleteArticleSucceeded,

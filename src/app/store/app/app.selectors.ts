@@ -1,10 +1,10 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
-import { ArticlesSelectors } from '@app/store/articles';
-import { AuthSelectors } from '@app/store/auth';
-import { EventsSelectors } from '@app/store/events';
-import { ImagesSelectors } from '@app/store/images';
-import { MembersSelectors } from '@app/store/members';
+import * as ArticlesSelectors from '@app/store/articles/articles.selectors';
+import * as AuthSelectors from '@app/store/auth/auth.selectors';
+import * as EventsSelectors from '@app/store/events/events.selectors';
+import * as ImagesSelectors from '@app/store/images/images.selectors';
+import * as MembersSelectors from '@app/store/members/members.selectors';
 
 import { AppState } from './app.reducer';
 

@@ -9,6 +9,7 @@ import { Injectable } from '@angular/core';
 
 import { Member } from '@app/models';
 import { MembersApiService } from '@app/services';
+import { AppActions } from '@app/store/app';
 import { AuthSelectors } from '@app/store/auth';
 import {
   exportDataToCsv,
@@ -72,6 +73,7 @@ export class MembersEffects {
   refetchFilteredMembers$ = createEffect(() => {
     const refetchActions$ = this.actions$.pipe(
       ofType(
+        AppActions.pullToRefreshRequested,
         MembersActions.addMemberSucceeded,
         MembersActions.updateMemberSucceeded,
         MembersActions.deleteMemberSucceeded,

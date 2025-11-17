@@ -7,7 +7,7 @@ import { filter, map, tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 
 import { LccError, Toast } from '@app/models';
-import { ToastService } from '@app/services';
+import { PullToRefreshService, ToastService } from '@app/services';
 import { ArticlesActions } from '@app/store/articles';
 import { AuthActions, AuthSelectors } from '@app/store/auth';
 import { EventsActions } from '@app/store/events';
@@ -164,8 +164,18 @@ export class AppEffects {
     ),
   );
 
+  completePullToRefresh$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(AppActions.pullToRefreshRequested),
+        tap(() => this.pullToRefreshService.completeRefresh()),
+      ),
+    { dispatch: false },
+  );
+
   constructor(
     private readonly actions$: Actions,
+    private readonly pullToRefreshService: PullToRefreshService,
     private readonly store: Store,
     private readonly toastService: ToastService,
   ) {}

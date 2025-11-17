@@ -9,6 +9,7 @@ import { Injectable } from '@angular/core';
 
 import { DataPaginationOptions, Event } from '@app/models';
 import { EventsApiService } from '@app/services';
+import { AppActions } from '@app/store/app';
 import { AuthSelectors } from '@app/store/auth';
 import { exportDataToCsv, isDefined, isExpired, parseError } from '@app/utils';
 
@@ -98,6 +99,7 @@ export class EventsEffects {
   refetchHomePageEvents$ = createEffect(() => {
     const refetchActions$ = this.actions$.pipe(
       ofType(
+        AppActions.pullToRefreshRequested,
         EventsActions.addEventSucceeded,
         EventsActions.updateEventSucceeded,
         EventsActions.deleteEventSucceeded,
@@ -119,6 +121,7 @@ export class EventsEffects {
   refetchFilteredEvents$ = createEffect(() => {
     const refetchActions$ = this.actions$.pipe(
       ofType(
+        AppActions.pullToRefreshRequested,
         EventsActions.addEventSucceeded,
         EventsActions.updateEventSucceeded,
         EventsActions.deleteEventSucceeded,

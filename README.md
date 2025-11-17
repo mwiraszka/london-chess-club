@@ -34,8 +34,9 @@ Below you'll find an overview of the tools and technologies that power the app, 
 <details>
 <summary>v5.10.0 - November 18th, 2025</summary>
 
-- 🚀 Temporarily display thumbnail image if available and valid, whenever the corresponding full-size image's presigned URL is expired
-- 🔧 Update web manifest configuration to ensure app always opens up in a browser UI as expected
+- 🚀 Implement a basic pull-to-refresh mechanism on mobile to immediately fetch any updated website data (by default fetched automatically every 30 mins)
+- 🚀 If the presigned URL for the full-size version of an image is expired, temporarily display the thumbnail if available and valid
+- 🔧 Update web manifest configuration to ensure internal links always open up in the browser UI by default
 
 </details>
 
