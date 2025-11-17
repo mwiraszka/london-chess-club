@@ -1,8 +1,8 @@
 .pull-indicator {
   position: fixed;
-  top: 0;
+  top: -60px;
   left: 50%;
-  transform: translateX(-50%) translateY(-100%);
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -11,9 +11,7 @@
   border-radius: 0 0 0.5rem 0.5rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   z-index: 3000;
-  transition:
-    transform 0.2s ease-out,
-    opacity 0.2s ease-out;
+  transition: opacity 0.2s ease-out;
   opacity: 0;
   pointer-events: none;
 
@@ -22,7 +20,8 @@
   }
 
   &.refreshing {
-    transform: translateX(-50%) translateY(0) !important;
+    top: 0;
+    opacity: 1;
   }
 }
 

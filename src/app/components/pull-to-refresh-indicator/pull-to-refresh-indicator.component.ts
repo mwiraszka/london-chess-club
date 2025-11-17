@@ -16,7 +16,7 @@ import { PullToRefreshService } from '@app/services';
         class="pull-indicator"
         [class.active]="vm.pullDistance > 0"
         [class.refreshing]="vm.isRefreshing"
-        [style.transform]="'translateY(' + vm.pullDistance + 'px)'">
+        [style.transform]="'translateX(-50%) translateY(' + vm.pullDistance + 'px)'">
         <div
           class="spinner"
           [class.spinning]="vm.isRefreshing">
