@@ -11,6 +11,7 @@ import { isTouchDevice } from '@app/utils';
 export class PullToRefreshService {
   private readonly PULL_THRESHOLD = 80;
   private readonly MAX_PULL_DISTANCE = 120;
+  private readonly REFRESHING_HEIGHT = 60;
   private readonly RESISTANCE = 0.5;
 
   private touchStartY = 0;
@@ -110,6 +111,8 @@ export class PullToRefreshService {
 
     if (this.currentPullDistance >= this.PULL_THRESHOLD) {
       this.isRefreshing = true;
+      this.currentPullDistance = this.REFRESHING_HEIGHT;
+      this.pullDistance$.next(this.REFRESHING_HEIGHT);
       this.isRefreshing$.next(true);
     } else {
       this.currentPullDistance = 0;
