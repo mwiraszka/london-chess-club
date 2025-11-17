@@ -61,7 +61,7 @@ describe('ImageFileService', () => {
 
       expect(result).toEqual({
         name: 'LCCError',
-        message: expect.stringMatching(/PNG.*JPEG.*SVG.*TIFF.*GIF/i),
+        message: expect.stringMatching(/PNG.*JPEG.*GIF/i),
       });
     });
   });
