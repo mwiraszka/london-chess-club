@@ -28,6 +28,14 @@ describe('AppComponent', () => {
   let querySelectorSpy: jest.SpyInstance;
   let setAttributeSpy: jest.SpyInstance;
 
+  beforeAll(() => {
+    window.ResizeObserver = jest.fn().mockImplementation(() => ({
+      observe: jest.fn(),
+      unobserve: jest.fn(),
+      disconnect: jest.fn(),
+    }));
+  });
+
   beforeEach(async () => {
     mockFragmentSubject = new Subject<string | null>();
 

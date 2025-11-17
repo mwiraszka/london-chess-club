@@ -1,34 +1,28 @@
-import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 
 import { MOCK_EVENTS } from '@app/mocks/events.mock';
-import { formatDate, query, queryTextContent } from '@app/utils';
+import { formatDate, query, queryAll, queryTextContent } from '@app/utils';
 
 import { UpcomingEventBannerComponent } from './upcoming-event-banner.component';
-
-@Component({
-  template: '',
-})
-class ScheduleStubComponent {}
 
 describe('UpcomingEventBannerComponent', () => {
   let fixture: ComponentFixture<UpcomingEventBannerComponent>;
   let component: UpcomingEventBannerComponent;
-
   let clearBannerSpy: jest.SpyInstance;
+
+  beforeAll(() => {
+    window.ResizeObserver = jest.fn().mockImplementation(() => ({
+      observe: jest.fn(),
+      unobserve: jest.fn(),
+      disconnect: jest.fn(),
+    }));
+  });
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [UpcomingEventBannerComponent],
-      providers: [
-        provideRouter([
-          {
-            path: 'schedule',
-            component: ScheduleStubComponent,
-          },
-        ]),
-      ],
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(UpcomingEventBannerComponent);
@@ -50,22 +44,51 @@ describe('UpcomingEventBannerComponent', () => {
         const bannerText = queryTextContent(fixture.debugElement, '.banner-message');
 
         expect(bannerText).toContain(MOCK_EVENTS[0].title);
-        expect(bannerText).toContain(formatDate(MOCK_EVENTS[0].eventDate, 'short'));
+        expect(bannerText).toContain(formatDate(MOCK_EVENTS[0].eventDate));
       });
 
-      it('should emit clearBanner when clicked', () => {
-        query(fixture.debugElement, '.banner-message').nativeElement.dispatchEvent(
-          new MouseEvent('click'),
-        );
+      it('should have navigatable class when not on schedule page', () => {
+        const bannerMessage = query(fixture.debugElement, '.banner-message');
+        expect(bannerMessage.nativeElement.classList.contains('navigatable')).toBe(true);
+      });
+    });
+
+    describe('marquee animation', () => {
+      it('should render marquee content template', () => {
+        const marqueeContent = query(fixture.debugElement, '.marquee-content');
+        expect(marqueeContent).toBeTruthy();
+      });
+
+      it('should render single instance of content when not animating', () => {
+        component['shouldAnimate'] = false;
         fixture.detectChanges();
 
-        expect(clearBannerSpy).toHaveBeenCalledTimes(1);
+        const marqueeItems = queryAll(fixture.debugElement, '.marquee-item');
+        expect(marqueeItems.length).toBe(1);
       });
 
-      it('should have router link set to the schedule page', () => {
-        expect(
-          query(fixture.debugElement, '.banner-message').attributes['routerLink'],
-        ).toBe('/schedule');
+      it('should render duplicate content when animating', () => {
+        component['shouldAnimate'] = true;
+        fixture.detectChanges();
+
+        const marqueeItems = queryAll(fixture.debugElement, '.marquee-item');
+        expect(marqueeItems.length).toBe(2);
+      });
+
+      it('should apply animate class when shouldAnimate is true', () => {
+        component['shouldAnimate'] = true;
+        fixture.detectChanges();
+
+        const marqueeContent = query(fixture.debugElement, '.marquee-content');
+        expect(marqueeContent.nativeElement.classList.contains('animate')).toBe(true);
+      });
+
+      it('should not apply animate class when shouldAnimate is false', () => {
+        component['shouldAnimate'] = false;
+        fixture.detectChanges();
+
+        const marqueeContent = query(fixture.debugElement, '.marquee-content');
+        expect(marqueeContent.nativeElement.classList.contains('animate')).toBe(false);
       });
     });
 
@@ -82,6 +105,20 @@ describe('UpcomingEventBannerComponent', () => {
 
         expect(clearBannerSpy).toHaveBeenCalledTimes(1);
       });
+    });
+  });
+
+  describe('lifecycle hooks', () => {
+    it('should setup resize observer on init', () => {
+      expect(window.ResizeObserver).toHaveBeenCalled();
+    });
+
+    it('should disconnect resize observer on destroy', () => {
+      const mockObserver = (window.ResizeObserver as jest.Mock).mock.results[0].value;
+
+      component.ngOnDestroy();
+
+      expect(mockObserver.disconnect).toHaveBeenCalled();
     });
   });
 });
