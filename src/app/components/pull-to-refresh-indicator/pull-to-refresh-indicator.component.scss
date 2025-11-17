@@ -7,34 +7,59 @@
   align-items: center;
   justify-content: center;
   padding: 1rem;
-  background: var(--primary-colour);
+  // DEBUG: Bright magenta background to make it super visible
+  background: magenta;
+  border: 5px solid lime;
   border-radius: 0 0 0.5rem 0.5rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  z-index: 3000;
+  z-index: 9999;
   transition: opacity 0.2s ease-out;
-  opacity: 0;
+  // DEBUG: Always visible to test positioning
+  opacity: 1;
   pointer-events: none;
+  width: 100px;
+  height: 100px;
 
   &.active {
     opacity: 1;
+    // DEBUG: Yellow border when active
+    border-color: yellow;
   }
 
   &.refreshing {
     top: 0;
     opacity: 1;
+    // DEBUG: Red border when refreshing
+    border-color: red;
   }
 }
 
+.debug-info {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  font-size: 10px;
+  font-weight: bold;
+  color: black;
+  background: white;
+  padding: 2px 4px;
+  border-radius: 4px;
+  line-height: 1.2;
+}
+
 .spinner {
-  width: 24px;
-  height: 24px;
-  border: 3px solid rgba(255, 255, 255, 0.3);
-  border-top-color: var(--white);
+  width: 40px;
+  height: 40px;
+  // DEBUG: Bright blue spinner
+  border: 5px solid cyan;
+  border-top-color: orange;
   border-radius: 50%;
   transition: transform 0.2s ease-out;
 
   &.spinning {
     animation: spin 1s linear infinite;
+    // DEBUG: Scale up when spinning
+    transform: scale(1.2);
   }
 }
 

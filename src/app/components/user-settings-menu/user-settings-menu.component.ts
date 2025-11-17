@@ -64,6 +64,11 @@ export class UserSettingsMenuComponent implements OnInit {
     this.store.dispatch(AppActions.safeModeToggled());
   }
 
+  public onRefreshData(): void {
+    this.store.dispatch(AppActions.pullToRefreshRequested());
+    this.close.emit();
+  }
+
   public onLogin(): void {
     this.router.navigate(['login']);
     this.close.emit();

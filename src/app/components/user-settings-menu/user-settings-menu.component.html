@@ -20,6 +20,16 @@
       </lcc-toggle-switch>
     </li>
 
+    <li class="menu-item refresh-data">
+      <a
+        aria-label="Refresh data"
+        class="lcc-dropdown-link"
+        (click)="onRefreshData()">
+        <mat-icon>refresh</mat-icon>
+        <span>Refresh data</span>
+      </a>
+    </li>
+
     @if (vm.user) {
       <li class="menu-item safe-mode-toggle">
         <span>Safe mode</span>
