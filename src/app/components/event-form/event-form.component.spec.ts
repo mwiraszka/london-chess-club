@@ -176,27 +176,25 @@ describe('EventFormComponent', () => {
       });
     });
 
-    describe('pattern validator', () => {
-      it('should mark field with an invalid pattern as invalid', () => {
+    describe('text validator', () => {
+      it('should mark field with whitespace-only text as valid', () => {
         component.form.patchValue({
           title: ' ',
-          details: '\t\n',
         });
         fixture.detectChanges();
 
-        expect(component.form.controls.title.hasError('pattern')).toBe(true);
-        expect(component.form.controls.details.hasError('pattern')).toBe(true);
+        expect(component.form.controls.title.hasError('invalidText')).toBe(false);
       });
 
-      it('should mark field with a valid pattern as valid', () => {
+      it('should mark field with emoji as invalid', () => {
         component.form.patchValue({
           title: '🔥',
           details: '123',
         });
         fixture.detectChanges();
 
-        expect(component.form.controls.title.hasError('pattern')).toBe(false);
-        expect(component.form.controls.details.hasError('pattern')).toBe(false);
+        expect(component.form.controls.title.hasError('invalidText')).toBe(true);
+        expect(component.form.controls.details.hasError('invalidText')).toBe(false);
       });
     });
   });

@@ -134,21 +134,19 @@ describe('MemberFormComponent', () => {
       });
     });
 
-    describe('pattern validator', () => {
-      it('should mark field with an invalid pattern as invalid', () => {
+    describe('text validator', () => {
+      it('should mark field with whitespace-only text as false', () => {
         component.form.patchValue({
           firstName: ' ',
-          lastName: '\t\n',
           city: '  ',
         });
         fixture.detectChanges();
 
-        expect(component.form.controls.firstName.hasError('pattern')).toBe(true);
-        expect(component.form.controls.lastName.hasError('pattern')).toBe(true);
-        expect(component.form.controls.city.hasError('pattern')).toBe(true);
+        expect(component.form.controls.firstName.hasError('invalidText')).toBe(false);
+        expect(component.form.controls.city.hasError('invalidText')).toBe(false);
       });
 
-      it('should mark field with a valid pattern as valid', () => {
+      it('should mark field with emoji as invalid', () => {
         component.form.patchValue({
           firstName: '🔥',
           lastName: 'abc',
@@ -156,9 +154,9 @@ describe('MemberFormComponent', () => {
         });
         fixture.detectChanges();
 
-        expect(component.form.controls.firstName.hasError('pattern')).toBe(false);
-        expect(component.form.controls.lastName.hasError('pattern')).toBe(false);
-        expect(component.form.controls.city.hasError('pattern')).toBe(false);
+        expect(component.form.controls.firstName.hasError('invalidText')).toBe(true);
+        expect(component.form.controls.lastName.hasError('invalidText')).toBe(false);
+        expect(component.form.controls.city.hasError('invalidText')).toBe(false);
       });
     });
   });

@@ -133,21 +133,19 @@ describe('ArticleFormComponent', () => {
       });
     });
 
-    describe('pattern validator', () => {
-      it('should mark field with an invalid pattern as invalid', () => {
+    describe('text validator', () => {
+      it('should mark field with whitespace-only text as valid', () => {
         component.form.patchValue({
           bannerImageId: ' ',
-          title: '\t\n',
           body: '  ',
         });
         fixture.detectChanges();
 
-        expect(component.form.controls.bannerImageId.hasError('pattern')).toBe(true);
-        expect(component.form.controls.title.hasError('pattern')).toBe(true);
-        expect(component.form.controls.body.hasError('pattern')).toBe(true);
+        expect(component.form.controls.bannerImageId.hasError('invalidText')).toBe(false);
+        expect(component.form.controls.body.hasError('invalidText')).toBe(false);
       });
 
-      it('should mark field with a valid pattern as valid', () => {
+      it('should mark field with emoji as invalid', () => {
         component.form.patchValue({
           bannerImageId: '🔥',
           title: 'abc',
@@ -155,9 +153,9 @@ describe('ArticleFormComponent', () => {
         });
         fixture.detectChanges();
 
-        expect(component.form.controls.bannerImageId.hasError('pattern')).toBe(false);
-        expect(component.form.controls.title.hasError('pattern')).toBe(false);
-        expect(component.form.controls.body.hasError('pattern')).toBe(false);
+        expect(component.form.controls.bannerImageId.hasError('invalidText')).toBe(true);
+        expect(component.form.controls.title.hasError('invalidText')).toBe(false);
+        expect(component.form.controls.body.hasError('invalidText')).toBe(false);
       });
     });
   });

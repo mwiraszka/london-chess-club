@@ -325,26 +325,36 @@ describe('AlbumFormComponent', () => {
       });
     });
 
-    describe('pattern validator', () => {
-      it('should mark field with an invalid pattern as invalid', () => {
+    describe('text validator', () => {
+      it('should mark field with whitespace-only text as valid', () => {
         component.form.patchValue({ album: '   ' });
         component.form.controls.album.markAsTouched();
         fixture.detectChanges();
 
-        expect(component.form.controls.album.hasError('pattern')).toBe(true);
+        expect(component.form.controls.album.hasError('invalidText')).toBe(false);
       });
 
-      it('should mark field with a valid pattern as valid', () => {
+      it('should mark field with emoji as invalid', () => {
         component.form.patchValue({ album: '🔥' });
         component.form.markAllAsTouched();
         fixture.detectChanges();
 
-        expect(component.form.controls.album.hasError('pattern')).toBe(false);
+        expect(component.form.controls.album.hasError('invalidText')).toBe(true);
       });
-    });
 
-    describe('image caption validator', () => {
-      it('should mark field with an out-of-range ASCII character as invalid', () => {
+      it('should mark caption field with emoji as invalid', () => {
+        component.form.controls.newImages.at(0).patchValue({ caption: 'Żubrówka 🔥' });
+        component.form.markAllAsTouched();
+        fixture.detectChanges();
+
+        expect(
+          component.form.controls.newImages
+            .at(0)
+            .controls.caption.hasError('invalidText'),
+        ).toBe(true);
+      });
+
+      it('should mark caption field with foreign characters as valid', () => {
         component.form.controls.newImages.at(0).patchValue({ caption: 'Żubrówka' });
         component.form.markAllAsTouched();
         fixture.detectChanges();
@@ -352,11 +362,11 @@ describe('AlbumFormComponent', () => {
         expect(
           component.form.controls.newImages
             .at(0)
-            .controls.caption.hasError('invalidImageCaption'),
-        ).toBe(true);
+            .controls.caption.hasError('invalidText'),
+        ).toBe(false);
       });
 
-      it('should mark field without an out-of-range ASCII character as valid', () => {
+      it('should mark field with valid text as valid', () => {
         component.form.controls.newImages.at(0).patchValue({ caption: 'Absolut' });
         component.form.markAllAsTouched();
         fixture.detectChanges();
@@ -364,7 +374,7 @@ describe('AlbumFormComponent', () => {
         expect(
           component.form.controls.newImages
             .at(0)
-            .controls.caption.hasError('invalidImageCaption'),
+            .controls.caption.hasError('invalidText'),
         ).toBe(false);
       });
     });

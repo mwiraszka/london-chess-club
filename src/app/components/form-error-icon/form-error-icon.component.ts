@@ -27,8 +27,8 @@ export class FormErrorIconComponent {
   public get errorMessage(): string {
     if (this.control.hasError('required')) {
       return 'This field is required';
-    } else if (this.control.hasError('pattern')) {
-      return 'Invalid input (incorrect format)';
+    } else if (this.control.hasError('pattern') || this.control.hasError('invalidText')) {
+      return 'Text contains invalid characters';
     } else if (this.control.hasError('invalidOrdinal')) {
       return 'Invalid ordinal number - please input a number between 1 and 99';
     } else if (this.control.hasError('invalidEmailFormat')) {
@@ -39,8 +39,6 @@ export class FormErrorIconComponent {
       return 'Invalid rating';
     } else if (this.control.hasError('invalidYearOfBirth')) {
       return 'Invalid year';
-    } else if (this.control.hasError('invalidImageCaption')) {
-      return 'Image caption can only contain letters, numbers, and readable symbols';
     } else if (this.control.hasError('minlength')) {
       return 'Input is too short';
     } else if (this.control.hasError('maxlength')) {

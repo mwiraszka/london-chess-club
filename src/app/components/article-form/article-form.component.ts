@@ -35,6 +35,7 @@ import {
   Image,
 } from '@app/models';
 import { DialogService } from '@app/services';
+import { textValidator } from '@app/validators';
 
 @UntilDestroy()
 @Component({
@@ -172,15 +173,15 @@ export class ArticleFormComponent implements OnInit {
     this.form = this.formBuilder.group<ArticleFormGroup>({
       bannerImageId: new FormControl(this.formData.bannerImageId, {
         nonNullable: true,
-        validators: [Validators.required, Validators.pattern(/[^\s]/)],
+        validators: [Validators.required, textValidator],
       }),
       title: new FormControl(this.formData.title, {
         nonNullable: true,
-        validators: [Validators.required, Validators.pattern(/[^\s]/)],
+        validators: [Validators.required, textValidator],
       }),
       body: new FormControl(this.formData.body, {
         nonNullable: true,
-        validators: [Validators.required, Validators.pattern(/[^\s]/)],
+        validators: [Validators.required, textValidator],
       }),
     });
   }

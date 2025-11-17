@@ -32,17 +32,6 @@ describe('ImageFileService', () => {
   });
 
   describe('file validation', () => {
-    it('should reject unsupported file types', async () => {
-      const file = new File(['test'], 'test.gif', { type: 'image/gif' });
-
-      const result = await service.storeImageFile('test-id', file);
-
-      expect(result).toEqual({
-        name: 'LCCError',
-        message: expect.stringContaining('unsupported'),
-      });
-    });
-
     it('should reject BMP files', async () => {
       const file = new File(['test'], 'test.bmp', { type: 'image/bmp' });
 
@@ -54,14 +43,25 @@ describe('ImageFileService', () => {
       });
     });
 
-    it('should reject SVG files', async () => {
-      const file = new File(['test'], 'test.svg', { type: 'image/svg+xml' });
+    it('should reject WEBP files', async () => {
+      const file = new File(['test'], 'test.webp', { type: 'image/webp' });
 
       const result = await service.storeImageFile('test-id', file);
 
       expect(result).toEqual({
         name: 'LCCError',
         message: expect.stringContaining('unsupported'),
+      });
+    });
+
+    it('should mention supported formats in error message', async () => {
+      const file = new File(['test'], 'test.bmp', { type: 'image/bmp' });
+
+      const result = await service.storeImageFile('test-id', file);
+
+      expect(result).toEqual({
+        name: 'LCCError',
+        message: expect.stringMatching(/PNG.*JPEG.*SVG.*TIFF.*GIF/i),
       });
     });
   });

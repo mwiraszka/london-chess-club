@@ -360,8 +360,9 @@ export class ImagesEffects {
       concatLatestFrom(() => [
         this.store.select(AuthSelectors.selectUser).pipe(filter(isDefined)),
         this.store.select(ImagesSelectors.selectNewImageFormData).pipe(filter(isDefined)),
+        this.store.select(ImagesSelectors.selectAllExistingAlbums),
       ]),
-      switchMap(([imageFileResult, user, formData]) => {
+      switchMap(([imageFileResult, user, formData, existingAlbums]) => {
         if (isLccError(imageFileResult)) {
           return of(ImagesActions.addImageFailed({ error: imageFileResult }));
         }
@@ -381,7 +382,9 @@ export class ImagesEffects {
           filename: formData.filename,
           caption: formData.caption,
           album: formData.album,
-          albumCover: formData.albumCover,
+          albumCover: !existingAlbums.includes(formData.album)
+            ? true
+            : formData.albumCover,
           albumOrdinality: formData.albumOrdinality,
           modificationInfo: {
             createdBy: `${user.firstName} ${user.lastName}`,

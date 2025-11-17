@@ -39,7 +39,7 @@ import {
 } from '@app/models';
 import { DialogService, ImageFileService } from '@app/services';
 import { isLccError } from '@app/utils';
-import { imageCaptionValidator, ordinalityValidator } from '@app/validators';
+import { ordinalityValidator, textValidator } from '@app/validators';
 
 @UntilDestroy()
 @Component({
@@ -217,7 +217,7 @@ export class AlbumFormComponent implements OnInit {
           filename: new FormControl(filename, { nonNullable: true }),
           caption: new FormControl(filename.substring(0, filename.lastIndexOf('.')), {
             nonNullable: true,
-            validators: [Validators.required, imageCaptionValidator],
+            validators: [Validators.required, textValidator],
           }),
           albumOrdinality: new FormControl(`${albumOrdinality}`, {
             nonNullable: true,
@@ -334,7 +334,7 @@ export class AlbumFormComponent implements OnInit {
           filename: new FormControl(entity.formData.filename, { nonNullable: true }),
           caption: new FormControl(entity.formData.caption, {
             nonNullable: true,
-            validators: [Validators.required, imageCaptionValidator],
+            validators: [Validators.required, textValidator],
           }),
           albumOrdinality: new FormControl(entity.formData.albumOrdinality, {
             nonNullable: true,
@@ -354,7 +354,7 @@ export class AlbumFormComponent implements OnInit {
           filename: new FormControl(formData.filename, { nonNullable: true }),
           caption: new FormControl(formData.caption, {
             nonNullable: true,
-            validators: [Validators.required, imageCaptionValidator],
+            validators: [Validators.required, textValidator],
           }),
           albumOrdinality: new FormControl(formData.albumOrdinality, {
             nonNullable: true,
@@ -376,7 +376,7 @@ export class AlbumFormComponent implements OnInit {
     this.form = this.formBuilder.group<AlbumFormGroup>({
       album: new FormControl(albumValue, {
         nonNullable: true,
-        validators: [Validators.required, Validators.pattern(/[^\s]/)],
+        validators: [Validators.required, textValidator],
       }),
       existingImages: existingImagesFormArray,
       newImages: newImagesFormArray,
