@@ -86,10 +86,12 @@ export class ImagesApiService {
     );
   }
 
-  public updateImages(baseImages: BaseImage[]): Observable<ApiResponse<Id[]>> {
-    return this.http.put<ApiResponse<Id[]>>(
+  public updateImages(
+    imagesFormData: FormData,
+  ): Observable<ApiResponse<{ newImages: Image[]; updatedImages: BaseImage[] }>> {
+    return this.http.put<ApiResponse<{ newImages: Image[]; updatedImages: BaseImage[] }>>(
       `${this.API_BASE_URL}/${this.COLLECTION}`,
-      baseImages,
+      imagesFormData,
     );
   }
 

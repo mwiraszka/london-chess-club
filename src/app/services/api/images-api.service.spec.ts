@@ -264,23 +264,91 @@ describe('ImagesApiService', () => {
   });
 
   describe('updateImages', () => {
-    it('should update multiple images metadata', () => {
-      const updates: BaseImage[] = [
-        { ...mockBaseImages[0], caption: 'Updated caption text' },
-        { ...mockBaseImages[1], id: '999', album: 'new-album' },
-      ];
+    it('should update images via FormData and return new and updated images', () => {
+      const formData = new FormData();
+      formData.append('files', new File([''], 'new.jpg'));
+      formData.append(
+        'imageMetadata',
+        JSON.stringify({ id: 'new-1', filename: 'new.jpg' }),
+      );
+      formData.append('existingImages', JSON.stringify([mockBaseImages[0]]));
 
-      const mockResponse: ApiResponse<Id[]> = {
-        data: ['123', '999'],
+      const newImage = { ...mockImage, id: 'new-1', filename: 'new.jpg' };
+      const mockResponse: ApiResponse<{
+        newImages: Image[];
+        updatedImages: BaseImage[];
+      }> = {
+        data: { newImages: [newImage], updatedImages: [mockBaseImages[0]] },
       };
 
-      service.updateImages(updates).subscribe(response => {
+      service.updateImages(formData).subscribe(response => {
         expect(response).toEqual(mockResponse);
+        expect(response.data.newImages.length).toBe(1);
+        expect(response.data.updatedImages.length).toBe(1);
       });
 
       const req = httpMock.expectOne(apiBaseUrl);
       expect(req.request.method).toBe('PUT');
-      expect(req.request.body).toEqual(updates);
+      expect(req.request.body).toBe(formData);
+      req.flush(mockResponse);
+    });
+
+    it('should handle updates with only existing images', () => {
+      const formData = new FormData();
+      formData.append(
+        'existingImages',
+        JSON.stringify([mockBaseImages[0], mockBaseImages[1]]),
+      );
+
+      const mockResponse: ApiResponse<{
+        newImages: Image[];
+        updatedImages: BaseImage[];
+      }> = {
+        data: { newImages: [], updatedImages: [mockBaseImages[0], mockBaseImages[1]] },
+      };
+
+      service.updateImages(formData).subscribe(response => {
+        expect(response.data.newImages.length).toBe(0);
+        expect(response.data.updatedImages.length).toBe(2);
+      });
+
+      const req = httpMock.expectOne(apiBaseUrl);
+      expect(req.request.body).toBe(formData);
+      req.flush(mockResponse);
+    });
+
+    it('should handle updates with only new images', () => {
+      const formData = new FormData();
+      formData.append('files', new File([''], 'new1.jpg'));
+      formData.append(
+        'imageMetadata',
+        JSON.stringify({ id: 'new-1', filename: 'new1.jpg' }),
+      );
+      formData.append('files', new File([''], 'new2.jpg'));
+      formData.append(
+        'imageMetadata',
+        JSON.stringify({ id: 'new-2', filename: 'new2.jpg' }),
+      );
+
+      const newImages = [
+        { ...mockImage, id: 'new-1', filename: 'new1.jpg' },
+        { ...mockImage, id: 'new-2', filename: 'new2.jpg' },
+      ];
+
+      const mockResponse: ApiResponse<{
+        newImages: Image[];
+        updatedImages: BaseImage[];
+      }> = {
+        data: { newImages, updatedImages: [] },
+      };
+
+      service.updateImages(formData).subscribe(response => {
+        expect(response.data.newImages.length).toBe(2);
+        expect(response.data.updatedImages.length).toBe(0);
+      });
+
+      const req = httpMock.expectOne(apiBaseUrl);
+      expect(req.request.body).toBe(formData);
       req.flush(mockResponse);
     });
   });

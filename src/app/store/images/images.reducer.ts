@@ -278,32 +278,42 @@ export const imagesReducer = createReducer(
       ),
   ),
 
-  on(ImagesActions.updateAlbumSucceeded, (state, { baseImages }): ImagesState => {
-    const updatedEntities = compact(
-      baseImages.map(baseImage => {
-        const originalEntity = baseImage ? state.entities[baseImage.id] : null;
-        if (!originalEntity) {
-          console.warn(
-            `[LCC] Unable to find image ${baseImage.id} after successful album update`,
-          );
-          return undefined;
-        }
-        return {
-          image: { ...originalEntity.image, ...baseImage },
-          formData: pick(baseImage, IMAGE_FORM_DATA_PROPERTIES),
-        };
-      }),
-    );
+  on(
+    ImagesActions.updateAlbumSucceeded,
+    (state, { newImages, updatedImages }): ImagesState => {
+      const updatedImageEntities = compact(
+        updatedImages.map(updatedImage => {
+          const originalEntity = updatedImage ? state.entities[updatedImage.id] : null;
+          if (!originalEntity) {
+            console.warn(
+              `[LCC] Unable to find image ${updatedImage.id} after successful album update`,
+            );
+            return undefined;
+          }
+          return {
+            image: { ...originalEntity.image, ...updatedImage },
+            formData: pick(updatedImage, IMAGE_FORM_DATA_PROPERTIES),
+          };
+        }),
+      );
 
-    return imagesAdapter.upsertMany(updatedEntities, {
-      ...state,
-      callState: initialState.callState,
-      lastFilteredThumbnailsFetch: null,
-      lastAlbumCoversFetch: null,
-      lastMetadataFetch: null,
-      newImagesFormData: {},
-    });
-  }),
+      const newImageEntities = newImages.map(image => ({
+        image,
+        formData: pick(image, IMAGE_FORM_DATA_PROPERTIES),
+      }));
+
+      const allEntities = [...updatedImageEntities, ...newImageEntities];
+
+      return imagesAdapter.upsertMany(allEntities, {
+        ...state,
+        callState: initialState.callState,
+        lastFilteredThumbnailsFetch: null,
+        lastAlbumCoversFetch: null,
+        lastMetadataFetch: null,
+        newImagesFormData: {},
+      });
+    },
+  ),
 
   on(
     ImagesActions.deleteImageSucceeded,

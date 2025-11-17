@@ -457,7 +457,7 @@ describe('Images Reducer', () => {
   });
 
   describe('updateAlbumSucceeded', () => {
-    it('should update multiple images in an album', () => {
+    it('should update existing images and add new images in an album', () => {
       const previousState: ImagesState = imagesAdapter.upsertMany(
         [
           {
@@ -488,18 +488,63 @@ describe('Images Reducer', () => {
 
       const updatedBaseImages: BaseImage[] = [
         { ...mockBaseImage, caption: 'Updated 1' },
-        { ...MOCK_IMAGES[1], caption: 'Updated 2' },
+        { ...pick(MOCK_IMAGES[1], BASE_IMAGE_PROPERTIES), caption: 'Updated 2' },
       ];
+
+      const newImages = [MOCK_IMAGES[2]];
 
       const action = ImagesActions.updateAlbumSucceeded({
         album: 'Test Album',
-        baseImages: updatedBaseImages,
+        newImages,
+        updatedImages: updatedBaseImages,
       });
       const state = imagesReducer(previousState, action);
 
       expect(state.entities['mock-id-1']?.image.caption).toBe('Updated 1');
       expect(state.entities['mock-id-2']?.image.caption).toBe('Updated 2');
+      expect(state.entities['mock-id-3']?.image).toEqual(MOCK_IMAGES[2]);
+      expect(state.ids).toContain('mock-id-3');
       expect(state.newImagesFormData).toEqual({});
+    });
+
+    it('should handle update with only updated images', () => {
+      const previousState: ImagesState = imagesAdapter.upsertOne(
+        {
+          image: MOCK_IMAGES[0],
+          formData: {
+            id: MOCK_IMAGES[0].id,
+            filename: MOCK_IMAGES[0].filename,
+            caption: MOCK_IMAGES[0].caption,
+            album: MOCK_IMAGES[0].album,
+            albumCover: MOCK_IMAGES[0].albumCover,
+            albumOrdinality: MOCK_IMAGES[0].albumOrdinality,
+          },
+        },
+        initialState,
+      );
+
+      const action = ImagesActions.updateAlbumSucceeded({
+        album: 'Test Album',
+        newImages: [],
+        updatedImages: [{ ...mockBaseImage, caption: 'Updated' }],
+      });
+      const state = imagesReducer(previousState, action);
+
+      expect(state.entities['mock-id-1']?.image.caption).toBe('Updated');
+      expect(state.ids.length).toBe(1);
+    });
+
+    it('should handle update with only new images', () => {
+      const action = ImagesActions.updateAlbumSucceeded({
+        album: 'Test Album',
+        newImages: [MOCK_IMAGES[0], MOCK_IMAGES[1]],
+        updatedImages: [],
+      });
+      const state = imagesReducer(initialState, action);
+
+      expect(state.ids.length).toBe(2);
+      expect(state.entities['mock-id-1']?.image).toEqual(MOCK_IMAGES[0]);
+      expect(state.entities['mock-id-2']?.image).toEqual(MOCK_IMAGES[1]);
     });
   });
 

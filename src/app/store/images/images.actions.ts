@@ -113,11 +113,11 @@ export const updateAlbumRequested = createAction(
   props<{ album: string }>(),
 );
 export const updateAlbumSucceeded = createAction(
-  '[Images] Update album images succeeded',
-  props<{ album: string; baseImages: BaseImage[] }>(),
+  '[Images] Update album succeeded',
+  props<{ album: string; newImages: Image[]; updatedImages: BaseImage[] }>(),
 );
 export const updateAlbumFailed = createAction(
-  '[Images] Update images failed',
+  '[Images] Update album failed',
   props<{ album: string; error: LccError }>(),
 );
 

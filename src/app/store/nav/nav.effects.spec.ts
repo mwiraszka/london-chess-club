@@ -441,7 +441,11 @@ describe('NavEffects', () => {
 
     it('should navigate to photo-gallery on updateAlbumSucceeded', done => {
       actions$.next(
-        ImagesActions.updateAlbumSucceeded({ album: 'Test Album', baseImages: [] }),
+        ImagesActions.updateAlbumSucceeded({
+          album: 'Test Album',
+          newImages: [],
+          updatedImages: [],
+        }),
       );
 
       effects.navigateToPhotoGallery$.subscribe(action => {
