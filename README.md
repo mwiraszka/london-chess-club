@@ -35,6 +35,7 @@ Below you'll find an overview of the tools and technologies that power the app, 
 <summary>v5.10.0 - November 18th, 2025</summary>
 
 - 🚀 Temporarily display thumbnail image if available and valid, whenever the corresponding full-size image's presigned URL is expired
+- 🔧 Update web manifest configuration to ensure app always opens up in a browser UI as expected
 
 </details>
 
