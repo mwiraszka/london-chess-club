@@ -32,6 +32,13 @@ Below you'll find an overview of the tools and technologies that power the app, 
 | 🔧  | Behind-the-scenes changes         |
 
 <details>
+<summary>v5.10.0 - November 18th, 2025</summary>
+
+- 🚀 Temporarily display thumbnail image if available and valid, whenever the corresponding full-size image's presigned URL is expired
+
+</details>
+
+<details>
 <summary>v5.9.17 - November 17th, 2025</summary>
 
 - 🐛 Ensure album form can simultaneously handle addition of new images and update of existing ones
