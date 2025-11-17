@@ -1,5 +1,5 @@
 import { provideMockActions } from '@ngrx/effects/testing';
-import { Action } from '@ngrx/store';
+import { Action, createSelector } from '@ngrx/store';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import moment from 'moment-timezone';
 import { ReplaySubject, of, throwError } from 'rxjs';
@@ -11,6 +11,7 @@ import { MOCK_IMAGES } from '@app/mocks/images.mock';
 import {
   ApiResponse,
   BaseImage,
+  Id,
   Image,
   LccError,
   PaginatedItems,
@@ -22,12 +23,14 @@ import { AuthSelectors } from '@app/store/auth';
 import { ImagesActions, ImagesSelectors } from '.';
 import { ImagesEffects } from './images.effects';
 
+const mockBuildImagesFormData = jest.fn();
 const mockParseError = jest.fn();
 const mockIsExpired = jest.fn();
 const mockDataUrlToFile = jest.fn();
 const mockIsLccError = jest.fn();
 
 jest.mock('@app/utils', () => ({
+  buildImagesFormData: (...args: unknown[]) => mockBuildImagesFormData(...args),
   isDefined: <T>(value: T | null | undefined): value is T => value != null,
   isExpired: (date: unknown) => mockIsExpired(date),
   isLccError: (value: unknown) => mockIsLccError(value),
@@ -142,6 +145,7 @@ describe('ImagesEffects', () => {
     jest.clearAllMocks();
     mockParseError.mockImplementation(error => error);
     mockIsLccError.mockReturnValue(false);
+    mockBuildImagesFormData.mockReturnValue(new FormData());
   });
 
   describe('fetchAllImagesMetadata$', () => {
@@ -438,7 +442,25 @@ describe('ImagesEffects', () => {
 
     it('should update image successfully', done => {
       const imageId = MOCK_IMAGES[0].id;
-      const mockUpdateResponse: ApiResponse<string[]> = { data: [imageId] };
+      const mockUpdateResponse: ApiResponse<{
+        newImages: Image[];
+        updatedImages: BaseImage[];
+      }> = {
+        data: {
+          newImages: [],
+          updatedImages: [
+            {
+              id: MOCK_IMAGES[0].id,
+              filename: MOCK_IMAGES[0].filename,
+              caption: MOCK_IMAGES[0].caption,
+              album: MOCK_IMAGES[0].album,
+              albumCover: MOCK_IMAGES[0].albumCover,
+              albumOrdinality: MOCK_IMAGES[0].albumOrdinality,
+              modificationInfo: MOCK_IMAGES[0].modificationInfo,
+            },
+          ],
+        },
+      };
 
       imagesApiService.updateImages.mockReturnValue(of(mockUpdateResponse));
 
@@ -468,28 +490,379 @@ describe('ImagesEffects', () => {
       });
     });
 
-    it('should not dispatch success if response ID does not match', done => {
+    it('should fail when response counts do not match expected values', done => {
       const imageId = MOCK_IMAGES[0].id;
-      const mockUpdateResponse: ApiResponse<string[]> = { data: ['different-id'] };
+      const mockUpdateResponse: ApiResponse<{
+        newImages: Image[];
+        updatedImages: BaseImage[];
+      }> = {
+        data: {
+          newImages: [MOCK_IMAGES[0]], // Expected 0
+          updatedImages: [],
+        },
+      };
 
       imagesApiService.updateImages.mockReturnValue(of(mockUpdateResponse));
 
       actions$.next(ImagesActions.updateImageRequested({ imageId }));
 
-      const subscription = effects.updateImage$.subscribe(() => {
-        done.fail('Should not dispatch action when IDs do not match');
+      effects.updateImage$.subscribe(action => {
+        expect(action.type).toBe(ImagesActions.updateImageFailed.type);
+        const payload = action as ReturnType<typeof ImagesActions.updateImageFailed>;
+        expect(payload.error.message).toContain(
+          'Expected 0 images to be added and 1 image to be updated',
+        );
+        done();
       });
+    });
+
+    it('should build FormData with existing image', done => {
+      const imageId = MOCK_IMAGES[0].id;
+      const mockUpdateResponse: ApiResponse<{
+        newImages: Image[];
+        updatedImages: BaseImage[];
+      }> = {
+        data: {
+          newImages: [],
+          updatedImages: [
+            {
+              id: MOCK_IMAGES[0].id,
+              filename: MOCK_IMAGES[0].filename,
+              caption: MOCK_IMAGES[0].caption,
+              album: MOCK_IMAGES[0].album,
+              albumCover: MOCK_IMAGES[0].albumCover,
+              albumOrdinality: MOCK_IMAGES[0].albumOrdinality,
+              modificationInfo: MOCK_IMAGES[0].modificationInfo,
+            },
+          ],
+        },
+      };
+
+      imagesApiService.updateImages.mockReturnValue(of(mockUpdateResponse));
+
+      actions$.next(ImagesActions.updateImageRequested({ imageId }));
+
+      effects.updateImage$.subscribe(action => {
+        expect(action.type).toBe(ImagesActions.updateImageSucceeded.type);
+        const callArg = imagesApiService.updateImages.mock.calls[0][0];
+        expect(callArg).toBeInstanceOf(FormData);
+        done();
+      });
+    });
+  });
+
+  describe('updateAlbum$', () => {
+    const album = 'Test Album';
+    const mockIndexedDbData = [
+      { id: 'new-1', filename: 'new1.jpg', dataUrl: 'data:image/jpeg;base64,abc' },
+      { id: 'new-2', filename: 'new2.jpg', dataUrl: 'data:image/jpeg;base64,def' },
+    ];
+    let mockImageFileService: jest.Mocked<ImageFileService>;
+
+    beforeEach(() => {
+      mockImageFileService = TestBed.inject(
+        ImageFileService,
+      ) as jest.Mocked<ImageFileService>;
+      store.overrideSelector(AuthSelectors.selectUser, mockUser);
+      store.overrideSelector(ImagesSelectors.selectNewImagesFormData, {
+        'new-1': { ...INITIAL_IMAGE_FORM_DATA, id: 'new-1', album },
+        'new-2': { ...INITIAL_IMAGE_FORM_DATA, id: 'new-2', album },
+      });
+      store.refreshState();
+      mockIsLccError.mockReturnValue(false);
+      mockDataUrlToFile.mockReturnValue(new File([''], 'test.jpg'));
+    });
+
+    it('should update album with new and existing images successfully', done => {
+      const newImages = [
+        { ...MOCK_IMAGES[0], id: 'new-1', filename: 'new1.jpg' },
+        { ...MOCK_IMAGES[1], id: 'new-2', filename: 'new2.jpg' },
+      ];
+      const updatedImages: BaseImage[] = [
+        {
+          id: MOCK_IMAGES[0].id,
+          filename: MOCK_IMAGES[0].filename,
+          caption: MOCK_IMAGES[0].caption,
+          album: MOCK_IMAGES[0].album,
+          albumCover: MOCK_IMAGES[0].albumCover,
+          albumOrdinality: MOCK_IMAGES[0].albumOrdinality,
+          modificationInfo: MOCK_IMAGES[0].modificationInfo,
+        },
+      ];
+
+      jest.spyOn(ImagesSelectors, 'selectImageEntitiesByAlbum').mockReturnValue(
+        createSelector(() => [
+          {
+            image: MOCK_IMAGES[0],
+            formData: {
+              id: MOCK_IMAGES[0].id,
+              filename: MOCK_IMAGES[0].filename,
+              caption: MOCK_IMAGES[0].caption,
+              album: MOCK_IMAGES[0].album,
+              albumCover: MOCK_IMAGES[0].albumCover,
+              albumOrdinality: MOCK_IMAGES[0].albumOrdinality,
+            },
+          },
+        ]) as ReturnType<typeof ImagesSelectors.selectImageEntitiesByAlbum>,
+      );
+
+      const mockUpdateResponse: ApiResponse<{
+        newImages: Image[];
+        updatedImages: BaseImage[];
+      }> = {
+        data: { newImages, updatedImages },
+      };
+
+      mockImageFileService.getAllImages.mockReturnValue(
+        Promise.resolve(mockIndexedDbData),
+      );
+      imagesApiService.updateImages.mockReturnValue(of(mockUpdateResponse));
+
+      actions$.next(ImagesActions.updateAlbumRequested({ album }));
+
+      effects.updateAlbum$.subscribe(action => {
+        expect(action.type).toBe(ImagesActions.updateAlbumSucceeded.type);
+        const payload = action as ReturnType<typeof ImagesActions.updateAlbumSucceeded>;
+        expect(payload.album).toBe(album);
+        expect(payload.newImages.length).toBe(2);
+        expect(payload.updatedImages.length).toBe(1);
+        expect(imagesApiService.updateImages).toHaveBeenCalled();
+        done();
+      });
+    });
+
+    it('should handle update album failure from API', done => {
+      jest.spyOn(ImagesSelectors, 'selectImageEntitiesByAlbum').mockReturnValue(
+        createSelector(() => [
+          {
+            image: MOCK_IMAGES[0],
+            formData: {
+              id: MOCK_IMAGES[0].id,
+              filename: MOCK_IMAGES[0].filename,
+              caption: MOCK_IMAGES[0].caption,
+              album: MOCK_IMAGES[0].album,
+              albumCover: MOCK_IMAGES[0].albumCover,
+              albumOrdinality: MOCK_IMAGES[0].albumOrdinality,
+            },
+          },
+        ]) as ReturnType<typeof ImagesSelectors.selectImageEntitiesByAlbum>,
+      );
+
+      mockImageFileService.getAllImages.mockReturnValue(
+        Promise.resolve(mockIndexedDbData),
+      );
+      imagesApiService.updateImages.mockReturnValue(throwError(() => mockError));
+      mockParseError.mockReturnValue(mockError);
+
+      actions$.next(ImagesActions.updateAlbumRequested({ album }));
+
+      effects.updateAlbum$.subscribe(action => {
+        expect(action.type).toBe(ImagesActions.updateAlbumFailed.type);
+        done();
+      });
+    });
+
+    it('should fail when response counts do not match', done => {
+      jest.spyOn(ImagesSelectors, 'selectImageEntitiesByAlbum').mockReturnValue(
+        createSelector(() => [
+          {
+            image: MOCK_IMAGES[0],
+            formData: {
+              id: MOCK_IMAGES[0].id,
+              filename: MOCK_IMAGES[0].filename,
+              caption: MOCK_IMAGES[0].caption,
+              album: MOCK_IMAGES[0].album,
+              albumCover: MOCK_IMAGES[0].albumCover,
+              albumOrdinality: MOCK_IMAGES[0].albumOrdinality,
+            },
+          },
+        ]) as ReturnType<typeof ImagesSelectors.selectImageEntitiesByAlbum>,
+      );
+
+      const mockUpdateResponse: ApiResponse<{
+        newImages: Image[];
+        updatedImages: BaseImage[];
+      }> = {
+        data: {
+          newImages: [MOCK_IMAGES[0]], // Only 1, expected 2
+          updatedImages: [
+            {
+              id: MOCK_IMAGES[0].id,
+              filename: MOCK_IMAGES[0].filename,
+              caption: MOCK_IMAGES[0].caption,
+              album: MOCK_IMAGES[0].album,
+              albumCover: MOCK_IMAGES[0].albumCover,
+              albumOrdinality: MOCK_IMAGES[0].albumOrdinality,
+              modificationInfo: MOCK_IMAGES[0].modificationInfo,
+            },
+          ],
+        },
+      };
+
+      mockImageFileService.getAllImages.mockReturnValue(
+        Promise.resolve(mockIndexedDbData),
+      );
+      imagesApiService.updateImages.mockReturnValue(of(mockUpdateResponse));
+
+      actions$.next(ImagesActions.updateAlbumRequested({ album }));
+
+      effects.updateAlbum$.subscribe(action => {
+        expect(action.type).toBe(ImagesActions.updateAlbumFailed.type);
+        const payload = action as ReturnType<typeof ImagesActions.updateAlbumFailed>;
+        expect(payload.error.message).toContain('Expected 2 images to be added');
+        done();
+      });
+    });
+
+    it('should fail when form data is missing for an image', done => {
+      jest.spyOn(ImagesSelectors, 'selectImageEntitiesByAlbum').mockReturnValue(
+        createSelector(() => [
+          {
+            image: MOCK_IMAGES[0],
+            formData: {
+              id: MOCK_IMAGES[0].id,
+              filename: MOCK_IMAGES[0].filename,
+              caption: MOCK_IMAGES[0].caption,
+              album: MOCK_IMAGES[0].album,
+              albumCover: MOCK_IMAGES[0].albumCover,
+              albumOrdinality: MOCK_IMAGES[0].albumOrdinality,
+            },
+          },
+        ]) as ReturnType<typeof ImagesSelectors.selectImageEntitiesByAlbum>,
+      );
+      store.overrideSelector(ImagesSelectors.selectNewImagesFormData, {
+        'new-1': { ...INITIAL_IMAGE_FORM_DATA, id: 'new-1', album },
+        // Missing 'new-2' form data
+      });
+      store.refreshState();
+
+      mockImageFileService.getAllImages.mockReturnValue(
+        Promise.resolve(mockIndexedDbData),
+      );
+
+      actions$.next(ImagesActions.updateAlbumRequested({ album }));
+
+      effects.updateAlbum$.subscribe(action => {
+        expect(action.type).toBe(ImagesActions.updateAlbumFailed.type);
+        const payload = action as ReturnType<typeof ImagesActions.updateAlbumFailed>;
+        expect(payload.error.message).toBe(
+          'Mismatch between image file data and form data',
+        );
+        done();
+      });
+    });
+  });
+
+  describe('automaticallyUpdateAlbumCoverAfterImageDeletion$', () => {
+    const album = 'Test Album';
+    const deletedImage = { ...MOCK_IMAGES[0], albumCover: true };
+    const newCoverImage = { ...MOCK_IMAGES[1], album, albumCover: false };
+
+    beforeEach(() => {
+      jest
+        .spyOn(ImagesSelectors, 'selectImagesByAlbum')
+        .mockReturnValue(
+          createSelector(() => [newCoverImage]) as ReturnType<
+            typeof ImagesSelectors.selectImagesByAlbum
+          >,
+        );
+    });
+
+    it('should automatically set new album cover after deleting current cover', done => {
+      const mockUpdateResponse: ApiResponse<{
+        newImages: Image[];
+        updatedImages: BaseImage[];
+      }> = {
+        data: {
+          newImages: [],
+          updatedImages: [
+            {
+              id: newCoverImage.id,
+              filename: newCoverImage.filename,
+              caption: newCoverImage.caption,
+              album: newCoverImage.album,
+              albumCover: true,
+              albumOrdinality: newCoverImage.albumOrdinality,
+              modificationInfo: newCoverImage.modificationInfo,
+            },
+          ],
+        },
+      };
+
+      imagesApiService.updateImages.mockReturnValue(of(mockUpdateResponse));
+
+      actions$.next(ImagesActions.deleteImageSucceeded({ image: deletedImage }));
+
+      effects.automaticallyUpdateAlbumCoverAfterImageDeletion$.subscribe(action => {
+        expect(action.type).toBe(ImagesActions.automaticAlbumCoverSwitchSucceeded.type);
+        const payload = action as ReturnType<
+          typeof ImagesActions.automaticAlbumCoverSwitchSucceeded
+        >;
+        expect(payload.baseImage.id).toBe(newCoverImage.id);
+        expect(payload.baseImage.albumCover).toBe(true);
+        done();
+      });
+    });
+
+    it('should not trigger when deleted image is not album cover', done => {
+      const nonCoverImage = { ...MOCK_IMAGES[0], albumCover: false };
+
+      actions$.next(ImagesActions.deleteImageSucceeded({ image: nonCoverImage }));
+
+      const subscription =
+        effects.automaticallyUpdateAlbumCoverAfterImageDeletion$.subscribe(() => {
+          done.fail('Should not dispatch action when deleted image is not album cover');
+        });
 
       setTimeout(() => {
         subscription.unsubscribe();
         done();
       }, 100);
     });
+
+    it('should handle update failure with error counts mismatch', done => {
+      const mockUpdateResponse: ApiResponse<{
+        newImages: Image[];
+        updatedImages: BaseImage[];
+      }> = {
+        data: {
+          newImages: [MOCK_IMAGES[0]], // Expected 0, got 1
+          updatedImages: [],
+        },
+      };
+
+      imagesApiService.updateImages.mockReturnValue(of(mockUpdateResponse));
+
+      actions$.next(ImagesActions.deleteImageSucceeded({ image: deletedImage }));
+
+      effects.automaticallyUpdateAlbumCoverAfterImageDeletion$.subscribe(action => {
+        expect(action.type).toBe(ImagesActions.automaticAlbumCoverSwitchFailed.type);
+        const payload = action as ReturnType<
+          typeof ImagesActions.automaticAlbumCoverSwitchFailed
+        >;
+        expect(payload.error.message).toContain(
+          'Expected 0 images to be added and 1 image to be updated',
+        );
+        done();
+      });
+    });
+
+    it('should handle API failure', done => {
+      imagesApiService.updateImages.mockReturnValue(throwError(() => mockError));
+      mockParseError.mockReturnValue(mockError);
+
+      actions$.next(ImagesActions.deleteImageSucceeded({ image: deletedImage }));
+
+      effects.automaticallyUpdateAlbumCoverAfterImageDeletion$.subscribe(action => {
+        expect(action.type).toBe(ImagesActions.automaticAlbumCoverSwitchFailed.type);
+        done();
+      });
+    });
   });
 
   describe('deleteImage$', () => {
     it('should delete image successfully', done => {
-      const mockDeleteResponse: ApiResponse<string> = { data: MOCK_IMAGES[0].id };
+      const mockDeleteResponse: ApiResponse<Id> = { data: MOCK_IMAGES[0].id };
       imagesApiService.deleteImage.mockReturnValue(of(mockDeleteResponse));
 
       actions$.next(ImagesActions.deleteImageRequested({ image: MOCK_IMAGES[0] }));
@@ -518,7 +891,7 @@ describe('ImagesEffects', () => {
     });
 
     it('should not dispatch success if response ID does not match', done => {
-      const mockDeleteResponse: ApiResponse<string> = { data: 'different-id' };
+      const mockDeleteResponse: ApiResponse<Id> = { data: 'different-id' };
       imagesApiService.deleteImage.mockReturnValue(of(mockDeleteResponse));
 
       actions$.next(ImagesActions.deleteImageRequested({ image: MOCK_IMAGES[0] }));
@@ -538,7 +911,7 @@ describe('ImagesEffects', () => {
     it('should delete album successfully', done => {
       const albumName = 'Test Album';
       const imageIds = [MOCK_IMAGES[0].id, MOCK_IMAGES[1].id];
-      const mockDeleteResponse: ApiResponse<string[]> = { data: imageIds };
+      const mockDeleteResponse: ApiResponse<Id[]> = { data: imageIds };
       imagesApiService.deleteAlbum.mockReturnValue(of(mockDeleteResponse));
 
       actions$.next(ImagesActions.deleteAlbumRequested({ album: albumName }));

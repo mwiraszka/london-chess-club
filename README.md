@@ -32,9 +32,11 @@ Below you'll find an overview of the tools and technologies that power the app, 
 | 🔧  | Behind-the-scenes changes         |
 
 <details>
-<summary>v5.9.17 - November 16th, 2025</summary>
+<summary>v5.9.17 - November 17th, 2025</summary>
 
-- 🔧 Remove state refreshes on version updates and reinstate image state continuity
+- 🐛 Ensure album form can simultaneously handle addition of new images and update of existing ones
+- 🔧 Remove state refreshes and reinstate image state continuity (resets no longer necessary) whenever a new app version is released
+- 🔧 Move all timeout handling to the backend to avoid race conditions, and improve timeout flow for large requests
 
 </details>
 

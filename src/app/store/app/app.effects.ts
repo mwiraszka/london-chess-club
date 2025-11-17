@@ -1,20 +1,18 @@
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';
 import { Store } from '@ngrx/store';
-import { ActionCreator } from '@ngrx/store';
 import moment from 'moment-timezone';
-import { timer } from 'rxjs';
-import { filter, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 
 import { Injectable } from '@angular/core';
 
-import { CallState, LccError, Toast } from '@app/models';
+import { LccError, Toast } from '@app/models';
 import { ToastService } from '@app/services';
-import { ArticlesActions, ArticlesSelectors } from '@app/store/articles';
+import { ArticlesActions } from '@app/store/articles';
 import { AuthActions, AuthSelectors } from '@app/store/auth';
-import { EventsActions, EventsSelectors } from '@app/store/events';
-import { ImagesActions, ImagesSelectors } from '@app/store/images';
-import { MembersActions, MembersSelectors } from '@app/store/members';
+import { EventsActions } from '@app/store/events';
+import { ImagesActions } from '@app/store/images';
+import { MembersActions } from '@app/store/members';
 import { NavActions } from '@app/store/nav';
 import { isDefined } from '@app/utils';
 
@@ -132,8 +130,6 @@ export class AppEffects {
     MembersActions.fetchMemberFailed,
   ] as const;
 
-  readonly REQUEST_TIMEOUT_MS = 10000;
-
   notify$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(...this.ACTIONS_TO_NOTIFY),
@@ -173,121 +169,6 @@ export class AppEffects {
     private readonly store: Store,
     private readonly toastService: ToastService,
   ) {}
-
-  private readonly articlesRequested = [
-    ArticlesActions.deleteArticleRequested,
-    ArticlesActions.fetchArticleRequested,
-    ArticlesActions.fetchFilteredArticlesRequested,
-    ArticlesActions.fetchHomePageArticlesRequested,
-    ArticlesActions.publishArticleRequested,
-    ArticlesActions.updateArticleBookmarkRequested,
-    ArticlesActions.updateArticleRequested,
-  ];
-
-  private readonly eventsRequested = [
-    EventsActions.addEventRequested,
-    EventsActions.deleteEventRequested,
-    EventsActions.exportEventsToCsvRequested,
-    EventsActions.fetchEventRequested,
-    EventsActions.fetchFilteredEventsRequested,
-    EventsActions.fetchHomePageEventsRequested,
-    EventsActions.updateEventRequested,
-  ];
-
-  private readonly imagesRequested = [
-    ImagesActions.addImageRequested,
-    ImagesActions.addImagesRequested,
-    ImagesActions.deleteAlbumRequested,
-    ImagesActions.deleteImageRequested,
-    ImagesActions.fetchAlbumThumbnailsRequested,
-    ImagesActions.fetchAllImagesMetadataRequested,
-    ImagesActions.fetchBatchThumbnailsRequested,
-    ImagesActions.fetchFilteredThumbnailsRequested,
-    ImagesActions.fetchMainImageRequested,
-    ImagesActions.updateAlbumRequested,
-    ImagesActions.updateImageRequested,
-  ];
-
-  private readonly membersRequested = [
-    MembersActions.addMemberRequested,
-    MembersActions.deleteMemberRequested,
-    MembersActions.exportMembersToCsvRequested,
-    MembersActions.fetchAllMembersRequested,
-    MembersActions.fetchFilteredMembersRequested,
-    MembersActions.fetchMemberRequested,
-    MembersActions.updateMemberRatingsRequested,
-    MembersActions.updateMemberRequested,
-  ];
-
-  private readonly authRequested = [
-    AuthActions.codeForPasswordChangeRequested,
-    AuthActions.loginRequested,
-    AuthActions.logoutRequested,
-    AuthActions.passwordChangeRequested,
-  ];
-
-  private createTimeoutEffect(
-    requestedActions: ActionCreator[],
-    selectCallState: (state: object) => CallState,
-    timeoutAction: () => { type: string },
-  ) {
-    return createEffect(
-      () =>
-        this.actions$.pipe(
-          ofType(...requestedActions),
-          withLatestFrom(this.store.select(selectCallState)),
-          map(([, callState]) => callState.loadStart),
-          filter(isDefined),
-          mergeMap(loadStart =>
-            timer(this.REQUEST_TIMEOUT_MS).pipe(
-              withLatestFrom(this.store.select(selectCallState)),
-              filter(([, latest]) => {
-                return (
-                  latest.status === 'loading' &&
-                  !!latest.loadStart &&
-                  latest.loadStart === loadStart &&
-                  Date.now() - new Date(latest.loadStart).getTime() >=
-                    this.REQUEST_TIMEOUT_MS
-                );
-              }),
-              map(() => timeoutAction()),
-            ),
-          ),
-        ),
-      { dispatch: true },
-    );
-  }
-
-  // Individual timeout effects per feature slice
-  articlesTimeout$ = this.createTimeoutEffect(
-    this.articlesRequested,
-    ArticlesSelectors.selectCallState,
-    () => ArticlesActions.requestTimedOut(),
-  );
-
-  authTimeout$ = this.createTimeoutEffect(
-    this.authRequested,
-    AuthSelectors.selectCallState,
-    () => AuthActions.requestTimedOut(),
-  );
-
-  eventsTimeout$ = this.createTimeoutEffect(
-    this.eventsRequested,
-    EventsSelectors.selectCallState,
-    () => EventsActions.requestTimedOut(),
-  );
-
-  imagesTimeout$ = this.createTimeoutEffect(
-    this.imagesRequested,
-    ImagesSelectors.selectCallState,
-    () => ImagesActions.requestTimedOut(),
-  );
-
-  membersTimeout$ = this.createTimeoutEffect(
-    this.membersRequested,
-    MembersSelectors.selectCallState,
-    () => MembersActions.requestTimedOut(),
-  );
 
   private getErrorMessage(error: LccError): string {
     return error.status ? `[${error.status}] ${error.message}` : error.message;
@@ -537,7 +418,10 @@ export class AppEffects {
       case ImagesActions.deleteAlbumSucceeded.type:
         return {
           title: 'Album deletion',
-          message: `Successfully deleted ${action.album} and all ${action.imageIds.length} of its images`,
+          message:
+            action.imageIds.length === 1
+              ? `Successfully deleted ${action.album} and its only image`
+              : `Successfully deleted ${action.album} and all ${action.imageIds.length} of its images`,
           type: 'success',
         };
       case ImagesActions.deleteImageFailed.type:

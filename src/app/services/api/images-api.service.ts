@@ -88,8 +88,8 @@ export class ImagesApiService {
 
   public updateImages(
     imagesFormData: FormData,
-  ): Observable<ApiResponse<{ added: number; updated: number }>> {
-    return this.http.put<ApiResponse<{ added: number; updated: number }>>(
+  ): Observable<ApiResponse<{ newImages: Image[]; updatedImages: BaseImage[] }>> {
+    return this.http.put<ApiResponse<{ newImages: Image[]; updatedImages: BaseImage[] }>>(
       `${this.API_BASE_URL}/${this.COLLECTION}`,
       imagesFormData,
     );

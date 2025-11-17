@@ -10,13 +10,13 @@ import { MOCK_ARTICLES } from '@app/mocks/articles.mock';
 import { MOCK_EVENTS } from '@app/mocks/events.mock';
 import { MOCK_IMAGES } from '@app/mocks/images.mock';
 import { MOCK_MEMBERS } from '@app/mocks/members.mock';
-import { CallState, LccError } from '@app/models';
+import { LccError } from '@app/models';
 import { ToastService } from '@app/services';
-import { ArticlesActions, ArticlesSelectors } from '@app/store/articles';
+import { ArticlesActions } from '@app/store/articles';
 import { AuthActions, AuthSelectors } from '@app/store/auth';
-import { EventsActions, EventsSelectors } from '@app/store/events';
-import { ImagesActions, ImagesSelectors } from '@app/store/images';
-import { MembersActions, MembersSelectors } from '@app/store/members';
+import { EventsActions } from '@app/store/events';
+import { ImagesActions } from '@app/store/images';
+import { MembersActions } from '@app/store/members';
 import { NavActions } from '@app/store/nav';
 
 import { environment } from '@env';
@@ -34,12 +34,6 @@ describe('AppEffects', () => {
     name: 'LCCError',
     message: 'Test error message',
     status: 500,
-  };
-
-  const mockLoadingCallState: CallState = {
-    status: 'loading',
-    loadStart: new Date().toISOString(),
-    error: null,
   };
 
   beforeEach(() => {
@@ -414,7 +408,11 @@ describe('AppEffects', () => {
 
       it('should display toast for updateAlbumSucceeded', done => {
         actions$.next(
-          ImagesActions.updateAlbumSucceeded({ album: 'Test Album', baseImages: [] }),
+          ImagesActions.updateAlbumSucceeded({
+            album: 'Test Album',
+            newImages: [],
+            updatedImages: [],
+          }),
         );
 
         effects.notify$.subscribe(() => {
@@ -614,132 +612,6 @@ describe('AppEffects', () => {
         // No action should be emitted
         done();
       }, 10);
-    });
-  });
-
-  describe('Timeout effects', () => {
-    describe('articlesTimeout$', () => {
-      it('should dispatch timeout action when articles request times out', done => {
-        jest.useFakeTimers();
-
-        store.overrideSelector(ArticlesSelectors.selectCallState, mockLoadingCallState);
-        store.refreshState();
-
-        actions$.next(ArticlesActions.fetchArticleRequested({ articleId: 'test123' }));
-
-        effects.articlesTimeout$.subscribe(action => {
-          expect(action).toEqual(ArticlesActions.requestTimedOut());
-          done();
-        });
-
-        jest.advanceTimersByTime(10000);
-        jest.useRealTimers();
-      });
-
-      it('should not dispatch timeout when request completes in time', done => {
-        jest.useFakeTimers();
-
-        store.overrideSelector(ArticlesSelectors.selectCallState, mockLoadingCallState);
-        store.refreshState();
-
-        actions$.next(ArticlesActions.fetchArticleRequested({ articleId: 'test123' }));
-
-        // Change state to idle before timeout
-        setTimeout(() => {
-          store.overrideSelector(ArticlesSelectors.selectCallState, {
-            status: 'idle',
-            loadStart: null,
-            error: null,
-          });
-          store.refreshState();
-        }, 5000);
-
-        setTimeout(() => {
-          // No timeout action should be dispatched
-          done();
-        }, 11000);
-
-        jest.advanceTimersByTime(11000);
-        jest.useRealTimers();
-      });
-    });
-
-    describe('authTimeout$', () => {
-      it('should dispatch timeout action when auth request times out', done => {
-        jest.useFakeTimers();
-
-        store.overrideSelector(AuthSelectors.selectCallState, mockLoadingCallState);
-        store.refreshState();
-
-        actions$.next(
-          AuthActions.loginRequested({ email: 'test@test.com', password: 'pw' }),
-        );
-
-        effects.authTimeout$.subscribe(action => {
-          expect(action).toEqual(AuthActions.requestTimedOut());
-          done();
-        });
-
-        jest.advanceTimersByTime(10000);
-        jest.useRealTimers();
-      });
-    });
-
-    describe('eventsTimeout$', () => {
-      it('should dispatch timeout action when events request times out', done => {
-        jest.useFakeTimers();
-
-        store.overrideSelector(EventsSelectors.selectCallState, mockLoadingCallState);
-        store.refreshState();
-
-        actions$.next(EventsActions.fetchEventRequested({ eventId: 'event123' }));
-
-        effects.eventsTimeout$.subscribe(action => {
-          expect(action).toEqual(EventsActions.requestTimedOut());
-          done();
-        });
-
-        jest.advanceTimersByTime(10000);
-        jest.useRealTimers();
-      });
-    });
-
-    describe('imagesTimeout$', () => {
-      it('should dispatch timeout action when images request times out', done => {
-        jest.useFakeTimers();
-
-        store.overrideSelector(ImagesSelectors.selectCallState, mockLoadingCallState);
-        store.refreshState();
-
-        actions$.next(ImagesActions.fetchMainImageRequested({ imageId: 'img123' }));
-
-        effects.imagesTimeout$.subscribe(action => {
-          expect(action).toEqual(ImagesActions.requestTimedOut());
-          done();
-        });
-
-        jest.advanceTimersByTime(10000);
-        jest.useRealTimers();
-      });
-    });
-
-    describe('membersTimeout$', () => {
-      it('should dispatch timeout action when members request times out', done => {
-        jest.useFakeTimers();
-
-        store.overrideSelector(MembersSelectors.selectCallState, mockLoadingCallState);
-        store.refreshState();
-
-        actions$.next(MembersActions.fetchMemberRequested({ memberId: 'member123' }));
-
-        effects.membersTimeout$.subscribe(action => {
-          expect(action).toEqual(MembersActions.requestTimedOut());
-          done();
-        });
-
-        jest.advanceTimersByTime(10000);
-        jest.useRealTimers();
-      });
     });
   });
 });

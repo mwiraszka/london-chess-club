@@ -17,11 +17,18 @@ import {
 
 import { Injectable } from '@angular/core';
 
-import { BaseImage, LccError } from '@app/models';
+import { BaseImage, IndexedDbImageData, LccError } from '@app/models';
 import { ImageFileService, ImagesApiService } from '@app/services';
 import { ArticlesActions, ArticlesSelectors } from '@app/store/articles';
 import { AuthSelectors } from '@app/store/auth';
-import { dataUrlToFile, isDefined, isExpired, isLccError, parseError } from '@app/utils';
+import {
+  buildImagesFormData,
+  dataUrlToFile,
+  isDefined,
+  isExpired,
+  isLccError,
+  parseError,
+} from '@app/utils';
 
 import { ImagesActions, ImagesSelectors } from '.';
 
@@ -415,20 +422,10 @@ export class ImagesEffects {
           return of(ImagesActions.addImageFailed({ error }));
         }
 
-        const imageFormData = new FormData();
+        const newImagesMetadata: Omit<BaseImage, 'fileSize'>[] = [];
 
         for (const indexedDbImage of imageFilesResult) {
-          const { id, dataUrl, filename } = indexedDbImage;
-          const file = dataUrlToFile(dataUrl, filename);
-
-          if (!file) {
-            const error: LccError = {
-              name: 'LCCError',
-              message: `Unable to construct file object from image data URL for ${filename}`,
-            };
-            return of(ImagesActions.addImageFailed({ error }));
-          }
-
+          const { id, filename } = indexedDbImage;
           const formData = newImagesFormData[id];
 
           if (!formData) {
@@ -436,10 +433,10 @@ export class ImagesEffects {
               name: 'LCCError',
               message: `Unable to retrieve form data for ${filename}`,
             };
-            return of(ImagesActions.addImageFailed({ error }));
+            return of(ImagesActions.addImagesFailed({ error }));
           }
 
-          const imageMetadata: Omit<BaseImage, 'fileSize'> = {
+          newImagesMetadata.push({
             id,
             filename,
             caption: formData.caption,
@@ -452,13 +449,16 @@ export class ImagesEffects {
               lastEditedBy: `${user.firstName} ${user.lastName}`,
               dateLastEdited: moment().toISOString(),
             },
-          };
-
-          imageFormData.append('files', file);
-          imageFormData.append('imageMetadata', JSON.stringify(imageMetadata));
+          });
         }
 
-        return this.imagesApiService.addImages(imageFormData).pipe(
+        const result = buildImagesFormData(newImagesMetadata, imageFilesResult, []);
+
+        if (isLccError(result)) {
+          return of(ImagesActions.addImagesFailed({ error: result }));
+        }
+
+        return this.imagesApiService.addImages(result).pipe(
           map(response => ImagesActions.addImagesSucceeded({ images: response.data })),
           catchError(error =>
             of(ImagesActions.addImagesFailed({ error: parseError(error) })),
@@ -492,9 +492,31 @@ export class ImagesEffects {
           },
         };
 
-        return this.imagesApiService.updateImages([updatedImage]).pipe(
-          filter(response => response.data[0] === image.id),
-          map(() => ImagesActions.updateImageSucceeded({ baseImage: updatedImage })),
+        const imagesFormData = buildImagesFormData([], [], [updatedImage]);
+
+        if (isLccError(imagesFormData)) {
+          return of(
+            ImagesActions.updateImageFailed({
+              baseImage: updatedImage,
+              error: imagesFormData,
+            }),
+          );
+        }
+
+        return this.imagesApiService.updateImages(imagesFormData).pipe(
+          map(response => {
+            const { newImages, updatedImages } = response.data;
+
+            if (newImages.length !== 0 || updatedImages.length !== 1) {
+              const error: LccError = {
+                name: 'LCCError',
+                message: `Expected 0 images to be added and 1 image to be updated, but backend reported ${newImages.length} added and ${updatedImages.length} updated.`,
+              };
+              return ImagesActions.updateImageFailed({ baseImage: updatedImage, error });
+            }
+
+            return ImagesActions.updateImageSucceeded({ baseImage: updatedImage });
+          }),
           catchError(error =>
             of(
               ImagesActions.updateImageFailed({
@@ -511,39 +533,104 @@ export class ImagesEffects {
   updateAlbum$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(ImagesActions.updateAlbumRequested),
+      switchMap(({ album }) =>
+        from(this.imageFileService.getAllImages()).pipe(
+          map(indexedDbImageDataResult => ({ album, indexedDbImageDataResult })),
+        ),
+      ),
       concatLatestFrom(({ album }) => [
         this.store.select(ImagesSelectors.selectImageEntitiesByAlbum(album)),
+        this.store.select(ImagesSelectors.selectNewImagesFormData),
         this.store.select(AuthSelectors.selectUser).pipe(filter(isDefined)),
       ]),
-      switchMap(([{ album }, entities, user]) => {
-        const updatedImages: BaseImage[] = entities.map(({ image, formData }) => ({
-          id: image.id,
-          filename: image.filename,
-          caption: formData.caption,
-          album: formData.album,
-          albumCover: formData.albumCover,
-          albumOrdinality: formData.albumOrdinality,
-          modificationInfo: {
-            ...image.modificationInfo,
-            lastEditedBy: `${user.firstName} ${user.lastName}`,
-            dateLastEdited: moment().toISOString(),
-          },
-        }));
+      switchMap(
+        ([{ album, indexedDbImageDataResult }, entities, newImagesFormData, user]) => {
+          const existingImages: BaseImage[] = entities.map(({ image, formData }) => ({
+            id: image.id,
+            filename: image.filename,
+            caption: formData.caption,
+            album: formData.album,
+            albumCover: formData.albumCover,
+            albumOrdinality: formData.albumOrdinality,
+            modificationInfo: {
+              ...image.modificationInfo,
+              lastEditedBy: `${user.firstName} ${user.lastName}`,
+              dateLastEdited: moment().toISOString(),
+            },
+          }));
 
-        return this.imagesApiService.updateImages(updatedImages).pipe(
-          map(() =>
-            ImagesActions.updateAlbumSucceeded({ album, baseImages: updatedImages }),
-          ),
-          catchError(error =>
-            of(
-              ImagesActions.updateAlbumFailed({
+          const newImagesMetadata: Omit<BaseImage, 'fileSize'>[] = [];
+
+          if (
+            !isLccError(indexedDbImageDataResult) &&
+            indexedDbImageDataResult.length > 0
+          ) {
+            for (const indexedDbImageData of indexedDbImageDataResult) {
+              const { id, filename } = indexedDbImageData;
+              const formData = newImagesFormData[id];
+
+              if (!formData) {
+                const error: LccError = {
+                  name: 'LCCError',
+                  message: 'Mismatch between image file data and form data',
+                };
+                return of(ImagesActions.updateAlbumFailed({ album, error }));
+              }
+
+              newImagesMetadata.push({
+                id,
+                filename,
+                caption: formData.caption,
+                album: formData.album,
+                albumCover: formData.albumCover,
+                albumOrdinality: formData.albumOrdinality,
+                modificationInfo: {
+                  createdBy: `${user.firstName} ${user.lastName}`,
+                  dateCreated: moment().toISOString(),
+                  lastEditedBy: `${user.firstName} ${user.lastName}`,
+                  dateLastEdited: moment().toISOString(),
+                },
+              });
+            }
+          }
+
+          const imagesFormData = buildImagesFormData(
+            newImagesMetadata,
+            indexedDbImageDataResult as IndexedDbImageData[],
+            existingImages,
+          );
+
+          if (isLccError(imagesFormData)) {
+            return of(ImagesActions.updateAlbumFailed({ album, error: imagesFormData }));
+          }
+
+          return this.imagesApiService.updateImages(imagesFormData).pipe(
+            map(response => {
+              const { newImages, updatedImages } = response.data;
+
+              if (
+                newImages.length !== newImagesMetadata.length ||
+                updatedImages.length !== existingImages.length
+              ) {
+                const error: LccError = {
+                  name: 'LCCError',
+                  message: `Expected ${newImagesMetadata.length} images to be added and ${existingImages.length} images to be updated, but backend reported ${newImages.length} added and ${updatedImages.length} updated.`,
+                };
+                return ImagesActions.updateAlbumFailed({ album, error });
+              }
+
+              return ImagesActions.updateAlbumSucceeded({
                 album,
-                error: parseError(error),
-              }),
+                newImages,
+                updatedImages,
+              });
+            }),
+            catchError(error =>
+              of(ImagesActions.updateAlbumFailed({ album, error: parseError(error) })),
             ),
-          ),
-        );
-      }),
+          );
+        },
+      ),
     );
   });
 
@@ -600,11 +687,36 @@ export class ImagesEffects {
         return updatedImage;
       }),
       switchMap(updatedImage => {
-        return this.imagesApiService.updateImages([updatedImage]).pipe(
-          filter(response => response.data[0] === updatedImage.id),
-          map(() =>
-            ImagesActions.automaticAlbumCoverSwitchSucceeded({ baseImage: updatedImage }),
-          ),
+        const imagesFormData = buildImagesFormData([], [], [updatedImage]);
+
+        if (isLccError(imagesFormData)) {
+          return of(
+            ImagesActions.automaticAlbumCoverSwitchFailed({
+              album: updatedImage.album,
+              error: imagesFormData,
+            }),
+          );
+        }
+
+        return this.imagesApiService.updateImages(imagesFormData).pipe(
+          map(response => {
+            const { newImages, updatedImages } = response.data;
+
+            if (newImages.length !== 0 || updatedImages.length !== 1) {
+              const error: LccError = {
+                name: 'LCCError',
+                message: `Expected 0 images to be added and 1 image to be updated, but backend reported ${newImages.length} added and ${updatedImages.length} updated.`,
+              };
+              return ImagesActions.automaticAlbumCoverSwitchFailed({
+                album: updatedImage.album,
+                error,
+              });
+            }
+
+            return ImagesActions.automaticAlbumCoverSwitchSucceeded({
+              baseImage: updatedImage,
+            });
+          }),
           catchError(error =>
             of(
               ImagesActions.automaticAlbumCoverSwitchFailed({

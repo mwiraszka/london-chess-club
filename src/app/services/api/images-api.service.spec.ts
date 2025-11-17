@@ -264,7 +264,7 @@ describe('ImagesApiService', () => {
   });
 
   describe('updateImages', () => {
-    it('should update images via FormData and return added/updated counts', () => {
+    it('should update images via FormData and return new and updated images', () => {
       const formData = new FormData();
       formData.append('files', new File([''], 'new.jpg'));
       formData.append(
@@ -273,14 +273,18 @@ describe('ImagesApiService', () => {
       );
       formData.append('existingImages', JSON.stringify([mockBaseImages[0]]));
 
-      const mockResponse: ApiResponse<{ added: number; updated: number }> = {
-        data: { added: 1, updated: 1 },
+      const newImage = { ...mockImage, id: 'new-1', filename: 'new.jpg' };
+      const mockResponse: ApiResponse<{
+        newImages: Image[];
+        updatedImages: BaseImage[];
+      }> = {
+        data: { newImages: [newImage], updatedImages: [mockBaseImages[0]] },
       };
 
       service.updateImages(formData).subscribe(response => {
         expect(response).toEqual(mockResponse);
-        expect(response.data.added).toBe(1);
-        expect(response.data.updated).toBe(1);
+        expect(response.data.newImages.length).toBe(1);
+        expect(response.data.updatedImages.length).toBe(1);
       });
 
       const req = httpMock.expectOne(apiBaseUrl);
@@ -296,13 +300,16 @@ describe('ImagesApiService', () => {
         JSON.stringify([mockBaseImages[0], mockBaseImages[1]]),
       );
 
-      const mockResponse: ApiResponse<{ added: number; updated: number }> = {
-        data: { added: 0, updated: 2 },
+      const mockResponse: ApiResponse<{
+        newImages: Image[];
+        updatedImages: BaseImage[];
+      }> = {
+        data: { newImages: [], updatedImages: [mockBaseImages[0], mockBaseImages[1]] },
       };
 
       service.updateImages(formData).subscribe(response => {
-        expect(response.data.added).toBe(0);
-        expect(response.data.updated).toBe(2);
+        expect(response.data.newImages.length).toBe(0);
+        expect(response.data.updatedImages.length).toBe(2);
       });
 
       const req = httpMock.expectOne(apiBaseUrl);
@@ -323,13 +330,21 @@ describe('ImagesApiService', () => {
         JSON.stringify({ id: 'new-2', filename: 'new2.jpg' }),
       );
 
-      const mockResponse: ApiResponse<{ added: number; updated: number }> = {
-        data: { added: 2, updated: 0 },
+      const newImages = [
+        { ...mockImage, id: 'new-1', filename: 'new1.jpg' },
+        { ...mockImage, id: 'new-2', filename: 'new2.jpg' },
+      ];
+
+      const mockResponse: ApiResponse<{
+        newImages: Image[];
+        updatedImages: BaseImage[];
+      }> = {
+        data: { newImages, updatedImages: [] },
       };
 
       service.updateImages(formData).subscribe(response => {
-        expect(response.data.added).toBe(2);
-        expect(response.data.updated).toBe(0);
+        expect(response.data.newImages.length).toBe(2);
+        expect(response.data.updatedImages.length).toBe(0);
       });
 
       const req = httpMock.expectOne(apiBaseUrl);
