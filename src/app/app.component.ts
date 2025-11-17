@@ -18,15 +18,9 @@ import { RouterOutlet } from '@angular/router';
 import { FooterComponent } from '@app/components/footer/footer.component';
 import { HeaderComponent } from '@app/components/header/header.component';
 import { NavigationBarComponent } from '@app/components/navigation-bar/navigation-bar.component';
-import { PullToRefreshIndicatorComponent } from '@app/components/pull-to-refresh-indicator/pull-to-refresh-indicator.component';
 import { UpcomingEventBannerComponent } from '@app/components/upcoming-event-banner/upcoming-event-banner.component';
 import { Event, IsoDate } from '@app/models';
-import {
-  PullToRefreshService,
-  RoutingService,
-  TouchEventsService,
-  UserActivityService,
-} from '@app/services';
+import { RoutingService, TouchEventsService, UserActivityService } from '@app/services';
 import { AppActions, AppSelectors } from '@app/store/app';
 import { EventsSelectors } from '@app/store/events';
 
@@ -35,8 +29,6 @@ import { EventsSelectors } from '@app/store/events';
   selector: 'app-root',
   template: `
     @if (viewModel$ | async; as vm) {
-      <lcc-pull-to-refresh-indicator></lcc-pull-to-refresh-indicator>
-
       @if (vm.isLoading) {
         <div class="lcc-loader"><div></div></div>
       }
@@ -65,7 +57,6 @@ import { EventsSelectors } from '@app/store/events';
     FooterComponent,
     HeaderComponent,
     NavigationBarComponent,
-    PullToRefreshIndicatorComponent,
     RouterOutlet,
     UpcomingEventBannerComponent,
   ],
@@ -82,7 +73,6 @@ export class AppComponent implements OnInit {
 
   constructor(
     @Inject(DOCUMENT) private readonly _document: Document,
-    private readonly pullToRefreshService: PullToRefreshService,
     private readonly routingService: RoutingService,
     private readonly store: Store,
     private readonly touchEventsService: TouchEventsService,
@@ -93,7 +83,6 @@ export class AppComponent implements OnInit {
 
   public ngOnInit(): void {
     this.initNavigationListenerForScrollingBackToTop();
-    this.pullToRefreshService.initialize();
     this.touchEventsService.listenForTouchEvents();
     this.userActivityService.monitorSessionExpiry();
 

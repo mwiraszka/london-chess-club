@@ -80,7 +80,15 @@ export class ImagePreloadDirective implements OnInit, OnChanges {
     }
 
     this.removeShimmerEffect();
-    this.currentSrc = this.image?.mainUrl || this.FALLBACK_SRC;
+
+    // Try alternative URLs if current one failed
+    if (this.currentSrc === this.image?.mainUrl) {
+      this.currentSrc = this.image?.thumbnailUrl || this.FALLBACK_SRC;
+    } else if (this.currentSrc === this.image?.thumbnailUrl) {
+      this.currentSrc = this.image?.mainUrl || this.FALLBACK_SRC;
+    } else {
+      this.currentSrc = this.FALLBACK_SRC;
+    }
   }
 
   protected updateImage(): void {
