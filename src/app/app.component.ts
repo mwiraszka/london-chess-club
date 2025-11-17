@@ -7,11 +7,14 @@ import { filter, map, tap } from 'rxjs/operators';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
 import { CommonModule } from '@angular/common';
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   DOCUMENT,
+  ElementRef,
   Inject,
   OnInit,
+  ViewChild,
 } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
@@ -35,8 +38,6 @@ import { EventsSelectors } from '@app/store/events';
   selector: 'app-root',
   template: `
     @if (viewModel$ | async; as vm) {
-      <lcc-pull-to-refresh-indicator></lcc-pull-to-refresh-indicator>
-
       @if (vm.isLoading) {
         <div class="lcc-loader"><div></div></div>
       }
@@ -52,7 +53,10 @@ import { EventsSelectors } from '@app/store/events';
 
       <lcc-navigation-bar></lcc-navigation-bar>
 
-      <main cdkScrollable>
+      <main
+        #mainElement
+        cdkScrollable>
+        <lcc-pull-to-refresh-indicator></lcc-pull-to-refresh-indicator>
         <router-outlet></router-outlet>
         <lcc-footer></lcc-footer>
       </main>
@@ -71,7 +75,10 @@ import { EventsSelectors } from '@app/store/events';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
+  @ViewChild('mainElement', { read: ElementRef })
+  public mainElement?: ElementRef<HTMLElement>;
+
   public viewModel$?: Observable<{
     bannerLastCleared: IsoDate | null;
     isDarkMode: boolean;
@@ -93,7 +100,6 @@ export class AppComponent implements OnInit {
 
   public ngOnInit(): void {
     this.initNavigationListenerForScrollingBackToTop();
-    this.pullToRefreshService.initialize();
     this.touchEventsService.listenForTouchEvents();
     this.userActivityService.monitorSessionExpiry();
     this.initPullToRefreshListener();
@@ -125,6 +131,13 @@ export class AppComponent implements OnInit {
         this._document.body.setAttribute('data-theme', isDarkMode ? 'dark' : 'light'),
       ),
     );
+  }
+
+  public ngAfterViewInit(): void {
+    // Initialize pull-to-refresh after the view is ready
+    if (this.mainElement) {
+      this.pullToRefreshService.initialize(this.mainElement.nativeElement);
+    }
   }
 
   public onClearBanner(): void {

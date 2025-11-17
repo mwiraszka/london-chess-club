@@ -30,12 +30,12 @@ export class PullToRefreshService {
     this.isRefreshing$.next(false);
   }
 
-  public initialize(): void {
+  public initialize(mainElement: HTMLElement): void {
     if (!isTouchDevice()) {
       return;
     }
 
-    this.mainElement = this._document.querySelector('main');
+    this.mainElement = mainElement;
     if (!this.mainElement) {
       return;
     }

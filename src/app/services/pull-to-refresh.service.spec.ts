@@ -33,7 +33,7 @@ describe('PullToRefreshService', () => {
       const addEventListenerSpy = jest.spyOn(mockMainElement, 'addEventListener');
       jest.spyOn(deviceUtils, 'isTouchDevice').mockReturnValue(true);
 
-      service.initialize();
+      service.initialize(mockMainElement);
 
       expect(addEventListenerSpy).toHaveBeenCalledWith(
         'touchstart',
@@ -54,22 +54,19 @@ describe('PullToRefreshService', () => {
       const addEventListenerSpy = jest.spyOn(mockMainElement, 'addEventListener');
       jest.spyOn(deviceUtils, 'isTouchDevice').mockReturnValue(false);
 
-      service.initialize();
+      service.initialize(mockMainElement);
 
       expect(addEventListenerSpy).not.toHaveBeenCalled();
     });
 
-    it('should not initialize if main element not found', () => {
-      document.body.removeChild(mockMainElement);
+    it('should not initialize if main element not provided', () => {
       const addEventListenerSpy = jest.spyOn(mockMainElement, 'addEventListener');
       jest.spyOn(deviceUtils, 'isTouchDevice').mockReturnValue(true);
 
-      service.initialize();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      service.initialize(null as any);
 
       expect(addEventListenerSpy).not.toHaveBeenCalled();
-
-      // Re-add for cleanup
-      document.body.appendChild(mockMainElement);
     });
   });
 
@@ -78,7 +75,7 @@ describe('PullToRefreshService', () => {
       const removeEventListenerSpy = jest.spyOn(mockMainElement, 'removeEventListener');
       jest.spyOn(deviceUtils, 'isTouchDevice').mockReturnValue(true);
 
-      service.initialize();
+      service.initialize(mockMainElement);
       service.destroy();
 
       expect(removeEventListenerSpy).toHaveBeenCalledWith(
@@ -118,7 +115,7 @@ describe('PullToRefreshService', () => {
   describe('touch gestures', () => {
     beforeEach(() => {
       jest.spyOn(deviceUtils, 'isTouchDevice').mockReturnValue(true);
-      service.initialize();
+      service.initialize(mockMainElement);
       Object.defineProperty(mockMainElement, 'scrollTop', {
         value: 0,
         writable: true,

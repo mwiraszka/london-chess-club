@@ -35,7 +35,7 @@ Below you'll find an overview of the tools and technologies that power the app, 
 <summary>v5.10.0 - November 18th, 2025</summary>
 
 - 🚀 Transform the next event banner at the top of the screen into a looping marquee banner if there isn't enough room to display all the text
-- 🚀 Implement a button in the user settings menu, as well as a basic pull-to-refresh mechanism on mobile, to immediately fetch any updated website data (by default fetched automatically every 30 mins)
+- 🚀 Add a button in the user settings menu to immediately fetch any new website data (by default fetched automatically every 30 mins). Also implement a pull-to-refresh mechanism on mobile to do the same thing.
 - 🚀 Add support for GIFs
 - 🚀 If the presigned URL for the full-size version of an image is expired, temporarily fall back to the thumbnail if available and valid
 - 🚀 Add support for more international alphabets and a greater assortment of symbols for text fields such as member's first/ last name, album title, or image caption
