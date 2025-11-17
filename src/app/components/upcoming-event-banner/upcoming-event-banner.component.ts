@@ -103,8 +103,8 @@ export class UpcomingEventBannerComponent implements AfterViewInit, OnDestroy {
   ) {}
 
   public ngAfterViewInit(): void {
-    this.checkOverflow();
     this.setupResizeObserver();
+    setTimeout(() => this.checkOverflow());
   }
 
   public ngOnDestroy(): void {

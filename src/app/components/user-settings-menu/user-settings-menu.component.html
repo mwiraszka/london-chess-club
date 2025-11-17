@@ -20,14 +20,12 @@
       </lcc-toggle-switch>
     </li>
 
-    <li class="menu-item refresh-data">
-      <a
-        aria-label="Refresh data"
-        class="lcc-dropdown-link"
-        (click)="onRefreshData()">
-        <mat-icon>refresh</mat-icon>
+    <li
+      class="menu-item refresh-data"
+      [tooltip]="refreshDataTooltipContent">
+      <button (click)="onRefreshData()">
         <span>Refresh data</span>
-      </a>
+      </button>
     </li>
 
     @if (vm.user) {
@@ -83,6 +81,22 @@
 
     <div class="warning-message">
       Users' personal information such as emails and phone numbers are visible on screen
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #refreshDataTooltipContent>
+  <div class="refresh-data-tooltip">
+    <header>
+      <mat-icon>refresh</mat-icon>
+      <div>Refresh data</div>
+    </header>
+
+    <div class="message-content">
+      <p>
+        Check for any recent article, event or member updates (may take a few seconds).
+      </p>
+      <p>By default, data is refreshed automatically every 30 mins.</p>
     </div>
   </div>
 </ng-template>

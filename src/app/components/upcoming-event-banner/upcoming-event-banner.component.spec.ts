@@ -69,6 +69,7 @@ describe('UpcomingEventBannerComponent', () => {
 
       it('should render duplicate content when animating', () => {
         component['shouldAnimate'] = true;
+        component['changeDetectorRef'].markForCheck();
         fixture.detectChanges();
 
         const marqueeItems = queryAll(fixture.debugElement, '.marquee-item');
@@ -77,6 +78,7 @@ describe('UpcomingEventBannerComponent', () => {
 
       it('should apply animate class when shouldAnimate is true', () => {
         component['shouldAnimate'] = true;
+        component['changeDetectorRef'].markForCheck();
         fixture.detectChanges();
 
         const marqueeContent = query(fixture.debugElement, '.marquee-content');
