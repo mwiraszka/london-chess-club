@@ -13,17 +13,16 @@ import { PullToRefreshService } from '@app/services';
   template: `
     @if (viewModel$ | async; as vm) {
       <div
-        class="pull-indicator"
-        [class.active]="vm.pullDistance > 0"
-        [class.refreshing]="vm.isRefreshing"
-        [style.transform]="'translateX(-50%) translateY(' + vm.pullDistance + 'px)'">
-        <div class="debug-info">
-          <div>Pull: {{ vm.pullDistance }}px</div>
-          <div>Refresh: {{ vm.isRefreshing }}</div>
-        </div>
+        class="pull-spacer"
+        [style.height.px]="vm.pullDistance">
         <div
-          class="spinner"
-          [class.spinning]="vm.isRefreshing">
+          class="pull-indicator"
+          [class.active]="vm.pullDistance > 0"
+          [class.refreshing]="vm.isRefreshing">
+          <div
+            class="spinner"
+            [class.spinning]="vm.isRefreshing">
+          </div>
         </div>
       </div>
     }

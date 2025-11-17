@@ -8,7 +8,6 @@ import {
   Component,
   ElementRef,
   EventEmitter,
-  HostListener,
   Input,
   OnDestroy,
   Output,
@@ -98,39 +97,25 @@ export class UpcomingEventBannerComponent implements AfterViewInit, OnDestroy {
   private resizeObserver?: ResizeObserver;
 
   constructor(
-    private readonly router: Router,
     private readonly changeDetectorRef: ChangeDetectorRef,
+    private readonly router: Router,
   ) {}
 
   public ngAfterViewInit(): void {
-    this.setupResizeObserver();
-    setTimeout(() => this.checkOverflow());
+    // Do not scroll for first 2 seconds to allow user to read the start of the message
+    setTimeout(() => {
+      this.resizeObserver = new ResizeObserver(() => {
+        this.checkOverflow();
+      });
+      this.resizeObserver.observe(this.bannerMessageRef.nativeElement);
+    }, 2000);
   }
 
   public ngOnDestroy(): void {
     this.resizeObserver?.disconnect();
   }
 
-  @HostListener('window:resize')
-  protected onResize(): void {
-    this.checkOverflow();
-  }
-
-  private setupResizeObserver(): void {
-    if (!this.bannerMessageRef) {
-      return;
-    }
-
-    this.resizeObserver = new ResizeObserver(() => {
-      this.checkOverflow();
-    });
-
-    this.resizeObserver.observe(this.bannerMessageRef.nativeElement);
-  }
-
   private checkOverflow(): void {
-    if (!this.bannerMessageRef || !this.marqueeContentRef) return;
-
     const containerWidth = this.bannerMessageRef.nativeElement.offsetWidth;
     const contentWidth = this.marqueeContentRef.nativeElement.scrollWidth;
 
@@ -141,7 +126,7 @@ export class UpcomingEventBannerComponent implements AfterViewInit, OnDestroy {
 
     if (this.shouldAnimate) {
       // Calculate duration based on content width: ~50 pixels per second for smooth scrolling
-      this.animationDuration = singleItemWidth / 50;
+      this.animationDuration = singleItemWidth / 51;
     }
 
     this.changeDetectorRef.markForCheck();

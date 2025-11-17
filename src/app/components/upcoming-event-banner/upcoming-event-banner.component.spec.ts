@@ -10,16 +10,16 @@ describe('UpcomingEventBannerComponent', () => {
   let fixture: ComponentFixture<UpcomingEventBannerComponent>;
   let component: UpcomingEventBannerComponent;
   let clearBannerSpy: jest.SpyInstance;
+  let resizeObserverMock: jest.Mock;
 
-  beforeAll(() => {
-    window.ResizeObserver = jest.fn().mockImplementation(() => ({
+  beforeEach(async () => {
+    resizeObserverMock = jest.fn().mockImplementation(() => ({
       observe: jest.fn(),
       unobserve: jest.fn(),
       disconnect: jest.fn(),
     }));
-  });
+    window.ResizeObserver = resizeObserverMock;
 
-  beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [UpcomingEventBannerComponent],
       providers: [provideRouter([])],
@@ -111,16 +111,24 @@ describe('UpcomingEventBannerComponent', () => {
   });
 
   describe('lifecycle hooks', () => {
-    it('should setup resize observer on init', () => {
-      expect(window.ResizeObserver).toHaveBeenCalled();
+    it('should setup resize observer on init', done => {
+      // ResizeObserver is created after 2 second delay
+      setTimeout(() => {
+        expect(resizeObserverMock).toHaveBeenCalled();
+        done();
+      }, 2100);
     });
 
-    it('should disconnect resize observer on destroy', () => {
-      const mockObserver = (window.ResizeObserver as jest.Mock).mock.results[0].value;
+    it('should disconnect resize observer on destroy', done => {
+      // Wait for observer to be created
+      setTimeout(() => {
+        const mockObserver = resizeObserverMock.mock.results[0].value;
 
-      component.ngOnDestroy();
+        component.ngOnDestroy();
 
-      expect(mockObserver.disconnect).toHaveBeenCalled();
+        expect(mockObserver.disconnect).toHaveBeenCalled();
+        done();
+      }, 2100);
     });
   });
 });
