@@ -106,6 +106,7 @@ export class PhotoGridComponent {
       buttonSize: 34,
       deleteCb: () => this.onRequestDeleteAlbum(album),
       editPath: ['album', 'edit', album],
+      editInNewTab: true,
       isEditDisabled: false,
       isDeleteDisabled: false,
       itemName: album,
