@@ -14,7 +14,6 @@ import {
 } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
-import { FormErrorIconComponent } from '@app/components/form-error-icon/form-error-icon.component';
 import { LoginFormGroup } from '@app/models';
 import { emailValidator } from '@app/validators';
 
@@ -22,7 +21,7 @@ import { emailValidator } from '@app/validators';
   selector: 'lcc-login-form',
   templateUrl: './login-form.component.html',
   styleUrl: './login-form.component.scss',
-  imports: [FormErrorIconComponent, ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginFormComponent implements OnInit {
