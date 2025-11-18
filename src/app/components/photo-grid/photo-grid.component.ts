@@ -68,8 +68,10 @@ export class PhotoGridComponent {
 
   constructor(private readonly dialogService: DialogService) {}
 
+  private animationDelays: Map<string, number> = new Map();
+
   public get albumCovers(): Image[] {
-    return this.photoImages
+    const covers = this.photoImages
       .filter(image => image.albumCover)
       .map(image => ({
         ...image,
@@ -77,6 +79,25 @@ export class PhotoGridComponent {
         mainHeight: image.mainHeight || 300,
         caption: image.caption || 'Loading...',
       }));
+
+    // Generate randomized animation delays (2 items at a time)
+    if (this.animationDelays.size === 0 && covers.length > 0) {
+      const shuffledIndices = Array.from({ length: covers.length }, (_, i) => i).sort(
+        () => Math.random() - 0.5,
+      );
+
+      shuffledIndices.forEach((originalIndex, shuffledPosition) => {
+        const pairIndex = Math.floor(shuffledPosition / 2);
+        const delay = pairIndex * 0.15; // 150ms between pairs
+        this.animationDelays.set(covers[originalIndex].id, delay);
+      });
+    }
+
+    return covers;
+  }
+
+  public getAnimationDelay(imageId: Id): number {
+    return this.animationDelays.get(imageId) || 0;
   }
 
   public async onClickAlbumCover(album: string): Promise<void> {

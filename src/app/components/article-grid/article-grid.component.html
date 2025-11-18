@@ -5,6 +5,7 @@
     <a
       class="article"
       [adminControls]="isAdmin ? getAdminControlsConfig(article) : null"
+      [style.animation-delay.s]="getAnimationDelay(article.id)"
       [routerLink]="
         article.title ? (['article', 'view', article.id] | routerLink) : undefined
       ">

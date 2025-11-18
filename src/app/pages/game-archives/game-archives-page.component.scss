@@ -17,6 +17,8 @@ $pgn-viewer-width: 432px;
     display: flex;
     align-items: center;
     justify-content: center;
+    opacity: 0;
+    animation: fade-in-up 1s ease-out forwards;
 
     img {
       max-width: 100%;
@@ -40,11 +42,24 @@ $pgn-viewer-width: 432px;
       margin: 8px 0 16px;
       font-style: italic;
       color: var(--lcc-color--gameArchivesPage-headerText);
+      opacity: 0;
+      animation: fade-in-up 1s ease-out forwards;
+      animation-delay: 0.5s;
     }
 
     p {
       margin-bottom: 16px;
       color: var(--lcc-color--gameArchivesPage-text);
+      opacity: 0;
+      animation: fade-in-up 1s ease-out forwards;
+
+      &:nth-child(2) {
+        animation-delay: 1s;
+      }
+
+      &:nth-child(3) {
+        animation-delay: 1.5s;
+      }
     }
   }
 }
@@ -202,5 +217,16 @@ $pgn-viewer-width: 432px;
   }
   100% {
     transform: scale(1);
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

@@ -45,6 +45,8 @@
     box-shadow: 3px 3px 5px var(--lcc-color--photoGrid-boxShadow);
     padding: 6px;
     margin: 8px;
+    opacity: 0;
+    animation: fade-in-up 0.6s ease-out forwards;
 
     &:first-child {
       margin-top: 0;
@@ -54,8 +56,11 @@
     page-break-inside: avoid;
 
     &:hover {
-      animation: raise 0.2s ease forwards;
+      transform: scale(1.015);
       box-shadow: 4px 4px 8px var(--lcc-color--photoGrid-boxShadow);
+      transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
     }
 
     figure {
@@ -107,5 +112,16 @@
   }
   100% {
     transform: scale(1.015);
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

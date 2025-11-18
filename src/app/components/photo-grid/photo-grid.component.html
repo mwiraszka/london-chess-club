@@ -14,6 +14,7 @@
       <button
         class="album-cover"
         [adminControls]="isAdmin ? getAdminControlsConfig(image.album) : null"
+        [style.animation-delay.s]="getAnimationDelay(image.id)"
         (click)="onClickAlbumCover(image.album)">
         <figure>
           <div class="album-image-container">

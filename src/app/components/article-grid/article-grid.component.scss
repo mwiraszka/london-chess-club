@@ -43,6 +43,8 @@ $grid-gap: 8px;
     max-width: $card-max-width;
     background-color: var(--lcc-color--articleGrid-cardBackground);
     border-radius: var(--lcc-borderRadius--large);
+    opacity: 0;
+    animation: fade-in-up 0.6s ease-out forwards;
     transition:
       transform 0.3s ease,
       background-color 0.3s ease;
@@ -120,5 +122,16 @@ $grid-gap: 8px;
         color: var(--lcc-color--articleGrid-articleCreationDateText);
       }
     }
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
