@@ -75,9 +75,8 @@ export class RefreshService {
     const touchY = event.touches[0].clientY;
     const pullDistance = touchY - this.touchStartY;
 
-    // Only process pull-down gestures when at or very near the top
+    // Track pull distance without preventing default scroll behavior
     if (pullDistance > 0 && this.mainElement.scrollTop <= 5) {
-      event.preventDefault();
       this.currentPullDistancePx = Math.min(
         pullDistance * this.RESISTANCE,
         this.MAX_PULL_DISTANCE_PX,
