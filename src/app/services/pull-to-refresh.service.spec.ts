@@ -98,16 +98,13 @@ describe('PullToRefreshService', () => {
   });
 
   describe('completeRefresh', () => {
-    it('should reset state and emit values', () => {
-      const pullDistanceSpy = jest.fn();
+    it('should reset state and emit isRefreshing false', () => {
       const isRefreshingSpy = jest.fn();
 
-      service.pullDistance$.subscribe(pullDistanceSpy);
       service.isRefreshing$.subscribe(isRefreshingSpy);
 
       service.completeRefresh();
 
-      expect(pullDistanceSpy).toHaveBeenCalledWith(0);
       expect(isRefreshingSpy).toHaveBeenCalledWith(false);
     });
   });
@@ -123,10 +120,7 @@ describe('PullToRefreshService', () => {
       });
     });
 
-    it('should track pull distance when pulling down from top', () => {
-      const pullDistanceSpy = jest.fn();
-      service.pullDistance$.subscribe(pullDistanceSpy);
-
+    it('should track pull distance internally when pulling down from top', () => {
       const touchStartEvent = new TouchEvent('touchstart', {
         touches: [{ clientY: 100 } as Touch],
       });
@@ -138,13 +132,10 @@ describe('PullToRefreshService', () => {
       mockMainElement.dispatchEvent(touchMoveEvent);
 
       // Pull of 100px with 0.5 resistance = 50px
-      expect(pullDistanceSpy).toHaveBeenCalledWith(50);
+      expect(service['currentPullDistance']).toBe(50);
     });
 
     it('should apply resistance and cap at maximum pull distance', () => {
-      const pullDistanceSpy = jest.fn();
-      service.pullDistance$.subscribe(pullDistanceSpy);
-
       const touchStartEvent = new TouchEvent('touchstart', {
         touches: [{ clientY: 100 } as Touch],
       });
@@ -157,7 +148,7 @@ describe('PullToRefreshService', () => {
       mockMainElement.dispatchEvent(touchMoveEvent);
 
       // Should be capped at 120px max
-      expect(pullDistanceSpy).toHaveBeenCalledWith(120);
+      expect(service['currentPullDistance']).toBe(120);
     });
 
     it('should trigger refresh when pulled past threshold', () => {
@@ -182,9 +173,7 @@ describe('PullToRefreshService', () => {
     });
 
     it('should not trigger refresh when pulled below threshold', () => {
-      const pullDistanceSpy = jest.fn();
       const isRefreshingSpy = jest.fn();
-      service.pullDistance$.subscribe(pullDistanceSpy);
       service.isRefreshing$.subscribe(isRefreshingSpy);
 
       const touchStartEvent = new TouchEvent('touchstart', {
@@ -202,13 +191,10 @@ describe('PullToRefreshService', () => {
       mockMainElement.dispatchEvent(touchEndEvent);
 
       expect(isRefreshingSpy).not.toHaveBeenCalledWith(true);
-      expect(pullDistanceSpy).toHaveBeenCalledWith(0);
+      expect(service['currentPullDistance']).toBe(0);
     });
 
     it('should not track pull when not at top of scroll', () => {
-      const pullDistanceSpy = jest.fn();
-      service.pullDistance$.subscribe(pullDistanceSpy);
-
       Object.defineProperty(mockMainElement, 'scrollTop', {
         value: 50,
         writable: true,
@@ -225,7 +211,7 @@ describe('PullToRefreshService', () => {
       });
       mockMainElement.dispatchEvent(touchMoveEvent);
 
-      expect(pullDistanceSpy).not.toHaveBeenCalled();
+      expect(service['currentPullDistance']).toBe(0);
     });
 
     it('should not track pull when already refreshing', () => {
@@ -240,9 +226,6 @@ describe('PullToRefreshService', () => {
     });
 
     it('should ignore pull-up gestures', () => {
-      const pullDistanceSpy = jest.fn();
-      service.pullDistance$.subscribe(pullDistanceSpy);
-
       const touchStartEvent = new TouchEvent('touchstart', {
         touches: [{ clientY: 200 } as Touch],
       });
@@ -254,7 +237,7 @@ describe('PullToRefreshService', () => {
       });
       mockMainElement.dispatchEvent(touchMoveEvent);
 
-      expect(pullDistanceSpy).not.toHaveBeenCalled();
+      expect(service['currentPullDistance']).toBe(0);
     });
   });
 });

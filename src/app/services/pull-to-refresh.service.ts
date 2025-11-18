@@ -1,7 +1,6 @@
 import { Subject } from 'rxjs';
 
-import { DOCUMENT } from '@angular/common';
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import { isTouchDevice } from '@app/utils';
 
@@ -11,7 +10,6 @@ import { isTouchDevice } from '@app/utils';
 export class PullToRefreshService {
   private readonly PULL_THRESHOLD = 80;
   private readonly MAX_PULL_DISTANCE = 120;
-  private readonly REFRESHING_HEIGHT = 60;
   private readonly RESISTANCE = 0.5;
 
   private touchStartY = 0;
@@ -23,16 +21,14 @@ export class PullToRefreshService {
   private boundOnTouchMove = this.onTouchMove.bind(this);
   private boundOnTouchEnd = this.onTouchEnd.bind(this);
 
-  public pullDistance$ = new Subject<number>();
   public isRefreshing$ = new Subject<boolean>();
 
-  constructor(@Inject(DOCUMENT) private readonly _document: Document) {
-    this.pullDistance$.next(0);
+  constructor() {
     this.isRefreshing$.next(false);
   }
 
-  public initialize(mainElement: HTMLElement): void {
-    if (!isTouchDevice()) {
+  public initialize(mainElement?: HTMLElement): void {
+    if (!isTouchDevice() || !mainElement) {
       return;
     }
 
@@ -66,7 +62,6 @@ export class PullToRefreshService {
     this.isRefreshing = false;
     this.currentPullDistance = 0;
     this.isRefreshing$.next(false);
-    this.pullDistance$.next(0);
   }
 
   private onTouchStart(event: TouchEvent): void {
@@ -92,13 +87,10 @@ export class PullToRefreshService {
 
     if (pullDistance > 0) {
       event.preventDefault();
-
       this.currentPullDistance = Math.min(
         pullDistance * this.RESISTANCE,
         this.MAX_PULL_DISTANCE,
       );
-
-      this.pullDistance$.next(this.currentPullDistance);
     }
   }
 
@@ -111,12 +103,9 @@ export class PullToRefreshService {
 
     if (this.currentPullDistance >= this.PULL_THRESHOLD) {
       this.isRefreshing = true;
-      this.currentPullDistance = this.REFRESHING_HEIGHT;
-      this.pullDistance$.next(this.REFRESHING_HEIGHT);
       this.isRefreshing$.next(true);
-    } else {
-      this.currentPullDistance = 0;
-      this.pullDistance$.next(0);
     }
+
+    this.currentPullDistance = 0;
   }
 }

@@ -25,5 +25,3 @@ export const unexpectedErrorOccurred = createAction(
 );
 
 export const pullToRefreshRequested = createAction('[App] Pull to refresh requested');
-
-export const pullToRefreshCompleted = createAction('[App] Pull to refresh completed');

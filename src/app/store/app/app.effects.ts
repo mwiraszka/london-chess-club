@@ -2,13 +2,12 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';
 import { Store } from '@ngrx/store';
 import moment from 'moment-timezone';
-import { combineLatest, timer } from 'rxjs';
-import { debounceTime, filter, map, switchMap, take, tap } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 
 import { Injectable } from '@angular/core';
 
 import { LccError, Toast } from '@app/models';
-import { PullToRefreshService, ToastService } from '@app/services';
+import { ToastService } from '@app/services';
 import { ArticlesActions } from '@app/store/articles';
 import { AuthActions, AuthSelectors } from '@app/store/auth';
 import { EventsActions } from '@app/store/events';
@@ -165,62 +164,8 @@ export class AppEffects {
     ),
   );
 
-  completePullToRefresh$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(AppActions.pullToRefreshRequested),
-      switchMap(() => {
-        // Create a timer that completes after 2 seconds (minimum display time)
-        const minimumTimer$ = timer(2000).pipe(take(1));
-
-        // Wait for all data loading actions to complete
-        const allDataLoaded$ = this.actions$.pipe(
-          ofType(
-            // Articles
-            ArticlesActions.fetchHomePageArticlesSucceeded,
-            ArticlesActions.fetchHomePageArticlesFailed,
-            ArticlesActions.fetchFilteredArticlesSucceeded,
-            ArticlesActions.fetchFilteredArticlesFailed,
-            // Events
-            EventsActions.fetchHomePageEventsSucceeded,
-            EventsActions.fetchHomePageEventsFailed,
-            EventsActions.fetchFilteredEventsSucceeded,
-            EventsActions.fetchFilteredEventsFailed,
-            // Images
-            ImagesActions.fetchAllImagesMetadataSucceeded,
-            ImagesActions.fetchAllImagesMetadataFailed,
-            ImagesActions.fetchFilteredThumbnailsSucceeded,
-            ImagesActions.fetchFilteredThumbnailsFailed,
-            ImagesActions.fetchBatchThumbnailsSucceeded,
-            ImagesActions.fetchBatchThumbnailsFailed,
-            // Members
-            MembersActions.fetchFilteredMembersSucceeded,
-            MembersActions.fetchFilteredMembersFailed,
-          ),
-          // Use debounceTime to wait for all rapid-fire completions to settle
-          debounceTime(100),
-          take(1),
-        );
-
-        // Wait for both the minimum timer AND all data to load
-        return combineLatest([minimumTimer$, allDataLoaded$]).pipe(
-          map(() => AppActions.pullToRefreshCompleted()),
-        );
-      }),
-    ),
-  );
-
-  handlePullToRefreshCompleted$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(AppActions.pullToRefreshCompleted),
-        tap(() => this.pullToRefreshService.completeRefresh()),
-      ),
-    { dispatch: false },
-  );
-
   constructor(
     private readonly actions$: Actions,
-    private readonly pullToRefreshService: PullToRefreshService,
     private readonly store: Store,
     private readonly toastService: ToastService,
   ) {}

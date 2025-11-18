@@ -25,7 +25,6 @@ describe('AppComponent', () => {
   let touchEventsService: TouchEventsService;
 
   let dispatchSpy: jest.SpyInstance;
-  let querySelectorSpy: jest.SpyInstance;
   let setAttributeSpy: jest.SpyInstance;
 
   beforeAll(() => {
@@ -68,7 +67,6 @@ describe('AppComponent', () => {
     touchEventsService = TestBed.inject(TouchEventsService);
 
     dispatchSpy = jest.spyOn(store, 'dispatch');
-    querySelectorSpy = jest.spyOn(document, 'querySelector');
     setAttributeSpy = jest.spyOn(document.body, 'setAttribute');
 
     store.overrideSelector(AppSelectors.selectBannerLastCleared, null);
@@ -89,31 +87,35 @@ describe('AppComponent', () => {
     });
 
     it('should scroll to top when navigation occurs without fragment', () => {
-      const mainElement = {
-        scrollTo: jest.fn(),
-      };
-      querySelectorSpy.mockReturnValue(mainElement as unknown as HTMLElement);
+      const scrollToSpy = jest.fn();
+      component.mainElement = {
+        nativeElement: {
+          scrollTo: scrollToSpy,
+        },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any;
 
       component.ngOnInit();
       mockFragmentSubject.next(null);
       fixture.detectChanges();
 
-      expect(querySelectorSpy).toHaveBeenCalledWith('main');
-      expect(mainElement.scrollTo).toHaveBeenCalledWith({ top: 0 });
+      expect(scrollToSpy).toHaveBeenCalledWith({ top: 0 });
     });
 
     it('should not scroll to top when navigation occurs with fragment', () => {
-      const mainElement = {
-        scrollTo: jest.fn(),
-      };
-      querySelectorSpy.mockReturnValue(mainElement as unknown as HTMLElement);
+      const scrollToSpy = jest.fn();
+      component.mainElement = {
+        nativeElement: {
+          scrollTo: scrollToSpy,
+        },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any;
 
       component.ngOnInit();
       mockFragmentSubject.next('some-fragment');
       fixture.detectChanges();
 
-      expect(querySelectorSpy).not.toHaveBeenCalled();
-      expect(mainElement.scrollTo).not.toHaveBeenCalled();
+      expect(scrollToSpy).not.toHaveBeenCalled();
     });
 
     it('should initialize image change and touch event listeners', () => {

@@ -67,9 +67,15 @@ describe('App Selectors', () => {
     });
 
     it('should return false when no call states are loading', () => {
+      const idleAuthCallState: CallState = {
+        status: 'idle',
+        error: null,
+        loadStart: null,
+      };
+
       const result = AppSelectors.selectIsLoading.projector(
         mockArticlesCallState,
-        mockEventsCallState,
+        idleAuthCallState,
         mockEventsCallState,
         mockImagesCallState,
         mockMembersCallState,
@@ -85,9 +91,15 @@ describe('App Selectors', () => {
         loadStart: null,
       };
 
+      const idleAuthCallState: CallState = {
+        status: 'idle',
+        error: null,
+        loadStart: null,
+      };
+
       const result = AppSelectors.selectIsLoading.projector(
         loadingArticlesCallState,
-        mockEventsCallState,
+        idleAuthCallState,
         mockEventsCallState,
         mockImagesCallState,
         mockMembersCallState,
@@ -103,9 +115,15 @@ describe('App Selectors', () => {
         loadStart: null,
       };
 
+      const idleAuthCallState: CallState = {
+        status: 'idle',
+        error: null,
+        loadStart: null,
+      };
+
       const result = AppSelectors.selectIsLoading.projector(
         mockArticlesCallState,
-        mockEventsCallState,
+        idleAuthCallState,
         loadingEventsCallState,
         mockImagesCallState,
         mockMembersCallState,
@@ -121,9 +139,15 @@ describe('App Selectors', () => {
         loadStart: null,
       };
 
+      const idleAuthCallState: CallState = {
+        status: 'idle',
+        error: null,
+        loadStart: null,
+      };
+
       const result = AppSelectors.selectIsLoading.projector(
         mockArticlesCallState,
-        mockEventsCallState,
+        idleAuthCallState,
         mockEventsCallState,
         loadingImagesCallState,
         mockMembersCallState,
@@ -139,9 +163,15 @@ describe('App Selectors', () => {
         loadStart: null,
       };
 
+      const idleAuthCallState: CallState = {
+        status: 'idle',
+        error: null,
+        loadStart: null,
+      };
+
       const result = AppSelectors.selectIsLoading.projector(
         mockArticlesCallState,
-        mockEventsCallState,
+        idleAuthCallState,
         mockEventsCallState,
         mockImagesCallState,
         loadingMembersCallState,

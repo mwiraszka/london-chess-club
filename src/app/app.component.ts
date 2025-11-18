@@ -21,7 +21,6 @@ import { RouterOutlet } from '@angular/router';
 import { FooterComponent } from '@app/components/footer/footer.component';
 import { HeaderComponent } from '@app/components/header/header.component';
 import { NavigationBarComponent } from '@app/components/navigation-bar/navigation-bar.component';
-import { PullToRefreshIndicatorComponent } from '@app/components/pull-to-refresh-indicator/pull-to-refresh-indicator.component';
 import { UpcomingEventBannerComponent } from '@app/components/upcoming-event-banner/upcoming-event-banner.component';
 import { Event, IsoDate } from '@app/models';
 import {
@@ -56,7 +55,6 @@ import { EventsSelectors } from '@app/store/events';
       <main
         #mainElement
         cdkScrollable>
-        <lcc-pull-to-refresh-indicator></lcc-pull-to-refresh-indicator>
         <router-outlet></router-outlet>
         <lcc-footer></lcc-footer>
       </main>
@@ -69,7 +67,6 @@ import { EventsSelectors } from '@app/store/events';
     FooterComponent,
     HeaderComponent,
     NavigationBarComponent,
-    PullToRefreshIndicatorComponent,
     RouterOutlet,
     UpcomingEventBannerComponent,
   ],
@@ -99,7 +96,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   public ngOnInit(): void {
-    this.initNavigationListenerForScrollingBackToTop();
     this.touchEventsService.listenForTouchEvents();
     this.userActivityService.monitorSessionExpiry();
     this.initPullToRefreshListener();
@@ -134,10 +130,8 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   public ngAfterViewInit(): void {
-    // Initialize pull-to-refresh after the view is ready
-    if (this.mainElement) {
-      this.pullToRefreshService.initialize(this.mainElement.nativeElement);
-    }
+    this.pullToRefreshService.initialize(this.mainElement?.nativeElement);
+    this.initNavigationListenerForScrollingBackToTop();
   }
 
   public onClearBanner(): void {
@@ -161,11 +155,6 @@ export class AppComponent implements OnInit, AfterViewInit {
         untilDestroyed(this),
         filter(fragment => !fragment),
       )
-      .subscribe(() => {
-        const mainElement = this._document.querySelector('main');
-        if (mainElement) {
-          mainElement.scrollTo({ top: 0 });
-        }
-      });
+      .subscribe(() => this.mainElement?.nativeElement.scrollTo({ top: 0 }));
   }
 }

@@ -126,7 +126,7 @@ export class UpcomingEventBannerComponent implements AfterViewInit, OnDestroy {
 
     if (this.shouldAnimate) {
       // Calculate duration based on content width: ~50 pixels per second for smooth scrolling
-      this.animationDuration = singleItemWidth / 49;
+      this.animationDuration = singleItemWidth / 50;
     }
 
     this.changeDetectorRef.markForCheck();
