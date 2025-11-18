@@ -86,17 +86,11 @@ export class ArticleGridComponent implements OnInit, OnChanges {
       articles = this.articles.slice(0, this.options.pageSize);
     }
 
-    // Generate randomized animation delays (2 items at a time)
     if (this.animationDelays.size === 0 && articles.length > 0) {
-      const shuffledIndices = Array.from({ length: articles.length }, (_, i) => i).sort(
-        () => Math.random() - 0.5,
-      );
-
-      shuffledIndices.forEach((originalIndex, shuffledPosition) => {
-        const pairIndex = Math.floor(shuffledPosition / 2);
-        const delay = pairIndex * 0.15; // 150ms between pairs
-        this.animationDelays.set(articles[originalIndex].id, delay);
-      });
+      for (let i = 0; i < articles.length; i++) {
+        const delay = i * 0.1;
+        this.animationDelays.set(articles[i].id, delay);
+      }
     }
 
     return articles;
