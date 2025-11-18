@@ -2,10 +2,10 @@ import { TestBed } from '@angular/core/testing';
 
 import * as deviceUtils from '@app/utils';
 
-import { PullToRefreshService } from './pull-to-refresh.service';
+import { RefreshService } from './refresh.service';
 
-describe('PullToRefreshService', () => {
-  let service: PullToRefreshService;
+describe('RefreshService', () => {
+  let service: RefreshService;
   let mockMainElement: HTMLElement;
 
   beforeEach(() => {
@@ -13,10 +13,10 @@ describe('PullToRefreshService', () => {
     document.body.appendChild(mockMainElement);
 
     TestBed.configureTestingModule({
-      providers: [PullToRefreshService],
+      providers: [RefreshService],
     });
 
-    service = TestBed.inject(PullToRefreshService);
+    service = TestBed.inject(RefreshService);
   });
 
   afterEach(() => {
@@ -55,16 +55,6 @@ describe('PullToRefreshService', () => {
       jest.spyOn(deviceUtils, 'isTouchDevice').mockReturnValue(false);
 
       service.initialize(mockMainElement);
-
-      expect(addEventListenerSpy).not.toHaveBeenCalled();
-    });
-
-    it('should not initialize if main element not provided', () => {
-      const addEventListenerSpy = jest.spyOn(mockMainElement, 'addEventListener');
-      jest.spyOn(deviceUtils, 'isTouchDevice').mockReturnValue(true);
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      service.initialize(null as any);
 
       expect(addEventListenerSpy).not.toHaveBeenCalled();
     });
@@ -215,7 +205,7 @@ describe('PullToRefreshService', () => {
     });
 
     it('should not track pull when already refreshing', () => {
-      service['isRefreshing'] = true;
+      service['isRefreshing$'].next(true);
 
       const touchStartEvent = new TouchEvent('touchstart', {
         touches: [{ clientY: 100 } as Touch],

@@ -73,7 +73,7 @@ export class MembersEffects {
   refetchFilteredMembers$ = createEffect(() => {
     const refetchActions$ = this.actions$.pipe(
       ofType(
-        AppActions.pullToRefreshRequested,
+        AppActions.refreshAppRequested,
         MembersActions.addMemberSucceeded,
         MembersActions.updateMemberSucceeded,
         MembersActions.deleteMemberSucceeded,

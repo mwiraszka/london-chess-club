@@ -24,7 +24,7 @@ import { NavigationBarComponent } from '@app/components/navigation-bar/navigatio
 import { UpcomingEventBannerComponent } from '@app/components/upcoming-event-banner/upcoming-event-banner.component';
 import { Event, IsoDate } from '@app/models';
 import {
-  PullToRefreshService,
+  RefreshService,
   RoutingService,
   TouchEventsService,
   UserActivityService,
@@ -74,7 +74,7 @@ import { EventsSelectors } from '@app/store/events';
 })
 export class AppComponent implements OnInit, AfterViewInit {
   @ViewChild('mainElement', { read: ElementRef })
-  public mainElement?: ElementRef<HTMLElement>;
+  public mainElement!: ElementRef<HTMLElement>;
 
   public viewModel$?: Observable<{
     bannerLastCleared: IsoDate | null;
@@ -86,7 +86,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   constructor(
     @Inject(DOCUMENT) private readonly _document: Document,
-    private readonly pullToRefreshService: PullToRefreshService,
+    private readonly refreshService: RefreshService,
     private readonly routingService: RoutingService,
     private readonly store: Store,
     private readonly touchEventsService: TouchEventsService,
@@ -98,7 +98,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   public ngOnInit(): void {
     this.touchEventsService.listenForTouchEvents();
     this.userActivityService.monitorSessionExpiry();
-    this.initPullToRefreshListener();
+    this.initRefreshListener();
 
     this.viewModel$ = combineLatest([
       this.store.select(AppSelectors.selectBannerLastCleared),
@@ -130,7 +130,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   public ngAfterViewInit(): void {
-    this.pullToRefreshService.initialize(this.mainElement?.nativeElement);
+    this.refreshService.initialize(this.mainElement.nativeElement);
     this.initNavigationListenerForScrollingBackToTop();
   }
 
@@ -138,14 +138,14 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.store.dispatch(AppActions.upcomingEventBannerCleared());
   }
 
-  private initPullToRefreshListener(): void {
-    this.pullToRefreshService.isRefreshing$
+  private initRefreshListener(): void {
+    this.refreshService.isRefreshing$
       .pipe(
         untilDestroyed(this),
         filter(isRefreshing => isRefreshing),
       )
       .subscribe(() => {
-        this.store.dispatch(AppActions.pullToRefreshRequested());
+        this.store.dispatch(AppActions.refreshAppRequested());
       });
   }
 
@@ -155,6 +155,6 @@ export class AppComponent implements OnInit, AfterViewInit {
         untilDestroyed(this),
         filter(fragment => !fragment),
       )
-      .subscribe(() => this.mainElement?.nativeElement.scrollTo({ top: 0 }));
+      .subscribe(() => this.mainElement.nativeElement.scrollTo({ top: 0 }));
   }
 }

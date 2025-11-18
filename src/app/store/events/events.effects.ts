@@ -99,7 +99,7 @@ export class EventsEffects {
   refetchHomePageEvents$ = createEffect(() => {
     const refetchActions$ = this.actions$.pipe(
       ofType(
-        AppActions.pullToRefreshRequested,
+        AppActions.refreshAppRequested,
         EventsActions.addEventSucceeded,
         EventsActions.updateEventSucceeded,
         EventsActions.deleteEventSucceeded,
@@ -121,7 +121,7 @@ export class EventsEffects {
   refetchFilteredEvents$ = createEffect(() => {
     const refetchActions$ = this.actions$.pipe(
       ofType(
-        AppActions.pullToRefreshRequested,
+        AppActions.refreshAppRequested,
         EventsActions.addEventSucceeded,
         EventsActions.updateEventSucceeded,
         EventsActions.deleteEventSucceeded,

@@ -75,7 +75,7 @@ export class ArticlesEffects {
   refetchHomePageArticles$ = createEffect(() => {
     const refetchActions$ = this.actions$.pipe(
       ofType(
-        AppActions.pullToRefreshRequested,
+        AppActions.refreshAppRequested,
         ArticlesActions.publishArticleSucceeded,
         ArticlesActions.updateArticleSucceeded,
         ArticlesActions.deleteArticleSucceeded,
@@ -97,7 +97,7 @@ export class ArticlesEffects {
   refetchFilteredArticles$ = createEffect(() => {
     const refetchActions$ = this.actions$.pipe(
       ofType(
-        AppActions.pullToRefreshRequested,
+        AppActions.refreshAppRequested,
         ArticlesActions.publishArticleSucceeded,
         ArticlesActions.updateArticleSucceeded,
         ArticlesActions.deleteArticleSucceeded,

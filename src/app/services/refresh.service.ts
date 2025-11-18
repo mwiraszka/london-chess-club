@@ -1,4 +1,4 @@
-import { Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
@@ -7,36 +7,27 @@ import { isTouchDevice } from '@app/utils';
 @Injectable({
   providedIn: 'root',
 })
-export class PullToRefreshService {
+export class RefreshService {
+  public isRefreshing$ = new BehaviorSubject<boolean>(false);
+
   private readonly PULL_THRESHOLD = 80;
   private readonly MAX_PULL_DISTANCE = 120;
   private readonly RESISTANCE = 0.5;
 
   private touchStartY = 0;
   private currentPullDistance = 0;
-  private isRefreshing = false;
   private mainElement: HTMLElement | null = null;
 
   private boundOnTouchStart = this.onTouchStart.bind(this);
   private boundOnTouchMove = this.onTouchMove.bind(this);
   private boundOnTouchEnd = this.onTouchEnd.bind(this);
 
-  public isRefreshing$ = new Subject<boolean>();
-
-  constructor() {
-    this.isRefreshing$.next(false);
-  }
-
-  public initialize(mainElement?: HTMLElement): void {
-    if (!isTouchDevice() || !mainElement) {
+  public initialize(mainElement: HTMLElement): void {
+    if (!isTouchDevice()) {
       return;
     }
 
     this.mainElement = mainElement;
-    if (!this.mainElement) {
-      return;
-    }
-
     this.mainElement.addEventListener('touchstart', this.boundOnTouchStart, {
       passive: true,
     });
@@ -59,13 +50,16 @@ export class PullToRefreshService {
   }
 
   public completeRefresh(): void {
-    this.isRefreshing = false;
     this.currentPullDistance = 0;
     this.isRefreshing$.next(false);
   }
 
   private onTouchStart(event: TouchEvent): void {
-    if (this.isRefreshing || !this.mainElement || this.mainElement.scrollTop !== 0) {
+    if (
+      this.isRefreshing$.value ||
+      !this.mainElement ||
+      this.mainElement.scrollTop !== 0
+    ) {
       return;
     }
 
@@ -74,7 +68,7 @@ export class PullToRefreshService {
 
   private onTouchMove(event: TouchEvent): void {
     if (
-      this.isRefreshing ||
+      this.isRefreshing$.value ||
       !this.mainElement ||
       this.touchStartY === 0 ||
       this.mainElement.scrollTop !== 0
@@ -95,14 +89,13 @@ export class PullToRefreshService {
   }
 
   private onTouchEnd(): void {
-    if (this.isRefreshing || this.touchStartY === 0) {
+    if (this.isRefreshing$.value || this.touchStartY === 0) {
       return;
     }
 
     this.touchStartY = 0;
 
     if (this.currentPullDistance >= this.PULL_THRESHOLD) {
-      this.isRefreshing = true;
       this.isRefreshing$.next(true);
     }
 

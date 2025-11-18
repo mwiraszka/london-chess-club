@@ -73,10 +73,10 @@ describe('UserSettingsMenuComponent', () => {
   });
 
   describe('onRefreshData', () => {
-    it('should dispatch pullToRefreshRequested action and emit close event', () => {
+    it('should dispatch refreshAppRequested action and emit close event', () => {
       component.onRefreshData();
 
-      expect(dispatchSpy).toHaveBeenCalledWith(AppActions.pullToRefreshRequested());
+      expect(dispatchSpy).toHaveBeenCalledWith(AppActions.refreshAppRequested());
       expect(closeSpy).toHaveBeenCalledTimes(1);
     });
   });

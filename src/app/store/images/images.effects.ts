@@ -229,7 +229,7 @@ export class ImagesEffects {
   refetchMetadata$ = createEffect(() => {
     const refetchActions$ = this.actions$.pipe(
       ofType(
-        AppActions.pullToRefreshRequested,
+        AppActions.refreshAppRequested,
         ImagesActions.addImageSucceeded,
         ImagesActions.addImagesSucceeded,
         ImagesActions.updateImageSucceeded,
@@ -255,7 +255,7 @@ export class ImagesEffects {
   refetchFilteredThumbnails$ = createEffect(() => {
     const refetchActions$ = this.actions$.pipe(
       ofType(
-        AppActions.pullToRefreshRequested,
+        AppActions.refreshAppRequested,
         ImagesActions.addImageSucceeded,
         ImagesActions.addImagesSucceeded,
         ImagesActions.updateImageSucceeded,
@@ -284,7 +284,7 @@ export class ImagesEffects {
   refetchAlbumCoverThumbnails$ = createEffect(() => {
     const refetchActions$ = this.actions$.pipe(
       ofType(
-        AppActions.pullToRefreshRequested,
+        AppActions.refreshAppRequested,
         ImagesActions.addImageSucceeded,
         ImagesActions.addImagesSucceeded,
         ImagesActions.updateImageSucceeded,

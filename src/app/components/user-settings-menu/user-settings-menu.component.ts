@@ -66,7 +66,7 @@ export class UserSettingsMenuComponent implements OnInit {
   }
 
   public onRefreshData(): void {
-    this.store.dispatch(AppActions.pullToRefreshRequested());
+    this.store.dispatch(AppActions.refreshAppRequested());
     this.close.emit();
   }
 
