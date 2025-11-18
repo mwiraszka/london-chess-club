@@ -10,13 +10,13 @@ import { isTouchDevice } from '@app/utils';
 export class RefreshService {
   public isRefreshing$ = new BehaviorSubject<boolean>(false);
 
-  private readonly PULL_THRESHOLD = 80;
-  private readonly MAX_PULL_DISTANCE = 120;
+  private readonly MAX_PULL_DISTANCE_PX = 120;
+  private readonly PULL_THRESHOLD_PX = 80;
   private readonly RESISTANCE = 0.5;
 
-  private touchStartY = 0;
-  private currentPullDistance = 0;
+  private currentPullDistancePx = 0;
   private mainElement: HTMLElement | null = null;
+  private touchStartY = 0;
 
   private boundOnTouchStart = this.onTouchStart.bind(this);
   private boundOnTouchMove = this.onTouchMove.bind(this);
@@ -50,7 +50,7 @@ export class RefreshService {
   }
 
   public completeRefresh(): void {
-    this.currentPullDistance = 0;
+    this.currentPullDistancePx = 0;
     this.isRefreshing$.next(false);
   }
 
@@ -81,9 +81,9 @@ export class RefreshService {
 
     if (pullDistance > 0) {
       event.preventDefault();
-      this.currentPullDistance = Math.min(
+      this.currentPullDistancePx = Math.min(
         pullDistance * this.RESISTANCE,
-        this.MAX_PULL_DISTANCE,
+        this.MAX_PULL_DISTANCE_PX,
       );
     }
   }
@@ -95,10 +95,10 @@ export class RefreshService {
 
     this.touchStartY = 0;
 
-    if (this.currentPullDistance >= this.PULL_THRESHOLD) {
+    if (this.currentPullDistancePx >= this.PULL_THRESHOLD_PX) {
       this.isRefreshing$.next(true);
     }
 
-    this.currentPullDistance = 0;
+    this.currentPullDistancePx = 0;
   }
 }

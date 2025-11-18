@@ -122,7 +122,7 @@ describe('RefreshService', () => {
       mockMainElement.dispatchEvent(touchMoveEvent);
 
       // Pull of 100px with 0.5 resistance = 50px
-      expect(service['currentPullDistance']).toBe(50);
+      expect(service['currentPullDistancePx']).toBe(50);
     });
 
     it('should apply resistance and cap at maximum pull distance', () => {
@@ -138,7 +138,7 @@ describe('RefreshService', () => {
       mockMainElement.dispatchEvent(touchMoveEvent);
 
       // Should be capped at 120px max
-      expect(service['currentPullDistance']).toBe(120);
+      expect(service['currentPullDistancePx']).toBe(120);
     });
 
     it('should trigger refresh when pulled past threshold', () => {
@@ -181,7 +181,7 @@ describe('RefreshService', () => {
       mockMainElement.dispatchEvent(touchEndEvent);
 
       expect(isRefreshingSpy).not.toHaveBeenCalledWith(true);
-      expect(service['currentPullDistance']).toBe(0);
+      expect(service['currentPullDistancePx']).toBe(0);
     });
 
     it('should not track pull when not at top of scroll', () => {
@@ -201,7 +201,7 @@ describe('RefreshService', () => {
       });
       mockMainElement.dispatchEvent(touchMoveEvent);
 
-      expect(service['currentPullDistance']).toBe(0);
+      expect(service['currentPullDistancePx']).toBe(0);
     });
 
     it('should not track pull when already refreshing', () => {
@@ -227,7 +227,7 @@ describe('RefreshService', () => {
       });
       mockMainElement.dispatchEvent(touchMoveEvent);
 
-      expect(service['currentPullDistance']).toBe(0);
+      expect(service['currentPullDistancePx']).toBe(0);
     });
   });
 });

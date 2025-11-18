@@ -147,6 +147,16 @@ export class AppComponent implements OnInit, AfterViewInit {
       .subscribe(() => {
         this.store.dispatch(AppActions.refreshAppRequested());
       });
+
+    this.store
+      .select(AppSelectors.selectIsLoading)
+      .pipe(
+        untilDestroyed(this),
+        filter(isLoading => !isLoading && this.refreshService.isRefreshing$.value),
+      )
+      .subscribe(() => {
+        this.refreshService.completeRefresh();
+      });
   }
 
   private initNavigationListenerForScrollingBackToTop(): void {
