@@ -55,11 +55,12 @@ export class RefreshService {
   }
 
   private onTouchStart(event: TouchEvent): void {
-    if (
-      this.isRefreshing$.value ||
-      !this.mainElement ||
-      this.mainElement.scrollTop !== 0
-    ) {
+    if (this.isRefreshing$.value || !this.mainElement) {
+      return;
+    }
+
+    // Allow pull-to-refresh when at the top (with small tolerance for scroll momentum)
+    if (this.mainElement.scrollTop > 5) {
       return;
     }
 
@@ -67,24 +68,23 @@ export class RefreshService {
   }
 
   private onTouchMove(event: TouchEvent): void {
-    if (
-      this.isRefreshing$.value ||
-      !this.mainElement ||
-      this.touchStartY === 0 ||
-      this.mainElement.scrollTop !== 0
-    ) {
+    if (this.isRefreshing$.value || !this.mainElement || this.touchStartY === 0) {
       return;
     }
 
     const touchY = event.touches[0].clientY;
     const pullDistance = touchY - this.touchStartY;
 
-    if (pullDistance > 0) {
+    // Only process pull-down gestures when at or very near the top
+    if (pullDistance > 0 && this.mainElement.scrollTop <= 5) {
       event.preventDefault();
       this.currentPullDistancePx = Math.min(
         pullDistance * this.RESISTANCE,
         this.MAX_PULL_DISTANCE_PX,
       );
+    } else if (pullDistance <= 0) {
+      // Reset if user starts pulling up
+      this.currentPullDistancePx = 0;
     }
   }
 
