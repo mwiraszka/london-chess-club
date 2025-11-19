@@ -43,6 +43,7 @@ Below you'll find an overview of the tools and technologies that power the app, 
 - 🚀 Add support for various international alphabets and unicode symbols for most string-based text fields such as member's first & last name, album title, and image caption
 - 🐛 Ensure an image added to a brand new album automatically becomes that album's cover for the photo grid mosaic
 - 🔧 Update web manifest configuration to ensure internal links always open up in the browser UI by default
+- 🔧 Security updates
 
 </details>
 

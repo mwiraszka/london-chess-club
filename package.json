@@ -84,7 +84,6 @@
     "ng-mocks": "14.14.0",
     "postcss": "8.5.6",
     "prettier": "3.6.2",
-    "prettier-eslint": "16.4.2",
     "ts-node": "10.9.2",
     "typescript": "5.9.3",
     "typescript-eslint": "8.46.3",
@@ -93,8 +92,9 @@
   "resolutions": {
     "abab": "2.0.6",
     "domexception": "4.0.0",
-    "glob": "11.0.1",
+    "glob": "11.1.0",
     "inflight": "1.0.7",
+    "js-yaml": "4.1.1",
     "rimraf": "6.0.1",
     "@humanwhocodes/config-array": "0.13.0",
     "@humanwhocodes/object-schema": "2.0.3",
