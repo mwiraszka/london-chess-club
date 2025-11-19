@@ -33,7 +33,7 @@ import { RoutingService } from '@app/services';
         </a>
       }
     </div>
-    <markdown [data]="data"></markdown>
+    <markdown [data]="processedData"></markdown>
   `,
   styleUrl: './markdown-renderer.component.scss',
   imports: [KebabCasePipe, MarkdownComponent, RouterLink],
@@ -44,6 +44,7 @@ export class MarkdownRendererComponent implements AfterViewInit, OnChanges {
 
   public currentPath: string;
   public headings: string[] = [];
+  public processedData?: string;
 
   constructor(
     @Inject(DOCUMENT) private _document: Document,
@@ -56,6 +57,9 @@ export class MarkdownRendererComponent implements AfterViewInit, OnChanges {
 
   public ngOnChanges(changes: NgChanges<MarkdownRendererComponent>): void {
     if (changes.data) {
+      // Preprocess images BEFORE markdown rendering
+      this.processedData = this.preprocessImages(this.data || '');
+
       const markdownElement = this._document.querySelector('markdown');
       if (markdownElement) {
         this.renderer.setStyle(markdownElement, 'visibility', 'hidden');
@@ -79,6 +83,36 @@ export class MarkdownRendererComponent implements AfterViewInit, OnChanges {
       this.routingService.fragment$
         .pipe(untilDestroyed(this))
         .subscribe(fragment => this.scrollToAnchor(fragment));
+    });
+  }
+
+  private preprocessImages(text: string): string {
+    // Regular expression to match {{{src}}}(((width)))<<<caption>>> (width and caption optional)
+    const imagePattern = /{{{([^}]+)}}}(?:\(\(\(([^)]+)\)\)\))?(?:<<<(.+?)>>>)?/g;
+
+    return text.replace(imagePattern, (match, src, width, caption) => {
+      const parsedWidth = width ? parseInt(width.trim(), 10) : 300;
+      const widthValue = Math.min(parsedWidth, 1200).toString();
+      const captionValue = caption ? caption.trim() : '';
+
+      let imageHtml = `<div class="markdown-image-container">
+        <img 
+          src="${src || 'assets/fallback-image.png'}" 
+          alt="${captionValue}" 
+          width="${widthValue}"
+          onerror="this.src='assets/fallback-image.png'"
+        />`;
+
+      if (captionValue) {
+        imageHtml += `
+          <div class="markdown-image-caption">
+            ${captionValue}
+          </div>`;
+      }
+
+      imageHtml += `</div>`;
+
+      return imageHtml;
     });
   }
 

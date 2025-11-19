@@ -280,10 +280,14 @@ export class ImageFileService {
     file: File,
   ): Promise<{ dataUrl: Url; filename: string } | LccError> {
     return new Promise(resolve => {
-      if (!['image/png', 'image/jpeg', 'image/jpg'].includes(file.type.toLowerCase())) {
+      if (
+        !['image/png', 'image/jpeg', 'image/jpg', 'image/gif'].includes(
+          file.type.toLowerCase(),
+        )
+      ) {
         resolve({
           name: 'LCCError',
-          message: `${file.type} is currently unsupported. Please try uploading ${file.name} again as either a PNG or JPEG.`,
+          message: `${file.type} is currently unsupported. Please try uploading ${file.name} again as PNG, JPEG, or GIF.`,
         });
         return;
       }

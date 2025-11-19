@@ -37,6 +37,7 @@ import {
   emailValidator,
   phoneNumberValidator,
   ratingValidator,
+  textValidator,
   yearOfBirthValidator,
 } from '@app/validators';
 
@@ -154,15 +155,15 @@ export class MemberFormComponent implements OnInit {
     this.form = this.formBuilder.group<MemberFormGroup>({
       firstName: new FormControl(this.formData.firstName, {
         nonNullable: true,
-        validators: [Validators.required, Validators.pattern(/[^\s]/)],
+        validators: [Validators.required, textValidator],
       }),
       lastName: new FormControl(this.formData.lastName, {
         nonNullable: true,
-        validators: [Validators.required, Validators.pattern(/[^\s]/)],
+        validators: [Validators.required, textValidator],
       }),
       city: new FormControl(this.formData.city, {
         nonNullable: true,
-        validators: [Validators.required, Validators.pattern(/[^\s]/)],
+        validators: [Validators.required, textValidator],
       }),
       rating: new FormControl(this.formData.rating, {
         nonNullable: true,
@@ -186,11 +187,11 @@ export class MemberFormComponent implements OnInit {
       }),
       chessComUsername: new FormControl(this.formData.chessComUsername, {
         nonNullable: true,
-        validators: Validators.pattern(/[^\s]/),
+        validators: textValidator,
       }),
       lichessUsername: new FormControl(this.formData.lichessUsername, {
         nonNullable: true,
-        validators: Validators.pattern(/[^\s]/),
+        validators: textValidator,
       }),
       isActive: new FormControl(this.formData.isActive, { nonNullable: true }),
       peakRating: new FormControl(this.formData.peakRating, { nonNullable: true }),

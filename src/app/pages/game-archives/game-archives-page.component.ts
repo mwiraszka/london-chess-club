@@ -146,7 +146,7 @@ export class GameArchivesPageComponent implements OnInit, OnDestroy {
     private readonly store: Store,
   ) {}
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize')
   onResize(): void {
     this.cdkVirtualScrollViewport?.checkViewportSize();
   }

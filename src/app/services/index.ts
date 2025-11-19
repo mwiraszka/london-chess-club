@@ -7,6 +7,7 @@ export { ImagesApiService } from './api/images-api.service';
 export { KeyStateService } from './key-state.service';
 export { MembersApiService } from './api/members-api.service';
 export { MetaAndTitleService } from './meta-and-title.service';
+export { RefreshService } from './refresh.service';
 export { RoutingService } from './routing.service';
 export { ToastService } from './toast.service';
 export { TouchEventsService } from './touch-events.service';

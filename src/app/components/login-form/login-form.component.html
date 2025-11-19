@@ -11,7 +11,6 @@
       formControlName="email"
       autocomplete="email"
       maxlength="50" />
-    <lcc-form-error-icon [control]="form.controls.email"></lcc-form-error-icon>
 
     <label for="password-input">Password:</label>
     <input
@@ -19,6 +18,7 @@
       type="password"
       name="password"
       formControlName="password"
+      autocomplete="current-password"
       maxlength="50" />
   </div>
 

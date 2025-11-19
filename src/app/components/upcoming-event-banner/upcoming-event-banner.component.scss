@@ -7,7 +7,7 @@
 .container {
   display: flex;
   justify-content: center;
-  padding: 2px 8px;
+  padding: 4px 8px;
   border-bottom: 1px solid var(--lcc-color--upcomingEventBanner-borderBottom);
 
   &.blitz-tournament-10-mins {
@@ -54,25 +54,54 @@
 }
 
 .banner-message {
-  display: inline-block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
   color: var(--lcc-color--upcomingEventBanner-text);
   font-size: 14px;
+  overflow: hidden;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  width: 100%;
+  white-space: nowrap;
 
-  &:hover {
-    color: var(--lcc-color--upcomingEventBanner-textOnHover);
+  &.navigatable {
+    cursor: pointer;
 
-    b {
-      color: var(--lcc-color--upcomingEventBanner-boldTextOnHover);
+    &:hover {
+      color: var(--lcc-color--upcomingEventBanner-textOnHover);
+
+      b {
+        color: var(--lcc-color--upcomingEventBanner-boldTextOnHover);
+      }
     }
+  }
+
+  &:not(.navigatable) {
+    cursor: default;
+    pointer-events: none;
   }
 
   b {
     color: var(--lcc-color--upcomingEventBanner-boldText);
     font-weight: bold;
     padding: 0 2px;
+  }
+}
+
+.marquee-content {
+  display: inline-flex;
+  align-items: center;
+
+  .marquee-item {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    padding-right: 50px;
+  }
+
+  &.animate {
+    animation: marquee-scroll linear infinite;
   }
 }
 
@@ -83,5 +112,14 @@ mat-icon {
 
   &:hover {
     color: var(--lcc-color--upcomingEventBanner-closeIconOnHover);
+  }
+}
+
+@keyframes marquee-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
   }
 }

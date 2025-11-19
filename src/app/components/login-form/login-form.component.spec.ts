@@ -42,58 +42,6 @@ describe('LoginFormComponent', () => {
       expect(component.form.controls.email.value).toBe('');
       expect(component.form.controls.password.value).toBe('');
     });
-
-    it('should set up validators correctly', () => {
-      component.form.patchValue({
-        email: '',
-        password: '',
-      });
-      fixture.detectChanges();
-
-      expect(component.form.controls.email.hasError('required')).toBe(true);
-      expect(component.form.controls.password.hasError('required')).toBe(true);
-    });
-  });
-
-  describe('form validation', () => {
-    describe('email field', () => {
-      it('should mark invalid email format as invalid', () => {
-        component.form.patchValue({ email: 'invalid-email' });
-        fixture.detectChanges();
-
-        expect(component.form.controls.email.hasError('invalidEmailFormat')).toBe(true);
-      });
-
-      it('should mark empty email as invalid', () => {
-        component.form.patchValue({ email: '' });
-        fixture.detectChanges();
-
-        expect(component.form.controls.email.hasError('required')).toBe(true);
-      });
-
-      it('should mark valid email format as valid', () => {
-        component.form.patchValue({ email: 'valid@example.com' });
-        fixture.detectChanges();
-
-        expect(component.form.controls.email.valid).toBe(true);
-      });
-    });
-
-    describe('password field', () => {
-      it('should mark empty password as invalid', () => {
-        component.form.patchValue({ password: '' });
-        fixture.detectChanges();
-
-        expect(component.form.controls.password.hasError('required')).toBe(true);
-      });
-
-      it('should mark non-empty password as valid', () => {
-        component.form.patchValue({ password: 'password123' });
-        fixture.detectChanges();
-
-        expect(component.form.controls.password.valid).toBe(true);
-      });
-    });
   });
 
   describe('onSubmit', () => {

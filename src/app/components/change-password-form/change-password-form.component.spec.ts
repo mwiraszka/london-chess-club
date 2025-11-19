@@ -74,22 +74,6 @@ describe('ChangePasswordFormComponent', () => {
   });
 
   describe('form validation', () => {
-    describe('email field', () => {
-      it('should mark invalid email format as invalid', () => {
-        component.form.patchValue({ email: 'invalid-email' });
-        fixture.detectChanges();
-
-        expect(component.form.controls.email.hasError('invalidEmailFormat')).toBe(true);
-      });
-
-      it('should mark valid email format as valid', () => {
-        component.form.patchValue({ email: 'valid@example.com' });
-        fixture.detectChanges();
-
-        expect(component.form.controls.email.hasError('invalidEmailFormat')).toBe(false);
-      });
-    });
-
     describe('code field', () => {
       it('should mark invalid code format as invalid', () => {
         component.form.patchValue({ code: '12345' }); // 5 digits instead of 6

@@ -37,7 +37,7 @@ import {
 } from '@app/models';
 import { DialogService, ImageFileService } from '@app/services';
 import { isLccError } from '@app/utils';
-import { imageCaptionValidator } from '@app/validators';
+import { textValidator } from '@app/validators';
 
 @UntilDestroy()
 @Component({
@@ -234,11 +234,11 @@ export class ImageFormComponent implements OnInit {
       }),
       caption: new FormControl(formData.caption, {
         nonNullable: true,
-        validators: [Validators.required, imageCaptionValidator],
+        validators: [Validators.required, textValidator],
       }),
       album: new FormControl(formData.album, {
         nonNullable: true,
-        validators: [Validators.required, Validators.pattern(/[^\s]/)],
+        validators: [Validators.required, textValidator],
       }),
       albumCover: new FormControl(formData.albumCover, { nonNullable: true }),
       albumOrdinality: new FormControl(formData.albumOrdinality, { nonNullable: true }),

@@ -55,7 +55,8 @@
       padding: 8px 16px;
     }
 
-    a {
+    a,
+    button {
       flex: 1;
 
       &:hover > * {
@@ -68,6 +69,14 @@
         display: block;
       }
     }
+
+    button {
+      background: inherit;
+      color: inherit;
+      border: none;
+      padding: unset;
+      text-align: start;
+    }
   }
 }
 
@@ -75,5 +84,27 @@
   header {
     color: var(--lcc-color--userSettingsMenu-warning);
     margin-bottom: 8px;
+  }
+}
+
+.refresh-data-tooltip {
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    gap: 4px;
+    margin-bottom: 8px;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+
+  .message-content {
+    font-size: 14px;
+    line-height: 1.4;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    text-align: start;
   }
 }

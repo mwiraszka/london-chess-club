@@ -23,3 +23,5 @@ export const unexpectedErrorOccurred = createAction(
   '[App] Unexpected error occurred',
   props<{ error: LccError }>(),
 );
+
+export const refreshAppRequested = createAction('[App] Refresh app requested');

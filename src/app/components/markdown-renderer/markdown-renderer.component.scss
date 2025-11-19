@@ -61,9 +61,24 @@
       color: var(--lcc-color--markdownRenderer-primaryText);
     }
 
+    // For old images
     img {
       min-width: 300px;
       max-width: 100%;
+    }
+
+    // For new images with caption and width
+    .markdown-image-container {
+      img {
+        min-width: unset;
+        max-width: unset;
+      }
+
+      .markdown-image-caption {
+        font-size: 14px;
+        text-align: left;
+        color: var(--lcc-color--markdownRenderer-secondaryText);
+      }
     }
 
     blockquote {

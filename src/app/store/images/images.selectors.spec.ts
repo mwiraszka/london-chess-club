@@ -525,7 +525,7 @@ describe('Images Selectors', () => {
     });
   });
 
-  describe('selectImageByArticleId', () => {
+  describe('selectBannerImageByArticleId', () => {
     it('should select image by article form data bannerImageId', () => {
       const allImages = [MOCK_IMAGES[0], MOCK_IMAGES[1]];
       const article = MOCK_ARTICLES[0];
@@ -534,7 +534,7 @@ describe('Images Selectors', () => {
         body: article.body,
         bannerImageId: MOCK_IMAGES[1].id,
       };
-      const selector = ImagesSelectors.selectImageByArticleId(article.id);
+      const selector = ImagesSelectors.selectBannerImageByArticleId(article.id);
       const result = selector.projector(allImages, article, articleFormData);
       expect(result).toEqual(MOCK_IMAGES[1]);
     });
@@ -547,7 +547,7 @@ describe('Images Selectors', () => {
         body: article.body,
         bannerImageId: '',
       };
-      const selector = ImagesSelectors.selectImageByArticleId(article.id);
+      const selector = ImagesSelectors.selectBannerImageByArticleId(article.id);
       const result = selector.projector(allImages, article, articleFormData);
       expect(result).toEqual(MOCK_IMAGES[0]);
     });
@@ -560,7 +560,7 @@ describe('Images Selectors', () => {
         body: article.body,
         bannerImageId: 'non-existent-id',
       };
-      const selector = ImagesSelectors.selectImageByArticleId(article.id);
+      const selector = ImagesSelectors.selectBannerImageByArticleId(article.id);
       const result = selector.projector(allImages, article, articleFormData);
       expect(result).toBeNull();
     });

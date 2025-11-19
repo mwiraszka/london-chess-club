@@ -48,13 +48,21 @@
       flex-direction: column;
       gap: 8px;
       align-self: flex-end;
+      align-items: center;
 
-      .image-explorer-button,
-      .revert-image-button {
+      .select-banner-image-button,
+      .revert-banner-image-button,
+      .insert-image-button {
         display: flex;
         align-items: center;
         justify-content: center;
         padding: 4px;
+      }
+
+      hr {
+        width: 24px;
+        border-bottom: 2px solid var(--lcc-color--articleForm-buttonsDivider);
+        margin: 16px 0;
       }
     }
   }

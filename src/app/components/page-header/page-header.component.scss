@@ -1,3 +1,5 @@
+@use '../../../styles/abstracts/mixins' as *;
+
 :host {
   width: 100%;
   display: flex;
@@ -12,9 +14,7 @@
 
   .page-header-icon {
     color: var(--lcc-color--pageHeader-icon);
-    height: 24px;
-    width: 24px;
-    min-width: 24px;
+    @include icon-size(24px);
 
     &.admin-page {
       color: var(--lcc-color--pageHeader-adminIcon);

@@ -24,14 +24,15 @@ describe('ArticleFormComponent', () => {
   let cancelSpy: jest.SpyInstance;
   let changeSpy: jest.SpyInstance;
   let dialogOpenSpy: jest.SpyInstance;
-  let imageExplorerSpy: jest.SpyInstance;
   let initFormSpy: jest.SpyInstance;
   let initFormValueChangeListenerSpy: jest.SpyInstance;
+  let insertImageSpy: jest.SpyInstance;
   let requestFetchMainImageSpy: jest.SpyInstance;
   let requestPublishArticleSpy: jest.SpyInstance;
   let requestUpdateArticleSpy: jest.SpyInstance;
   let restoreSpy: jest.SpyInstance;
-  let revertImageSpy: jest.SpyInstance;
+  let revertBannerImageSpy: jest.SpyInstance;
+  let selectBannerImageSpy: jest.SpyInstance;
   let submitSpy: jest.SpyInstance;
 
   beforeEach(async () => {
@@ -58,9 +59,7 @@ describe('ArticleFormComponent', () => {
 
     cancelSpy = jest.spyOn(component.cancel, 'emit');
     changeSpy = jest.spyOn(component.change, 'emit');
-    restoreSpy = jest.spyOn(component.restore, 'emit');
     dialogOpenSpy = jest.spyOn(dialogService, 'open');
-    imageExplorerSpy = jest.spyOn(component, 'onOpenImageExplorer');
     // @ts-expect-error Private class member
     initFormSpy = jest.spyOn(component, 'initForm');
     initFormValueChangeListenerSpy = jest.spyOn(
@@ -68,13 +67,17 @@ describe('ArticleFormComponent', () => {
       // @ts-expect-error Private class member
       'initFormValueChangeListener',
     );
+    insertImageSpy = jest.spyOn(component, 'onInsertImage');
     requestFetchMainImageSpy = jest.spyOn(component.requestFetchMainImage, 'emit');
     requestPublishArticleSpy = jest.spyOn(component.requestPublishArticle, 'emit');
     requestUpdateArticleSpy = jest.spyOn(component.requestUpdateArticle, 'emit');
-    revertImageSpy = jest.spyOn(component, 'onRevertImage');
+    restoreSpy = jest.spyOn(component.restore, 'emit');
+    revertBannerImageSpy = jest.spyOn(component, 'onRevertBannerImage');
+    selectBannerImageSpy = jest.spyOn(component, 'onSelectBannerImage');
     submitSpy = jest.spyOn(component, 'onSubmit');
 
     component.bannerImage = null;
+    component.bodyImages = [];
     component.formData = pick(MOCK_ARTICLES[0], ARTICLE_FORM_DATA_PROPERTIES);
     component.hasUnsavedChanges = false;
     component.originalArticle = null;
@@ -133,21 +136,19 @@ describe('ArticleFormComponent', () => {
       });
     });
 
-    describe('pattern validator', () => {
-      it('should mark field with an invalid pattern as invalid', () => {
+    describe('text validator', () => {
+      it('should mark field with whitespace-only text as valid', () => {
         component.form.patchValue({
           bannerImageId: ' ',
-          title: '\t\n',
           body: '  ',
         });
         fixture.detectChanges();
 
-        expect(component.form.controls.bannerImageId.hasError('pattern')).toBe(true);
-        expect(component.form.controls.title.hasError('pattern')).toBe(true);
-        expect(component.form.controls.body.hasError('pattern')).toBe(true);
+        expect(component.form.controls.bannerImageId.hasError('invalidText')).toBe(false);
+        expect(component.form.controls.body.hasError('invalidText')).toBe(false);
       });
 
-      it('should mark field with a valid pattern as valid', () => {
+      it('should mark field with emoji as invalid', () => {
         component.form.patchValue({
           bannerImageId: '🔥',
           title: 'abc',
@@ -155,9 +156,9 @@ describe('ArticleFormComponent', () => {
         });
         fixture.detectChanges();
 
-        expect(component.form.controls.bannerImageId.hasError('pattern')).toBe(false);
-        expect(component.form.controls.title.hasError('pattern')).toBe(false);
-        expect(component.form.controls.body.hasError('pattern')).toBe(false);
+        expect(component.form.controls.bannerImageId.hasError('invalidText')).toBe(true);
+        expect(component.form.controls.title.hasError('invalidText')).toBe(false);
+        expect(component.form.controls.body.hasError('invalidText')).toBe(false);
       });
     });
   });
@@ -226,14 +227,14 @@ describe('ArticleFormComponent', () => {
     });
   });
 
-  describe('onOpenImageExplorer', () => {
+  describe('onSelectBannerImage', () => {
     it('should set selected image as the new banner image', async () => {
       const newImageId = 'new_image_id';
       dialogOpenSpy.mockResolvedValue(`${newImageId}-thumb`);
       component.form.patchValue({ bannerImageId: 'old-image-id' });
       jest.clearAllMocks();
 
-      await component.onOpenImageExplorer();
+      await component.onSelectBannerImage();
 
       expect(dialogOpenSpy).toHaveBeenCalledWith({
         componentType: ImageExplorerComponent,
@@ -248,7 +249,7 @@ describe('ArticleFormComponent', () => {
       component.form.patchValue({ bannerImageId: 'old-image-id' });
       jest.clearAllMocks();
 
-      await component.onOpenImageExplorer();
+      await component.onSelectBannerImage();
 
       expect(dialogOpenSpy).toHaveBeenCalledWith({
         componentType: ImageExplorerComponent,
@@ -259,7 +260,7 @@ describe('ArticleFormComponent', () => {
     });
   });
 
-  describe('onRevertImage', () => {
+  describe('onRevertBannerImage', () => {
     it('should patch value originalArticle bannerImageId if originalArticle is defined', () => {
       fixture.componentRef.setInput('originalArticle', MOCK_ARTICLES[3]);
       fixture.componentRef.setInput(
@@ -272,7 +273,7 @@ describe('ArticleFormComponent', () => {
         MOCK_ARTICLES[2].bannerImageId,
       );
 
-      component.onRevertImage();
+      component.onRevertBannerImage();
 
       expect(component.form.controls.bannerImageId.value).toBe(
         MOCK_ARTICLES[3].bannerImageId,
@@ -291,9 +292,42 @@ describe('ArticleFormComponent', () => {
         MOCK_ARTICLES[2].bannerImageId,
       );
 
-      component.onRevertImage();
+      component.onRevertBannerImage();
 
       expect(component.form.controls.bannerImageId.value).toBe('');
+    });
+  });
+
+  describe('onInsertImage', () => {
+    it('should insert selected image within body text at current cursor position', async () => {
+      const imageId = 'abc123';
+      dialogOpenSpy.mockResolvedValue(`${imageId}-thumb`);
+      component['lastCursorPosition'] = 3;
+      component.form.patchValue({ body: 'Some text' });
+      jest.clearAllMocks();
+
+      await component.onInsertImage();
+
+      expect(dialogOpenSpy).toHaveBeenCalledWith({
+        componentType: ImageExplorerComponent,
+        isModal: true,
+      });
+      expect(component.form.controls.body.value).toBe('Som\n\n{{{abc123}}}\n\ne text');
+    });
+
+    it('should not alter body text if dialog is closed', async () => {
+      dialogOpenSpy.mockResolvedValue('close');
+      component['lastCursorPosition'] = 3;
+      component.form.patchValue({ body: 'Some text' });
+      jest.clearAllMocks();
+
+      await component.onInsertImage();
+
+      expect(dialogOpenSpy).toHaveBeenCalledWith({
+        componentType: ImageExplorerComponent,
+        isModal: true,
+      });
+      expect(component.form.controls.body.value).toBe('Some text');
     });
   });
 
@@ -382,6 +416,175 @@ describe('ArticleFormComponent', () => {
     });
   });
 
+  describe('body image management', () => {
+    describe('bodyImageCount', () => {
+      it('should return 0 when body has no images', () => {
+        component.form.patchValue({ body: 'Some text without images' });
+
+        expect(component.bodyImageCount).toBe(0);
+      });
+
+      it('should count image placeholders correctly', () => {
+        component.form.patchValue({
+          body: 'Text {{{image1}}} more text {{{image2}}} end',
+        });
+
+        expect(component.bodyImageCount).toBe(2);
+      });
+
+      it('should count all image placeholders even if more than limit', () => {
+        component.form.patchValue({
+          body: '{{{img1}}} {{{img2}}} {{{img3}}} {{{img4}}}',
+        });
+
+        expect(component.bodyImageCount).toBe(4);
+      });
+    });
+
+    describe('canInsertImage', () => {
+      it('should return true when no images in body', () => {
+        component.form.patchValue({ body: 'No images here' });
+
+        expect(component.canInsertImage).toBe(true);
+      });
+
+      it('should return true when body has fewer than MAX_ARTICLE_BODY_IMAGES', () => {
+        component.form.patchValue({ body: '{{{img1}}} {{{img2}}}' });
+
+        expect(component.canInsertImage).toBe(true);
+      });
+
+      it('should return false when body has MAX_ARTICLE_BODY_IMAGES or more', () => {
+        component.form.patchValue({ body: '{{{img1}}} {{{img2}}} {{{img3}}}' });
+
+        expect(component.canInsertImage).toBe(false);
+      });
+    });
+
+    describe('onBodyTextareaInteraction', () => {
+      it('should capture cursor position on interaction', () => {
+        const textarea = document.createElement('textarea');
+        textarea.value = 'Some text content for testing cursor tracking';
+        textarea.selectionStart = 10;
+        textarea.selectionEnd = 35;
+        const event = { target: textarea } as unknown as Event;
+
+        component.onBodyTextareaInteraction(event);
+
+        // @ts-expect-error Private property - Should capture the selectionEnd position
+        expect(component.lastCursorPosition).toBe(35);
+      });
+    });
+
+    describe('onInsertImage', () => {
+      beforeEach(() => {
+        dialogOpenSpy.mockResolvedValue('img-test-image-id');
+      });
+
+      it('should open image explorer dialog', async () => {
+        await component.onInsertImage();
+
+        expect(dialogOpenSpy).toHaveBeenCalledWith({
+          componentType: ImageExplorerComponent,
+          isModal: true,
+        });
+      });
+
+      it('should insert image placeholder at cursor position', async () => {
+        component.form.patchValue({ body: 'Start End' });
+        // @ts-expect-error Private property
+        component.lastCursorPosition = 6;
+
+        await component.onInsertImage();
+
+        expect(component.form.controls.body.value).toContain('{{{img}}}');
+      });
+
+      it('should insert at end if cursor position is 0', async () => {
+        component.form.patchValue({ body: 'Existing text' });
+        // @ts-expect-error Private property
+        component.lastCursorPosition = 0;
+
+        await component.onInsertImage();
+
+        expect(component.form.controls.body.value).toContain('{{{img}}}');
+        expect(component.form.controls.body.value).toContain('Existing text');
+      });
+
+      it('should not insert if dialog is cancelled', async () => {
+        dialogOpenSpy.mockResolvedValue('close');
+        component.form.patchValue({ body: 'Original text' });
+
+        await component.onInsertImage();
+
+        expect(component.form.controls.body.value).toBe('Original text');
+      });
+    });
+
+    describe('ngOnChanges', () => {
+      it('should replace image ID placeholders with full syntax when images are available', () => {
+        const imageId1 = '507f1f77bcf86cd799439011';
+        const imageId2 = '507f191e810c19729de860ea';
+
+        component.form.patchValue({
+          body: `Text {{{${imageId1}}}} more {{{${imageId2}}}}`,
+        });
+        const mockImages = [
+          {
+            ...MOCK_IMAGES[0],
+            id: imageId1,
+            mainUrl: 'http://example.com/img1.jpg',
+            mainWidth: 500,
+            caption: 'Test caption 1',
+          },
+          {
+            ...MOCK_IMAGES[1],
+            id: imageId2,
+            mainUrl: 'http://example.com/img2.jpg',
+            mainWidth: 600,
+            caption: 'Test caption 2',
+          },
+        ];
+
+        // Set the bodyImages input directly on the component
+        component.bodyImages = mockImages;
+
+        component.ngOnChanges({
+          bodyImages: {
+            previousValue: [],
+            currentValue: mockImages,
+            firstChange: false,
+            isFirstChange: () => false,
+          },
+        });
+
+        const body = component.form.controls.body.value;
+        expect(body).toContain(
+          '{{{http://example.com/img1.jpg}}}(((500)))<<<Test caption 1>>>',
+        );
+        expect(body).toContain(
+          '{{{http://example.com/img2.jpg}}}(((600)))<<<Test caption 2>>>',
+        );
+      });
+
+      it('should not replace placeholders if no matching images', () => {
+        component.form.patchValue({ body: 'Text {{{unknown-id}}}' });
+        fixture.componentRef.setInput('bodyImages', []);
+
+        component.ngOnChanges({
+          bodyImages: {
+            previousValue: [],
+            currentValue: [],
+            firstChange: false,
+            isFirstChange: () => false,
+          },
+        });
+
+        expect(component.form.controls.body.value).toBe('Text {{{unknown-id}}}');
+      });
+    });
+  });
+
   describe('template rendering', () => {
     describe('modification info', () => {
       it('should render if originalArticle is defined', () => {
@@ -399,18 +602,21 @@ describe('ArticleFormComponent', () => {
       });
     });
 
-    describe('image explorer button', () => {
-      it('should call onImageExplorer when clicked', async () => {
+    describe('select banner image button', () => {
+      it('should call onSelectBannerImage when clicked', async () => {
         dialogOpenSpy.mockResolvedValue('close');
-        const imageExplorerButton = query(fixture.debugElement, '.image-explorer-button');
-        imageExplorerButton.triggerEventHandler('click');
+        const selectBannerImageButton = query(
+          fixture.debugElement,
+          '.select-banner-image-button',
+        );
+        selectBannerImageButton.triggerEventHandler('click');
 
-        expect(imageExplorerButton.nativeElement.disabled).toBe(false);
-        expect(imageExplorerSpy).toHaveBeenCalledTimes(1);
+        expect(selectBannerImageButton.nativeElement.disabled).toBe(false);
+        expect(selectBannerImageSpy).toHaveBeenCalledTimes(1);
       });
     });
 
-    describe('revert image button', () => {
+    describe('revert banner image button', () => {
       it('should be disabled if original banner image is already set', () => {
         component.form.controls.bannerImageId.setValue('same-id');
         fixture.componentRef.setInput('originalArticle', {
@@ -420,7 +626,8 @@ describe('ArticleFormComponent', () => {
         fixture.detectChanges();
 
         expect(
-          query(fixture.debugElement, '.revert-image-button').nativeElement.disabled,
+          query(fixture.debugElement, '.revert-banner-image-button').nativeElement
+            .disabled,
         ).toBe(true);
       });
 
@@ -432,11 +639,42 @@ describe('ArticleFormComponent', () => {
         });
         fixture.detectChanges();
 
-        const revertImageButton = query(fixture.debugElement, '.revert-image-button');
-        revertImageButton.triggerEventHandler('click');
+        const revertBannerImageButton = query(
+          fixture.debugElement,
+          '.revert-banner-image-button',
+        );
+        revertBannerImageButton.triggerEventHandler('click');
 
-        expect(revertImageButton.nativeElement.disabled).toBe(false);
-        expect(revertImageSpy).toHaveBeenCalledTimes(1);
+        expect(revertBannerImageButton.nativeElement.disabled).toBe(false);
+        expect(revertBannerImageSpy).toHaveBeenCalledTimes(1);
+      });
+    });
+
+    describe('insert image button', () => {
+      it('should call onInsertImage when clicked', async () => {
+        dialogOpenSpy.mockResolvedValue('close');
+        const insertImageButton = query(fixture.debugElement, '.insert-image-button');
+        insertImageButton.triggerEventHandler('click');
+
+        expect(insertImageButton.nativeElement.disabled).toBe(false);
+        expect(insertImageSpy).toHaveBeenCalledTimes(1);
+      });
+
+      it('should be disabled when MAX_ARTICLE_BODY_IMAGES limit is reached', () => {
+        component.form.patchValue({ body: '{{{img1}}} {{{img2}}} {{{img3}}}' });
+
+        expect(component.canInsertImage).toBe(false);
+        expect(component.bodyImageCount).toBe(3);
+      });
+
+      it('should be enabled when below MAX_ARTICLE_BODY_IMAGES limit', () => {
+        component.form.patchValue({ body: '{{{img1}}} {{{img2}}}' });
+        fixture.detectChanges();
+
+        const insertImageButton = query(fixture.debugElement, '.insert-image-button');
+
+        expect(insertImageButton.nativeElement.disabled).toBe(false);
+        expect(component.canInsertImage).toBe(true);
       });
     });
 

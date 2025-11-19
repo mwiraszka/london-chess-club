@@ -43,6 +43,11 @@ $grid-gap: 8px;
     max-width: $card-max-width;
     background-color: var(--lcc-color--articleGrid-cardBackground);
     border-radius: var(--lcc-borderRadius--large);
+    opacity: 0;
+    animation: fade-in-up 1.5s ease-out forwards;
+    transition:
+      transform 0.3s ease,
+      background-color 0.3s ease;
 
     &:hover {
       cursor: pointer;
@@ -66,6 +71,9 @@ $grid-gap: 8px;
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
+
+      // Slightly scale up images to avoid tiny gaps around them
+      transform: scale(1.02);
     }
 
     .bookmark-icon {
@@ -114,5 +122,16 @@ $grid-gap: 8px;
         color: var(--lcc-color--articleGrid-articleCreationDateText);
       }
     }
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

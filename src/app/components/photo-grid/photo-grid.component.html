@@ -14,13 +14,14 @@
       <button
         class="album-cover"
         [adminControls]="isAdmin ? getAdminControlsConfig(image.album) : null"
+        [style.animation-delay.s]="getAnimationDelay(image.id)"
         (click)="onClickAlbumCover(image.album)">
         <figure>
           <div class="album-image-container">
             <img [image]="image" />
           </div>
           <figcaption>
-            <div class="album-name lcc-truncate-max-2-lines">{{ image.album }}</div>
+            <div class="album-name lcc-truncate-max-3-lines">{{ image.album }}</div>
             <div class="photo-count">
               {{ getAlbumPhotoCountText(image.album) | uppercase }}
             </div>

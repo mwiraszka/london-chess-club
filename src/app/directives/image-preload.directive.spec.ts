@@ -155,13 +155,74 @@ describe('ImagePreloadDirective', () => {
   });
 
   describe('onImageError', () => {
-    it('should set image to main URL on error if defined', () => {
+    it('should fallback to thumbnail URL when main URL fails', () => {
+      component.imageData = {
+        mainUrl: MOCK_MAIN_URL,
+        thumbnailUrl: 'https://example.com/thumb.jpg',
+      };
+      fixture.detectChanges();
+
+      // Simulate that main URL is currently loaded
+      directive.currentSrc = MOCK_MAIN_URL;
+      directive['onImageError']();
+
+      expect(directive.currentSrc).toBe('https://example.com/thumb.jpg');
+    });
+
+    it('should fallback to main URL when thumbnail URL fails', () => {
+      component.imageData = {
+        mainUrl: MOCK_MAIN_URL,
+        thumbnailUrl: 'https://example.com/thumb.jpg',
+      };
+      fixture.detectChanges();
+
+      // Simulate that thumbnail URL is currently loaded
+      directive.currentSrc = 'https://example.com/thumb.jpg';
       directive['onImageError']();
 
       expect(directive.currentSrc).toBe(MOCK_MAIN_URL);
     });
 
-    it('should set fallback image on error if main URL if undefined', () => {
+    it('should use fallback image when main URL fails and no thumbnail exists', () => {
+      component.imageData = {
+        mainUrl: MOCK_MAIN_URL,
+        thumbnailUrl: undefined,
+      };
+      fixture.detectChanges();
+
+      directive.currentSrc = MOCK_MAIN_URL;
+      directive['onImageError']();
+
+      expect(directive.currentSrc).toBe('assets/fallback-image.png');
+    });
+
+    it('should use fallback image when thumbnail fails and no main URL exists', () => {
+      component.imageData = {
+        mainUrl: undefined,
+        thumbnailUrl: 'https://example.com/thumb.jpg',
+      };
+      fixture.detectChanges();
+
+      directive.currentSrc = 'https://example.com/thumb.jpg';
+      directive['onImageError']();
+
+      expect(directive.currentSrc).toBe('assets/fallback-image.png');
+    });
+
+    it('should use fallback image directly when unknown URL fails', () => {
+      component.imageData = {
+        mainUrl: MOCK_MAIN_URL,
+        thumbnailUrl: 'https://example.com/thumb.jpg',
+      };
+      fixture.detectChanges();
+
+      directive.currentSrc = 'https://example.com/other.jpg';
+      directive['onImageError']();
+
+      expect(directive.currentSrc).toBe('assets/fallback-image.png');
+    });
+
+    it('should set fallback image on error if image is undefined', () => {
       directive.image = undefined;
       directive['onImageError']();
 

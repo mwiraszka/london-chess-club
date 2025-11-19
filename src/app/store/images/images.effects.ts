@@ -19,6 +19,7 @@ import { Injectable } from '@angular/core';
 
 import { BaseImage, IndexedDbImageData, LccError } from '@app/models';
 import { ImageFileService, ImagesApiService } from '@app/services';
+import { AppActions } from '@app/store/app';
 import { ArticlesActions, ArticlesSelectors } from '@app/store/articles';
 import { AuthSelectors } from '@app/store/auth';
 import {
@@ -185,6 +186,36 @@ export class ImagesEffects {
     ),
   );
 
+  fetchArticleBodyImages$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(ArticlesActions.fetchArticleSucceeded, ArticlesActions.formDataChanged),
+      concatLatestFrom(action =>
+        action.type === ArticlesActions.fetchArticleSucceeded.type
+          ? this.store.select(
+              ImagesSelectors.selectBodyImagesByArticleId(action.article.id),
+            )
+          : this.store.select(
+              ImagesSelectors.selectBodyImagesByArticleId(action.articleId),
+            ),
+      ),
+      switchMap(([, bodyImages]) => {
+        // Find images that need their main URLs fetched
+        const imagesToFetch = bodyImages.filter(
+          image =>
+            !image.mainUrl ||
+            (image.urlExpirationDate && isExpired(image.urlExpirationDate)),
+        );
+
+        // Fetch each image's main URL in the background
+        return from(
+          imagesToFetch.map(image =>
+            ImagesActions.fetchMainImageInBackgroundRequested({ imageId: image.id }),
+          ),
+        );
+      }),
+    );
+  });
+
   fetchMainImage$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(ImagesActions.fetchMainImageRequested),
@@ -228,6 +259,7 @@ export class ImagesEffects {
   refetchMetadata$ = createEffect(() => {
     const refetchActions$ = this.actions$.pipe(
       ofType(
+        AppActions.refreshAppRequested,
         ImagesActions.addImageSucceeded,
         ImagesActions.addImagesSucceeded,
         ImagesActions.updateImageSucceeded,
@@ -253,6 +285,7 @@ export class ImagesEffects {
   refetchFilteredThumbnails$ = createEffect(() => {
     const refetchActions$ = this.actions$.pipe(
       ofType(
+        AppActions.refreshAppRequested,
         ImagesActions.addImageSucceeded,
         ImagesActions.addImagesSucceeded,
         ImagesActions.updateImageSucceeded,
@@ -281,6 +314,7 @@ export class ImagesEffects {
   refetchAlbumCoverThumbnails$ = createEffect(() => {
     const refetchActions$ = this.actions$.pipe(
       ofType(
+        AppActions.refreshAppRequested,
         ImagesActions.addImageSucceeded,
         ImagesActions.addImagesSucceeded,
         ImagesActions.updateImageSucceeded,
@@ -356,8 +390,9 @@ export class ImagesEffects {
       concatLatestFrom(() => [
         this.store.select(AuthSelectors.selectUser).pipe(filter(isDefined)),
         this.store.select(ImagesSelectors.selectNewImageFormData).pipe(filter(isDefined)),
+        this.store.select(ImagesSelectors.selectAllExistingAlbums),
       ]),
-      switchMap(([imageFileResult, user, formData]) => {
+      switchMap(([imageFileResult, user, formData, existingAlbums]) => {
         if (isLccError(imageFileResult)) {
           return of(ImagesActions.addImageFailed({ error: imageFileResult }));
         }
@@ -377,7 +412,9 @@ export class ImagesEffects {
           filename: formData.filename,
           caption: formData.caption,
           album: formData.album,
-          albumCover: formData.albumCover,
+          albumCover: !existingAlbums.includes(formData.album)
+            ? true
+            : formData.albumCover,
           albumOrdinality: formData.albumOrdinality,
           modificationInfo: {
             createdBy: `${user.firstName} ${user.lastName}`,

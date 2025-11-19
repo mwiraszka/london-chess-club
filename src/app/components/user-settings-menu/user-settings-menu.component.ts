@@ -15,6 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 
 import { ToggleSwitchComponent } from '@app/components/toggle-switch/toggle-switch.component';
+import { TooltipDirective } from '@app/directives/tooltip.directive';
 import { User } from '@app/models';
 import { AppActions, AppSelectors } from '@app/store/app';
 import { AuthActions, AuthSelectors } from '@app/store/auth';
@@ -24,7 +25,7 @@ import { AuthActions, AuthSelectors } from '@app/store/auth';
   selector: 'lcc-user-settings-menu',
   templateUrl: './user-settings-menu.component.html',
   styleUrl: './user-settings-menu.component.scss',
-  imports: [CommonModule, MatIconModule, ToggleSwitchComponent],
+  imports: [CommonModule, MatIconModule, ToggleSwitchComponent, TooltipDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserSettingsMenuComponent implements OnInit {
@@ -62,6 +63,11 @@ export class UserSettingsMenuComponent implements OnInit {
 
   public onToggleSafeMode(): void {
     this.store.dispatch(AppActions.safeModeToggled());
+  }
+
+  public onRefreshData(): void {
+    this.store.dispatch(AppActions.refreshAppRequested());
+    this.close.emit();
   }
 
   public onLogin(): void {

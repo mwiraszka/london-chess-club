@@ -63,6 +63,7 @@ export class ArticleGridComponent implements OnInit, OnChanges {
     bookmark: boolean;
   }>();
 
+  private animationDelays = new Map<Id, number>();
   private bannerImagesMap = new Map<Id, Image>();
   private limitToFourArticles = false;
 
@@ -75,15 +76,24 @@ export class ArticleGridComponent implements OnInit, OnChanges {
   };
 
   get visibleArticles(): Article[] {
+    let articles: Article[];
+
     if (this.limitToFourArticles) {
-      return this.articles.slice(0, 4);
+      articles = this.articles.slice(0, 4);
+    } else if (!this.options || this.options.pageSize === -1) {
+      articles = this.articles;
+    } else {
+      articles = this.articles.slice(0, this.options.pageSize);
     }
 
-    if (!this.options || this.options.pageSize === -1) {
-      return this.articles;
+    if (this.animationDelays.size === 0 && articles.length > 0) {
+      for (let i = 0; i < articles.length; i++) {
+        const delay = i * 0.1;
+        this.animationDelays.set(articles[i].id, delay);
+      }
     }
 
-    return this.articles.slice(0, this.options.pageSize);
+    return articles;
   }
 
   constructor(private readonly dialogService: DialogService) {}
@@ -103,6 +113,10 @@ export class ArticleGridComponent implements OnInit, OnChanges {
 
   public getBannerImage(imageId: Id): Partial<Image> | null {
     return this.bannerImagesMap.get(imageId) || { id: imageId, caption: 'Loading...' };
+  }
+
+  public getAnimationDelay(articleId: Id): number {
+    return this.animationDelays.get(articleId) || 0;
   }
 
   public getAdminControlsConfig(article: Article): AdminControlsConfig {

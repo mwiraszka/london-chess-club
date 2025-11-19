@@ -7,11 +7,14 @@ import { filter, map, tap } from 'rxjs/operators';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
 import { CommonModule } from '@angular/common';
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   DOCUMENT,
+  ElementRef,
   Inject,
   OnInit,
+  ViewChild,
 } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
@@ -20,7 +23,12 @@ import { HeaderComponent } from '@app/components/header/header.component';
 import { NavigationBarComponent } from '@app/components/navigation-bar/navigation-bar.component';
 import { UpcomingEventBannerComponent } from '@app/components/upcoming-event-banner/upcoming-event-banner.component';
 import { Event, IsoDate } from '@app/models';
-import { RoutingService, TouchEventsService, UserActivityService } from '@app/services';
+import {
+  RefreshService,
+  RoutingService,
+  TouchEventsService,
+  UserActivityService,
+} from '@app/services';
 import { AppActions, AppSelectors } from '@app/store/app';
 import { EventsSelectors } from '@app/store/events';
 
@@ -44,7 +52,9 @@ import { EventsSelectors } from '@app/store/events';
 
       <lcc-navigation-bar></lcc-navigation-bar>
 
-      <main cdkScrollable>
+      <main
+        #mainElement
+        cdkScrollable>
         <router-outlet></router-outlet>
         <lcc-footer></lcc-footer>
       </main>
@@ -62,7 +72,10 @@ import { EventsSelectors } from '@app/store/events';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
+  @ViewChild('mainElement', { read: ElementRef })
+  public mainElement!: ElementRef<HTMLElement>;
+
   public viewModel$?: Observable<{
     bannerLastCleared: IsoDate | null;
     isDarkMode: boolean;
@@ -73,6 +86,7 @@ export class AppComponent implements OnInit {
 
   constructor(
     @Inject(DOCUMENT) private readonly _document: Document,
+    private readonly refreshService: RefreshService,
     private readonly routingService: RoutingService,
     private readonly store: Store,
     private readonly touchEventsService: TouchEventsService,
@@ -82,9 +96,9 @@ export class AppComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.initNavigationListenerForScrollingBackToTop();
     this.touchEventsService.listenForTouchEvents();
     this.userActivityService.monitorSessionExpiry();
+    this.initRefreshListener();
 
     this.viewModel$ = combineLatest([
       this.store.select(AppSelectors.selectBannerLastCleared),
@@ -115,8 +129,34 @@ export class AppComponent implements OnInit {
     );
   }
 
+  public ngAfterViewInit(): void {
+    this.refreshService.initialize(this.mainElement.nativeElement);
+    this.initNavigationListenerForScrollingBackToTop();
+  }
+
   public onClearBanner(): void {
     this.store.dispatch(AppActions.upcomingEventBannerCleared());
+  }
+
+  private initRefreshListener(): void {
+    this.refreshService.isRefreshing$
+      .pipe(
+        untilDestroyed(this),
+        filter(isRefreshing => isRefreshing),
+      )
+      .subscribe(() => {
+        this.store.dispatch(AppActions.refreshAppRequested());
+      });
+
+    this.store
+      .select(AppSelectors.selectIsLoading)
+      .pipe(
+        untilDestroyed(this),
+        filter(isLoading => !isLoading && this.refreshService.isRefreshing$.value),
+      )
+      .subscribe(() => {
+        this.refreshService.completeRefresh();
+      });
   }
 
   private initNavigationListenerForScrollingBackToTop(): void {
@@ -125,11 +165,6 @@ export class AppComponent implements OnInit {
         untilDestroyed(this),
         filter(fragment => !fragment),
       )
-      .subscribe(() => {
-        const mainElement = this._document.querySelector('main');
-        if (mainElement) {
-          mainElement.scrollTo({ top: 0 });
-        }
-      });
+      .subscribe(() => this.mainElement.nativeElement.scrollTo({ top: 0 }));
   }
 }
