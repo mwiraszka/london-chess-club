@@ -32,6 +32,13 @@ Below you'll find an overview of the tools and technologies that power the app, 
 | 🔧  | Behind-the-scenes changes         |
 
 <details>
+<summary>v5.10.2 - November 19th, 2025</summary>
+
+- 🐛 Force a reset of stale data for any local storage keys from v5.9.x or older
+
+</details>
+
+<details>
 <summary>v5.10.1 - November 19th, 2025</summary>
 
 - 🐛 Bust image cache with each new app version release and remove some potential race conditions when determining what image data to fetch and when
