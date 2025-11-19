@@ -103,6 +103,7 @@ describe('ArticleEditorPageComponent', () => {
 
         expect(vm).toStrictEqual({
           bannerImage: null,
+          bodyImages: [],
           formData: pick(MOCK_ARTICLES[0], ARTICLE_FORM_DATA_PROPERTIES),
           hasUnsavedChanges: false,
           originalArticle: MOCK_ARTICLES[0],
@@ -132,6 +133,7 @@ describe('ArticleEditorPageComponent', () => {
 
         expect(vm).toStrictEqual({
           bannerImage: null,
+          bodyImages: [],
           formData: INITIAL_ARTICLE_FORM_DATA,
           hasUnsavedChanges: false,
           originalArticle: null,

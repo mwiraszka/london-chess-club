@@ -109,7 +109,7 @@ export class ArticleFormComponent implements OnInit, OnChanges {
   }
 
   public ngOnChanges(changes: NgChanges<ArticleFormComponent>): void {
-    if (changes.bodyImages) {
+    if (changes.bodyImages && this.form) {
       let body = this.form.controls.body.value;
 
       // Find all {{{ ... }}} patterns in the body

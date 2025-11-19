@@ -7,10 +7,10 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { BasicDialogComponent } from '@app/components/basic-dialog/basic-dialog.component';
 import { ImageExplorerComponent } from '@app/components/image-explorer/image-explorer.component';
 import { MarkdownRendererComponent } from '@app/components/markdown-renderer/markdown-renderer.component';
-import { ARTICLE_FORM_DATA_PROPERTIES, MAX_ARTICLE_BODY_IMAGES } from '@app/constants';
+import { ARTICLE_FORM_DATA_PROPERTIES } from '@app/constants';
 import { MOCK_ARTICLES } from '@app/mocks/articles.mock';
 import { MOCK_IMAGES } from '@app/mocks/images.mock';
-import { DialogService, ToastService } from '@app/services';
+import { DialogService } from '@app/services';
 import { query } from '@app/utils';
 
 import { ArticleFormComponent } from './article-form.component';
@@ -20,13 +20,10 @@ describe('ArticleFormComponent', () => {
   let component: ArticleFormComponent;
 
   let dialogService: DialogService;
-  let toastService: ToastService;
 
   let cancelSpy: jest.SpyInstance;
   let changeSpy: jest.SpyInstance;
-  let cursorPositionSpy: jest.SpyInstance;
   let dialogOpenSpy: jest.SpyInstance;
-  let toastDisplaySpy: jest.SpyInstance;
   let initFormSpy: jest.SpyInstance;
   let initFormValueChangeListenerSpy: jest.SpyInstance;
   let insertImageSpy: jest.SpyInstance;
@@ -46,10 +43,6 @@ describe('ArticleFormComponent', () => {
           provide: DialogService,
           useValue: { open: jest.fn() },
         },
-        {
-          provide: ToastService,
-          useValue: { displayToast: jest.fn() },
-        },
         FormBuilder,
       ],
     })
@@ -63,12 +56,10 @@ describe('ArticleFormComponent', () => {
     component = fixture.componentInstance;
 
     dialogService = TestBed.inject(DialogService);
-    toastService = TestBed.inject(ToastService);
 
     cancelSpy = jest.spyOn(component.cancel, 'emit');
     changeSpy = jest.spyOn(component.change, 'emit');
     dialogOpenSpy = jest.spyOn(dialogService, 'open');
-    toastDisplaySpy = jest.spyOn(toastService, 'displayToast');
     // @ts-expect-error Private class member
     initFormSpy = jest.spyOn(component, 'initForm');
     initFormValueChangeListenerSpy = jest.spyOn(
@@ -81,8 +72,6 @@ describe('ArticleFormComponent', () => {
     requestPublishArticleSpy = jest.spyOn(component.requestPublishArticle, 'emit');
     requestUpdateArticleSpy = jest.spyOn(component.requestUpdateArticle, 'emit');
     restoreSpy = jest.spyOn(component.restore, 'emit');
-    // @ts-expect-error Private class member
-    cursorPositionSpy = jest.spyOn(component, 'cursorPosition');
     revertBannerImageSpy = jest.spyOn(component, 'onRevertBannerImage');
     selectBannerImageSpy = jest.spyOn(component, 'onSelectBannerImage');
     submitSpy = jest.spyOn(component, 'onSubmit');
@@ -340,15 +329,6 @@ describe('ArticleFormComponent', () => {
       });
       expect(component.form.controls.body.value).toBe('Some text');
     });
-
-    it('should not open image explorer when max images reached', async () => {
-      component.form.patchValue({ body: '{{{img1}}}\n\n{{{img2}}}\n\n{{{img3}}}' });
-      jest.clearAllMocks();
-
-      await component.onInsertImage();
-
-      expect(dialogOpenSpy).not.toHaveBeenCalled();
-    });
   });
 
   describe('onCancel', () => {
@@ -436,6 +416,175 @@ describe('ArticleFormComponent', () => {
     });
   });
 
+  describe('body image management', () => {
+    describe('bodyImageCount', () => {
+      it('should return 0 when body has no images', () => {
+        component.form.patchValue({ body: 'Some text without images' });
+
+        expect(component.bodyImageCount).toBe(0);
+      });
+
+      it('should count image placeholders correctly', () => {
+        component.form.patchValue({
+          body: 'Text {{{image1}}} more text {{{image2}}} end',
+        });
+
+        expect(component.bodyImageCount).toBe(2);
+      });
+
+      it('should count all image placeholders even if more than limit', () => {
+        component.form.patchValue({
+          body: '{{{img1}}} {{{img2}}} {{{img3}}} {{{img4}}}',
+        });
+
+        expect(component.bodyImageCount).toBe(4);
+      });
+    });
+
+    describe('canInsertImage', () => {
+      it('should return true when no images in body', () => {
+        component.form.patchValue({ body: 'No images here' });
+
+        expect(component.canInsertImage).toBe(true);
+      });
+
+      it('should return true when body has fewer than MAX_ARTICLE_BODY_IMAGES', () => {
+        component.form.patchValue({ body: '{{{img1}}} {{{img2}}}' });
+
+        expect(component.canInsertImage).toBe(true);
+      });
+
+      it('should return false when body has MAX_ARTICLE_BODY_IMAGES or more', () => {
+        component.form.patchValue({ body: '{{{img1}}} {{{img2}}} {{{img3}}}' });
+
+        expect(component.canInsertImage).toBe(false);
+      });
+    });
+
+    describe('onBodyTextareaInteraction', () => {
+      it('should capture cursor position on interaction', () => {
+        const textarea = document.createElement('textarea');
+        textarea.value = 'Some text content for testing cursor tracking';
+        textarea.selectionStart = 10;
+        textarea.selectionEnd = 35;
+        const event = { target: textarea } as unknown as Event;
+
+        component.onBodyTextareaInteraction(event);
+
+        // @ts-expect-error Private property - Should capture the selectionEnd position
+        expect(component.lastCursorPosition).toBe(35);
+      });
+    });
+
+    describe('onInsertImage', () => {
+      beforeEach(() => {
+        dialogOpenSpy.mockResolvedValue('img-test-image-id');
+      });
+
+      it('should open image explorer dialog', async () => {
+        await component.onInsertImage();
+
+        expect(dialogOpenSpy).toHaveBeenCalledWith({
+          componentType: ImageExplorerComponent,
+          isModal: true,
+        });
+      });
+
+      it('should insert image placeholder at cursor position', async () => {
+        component.form.patchValue({ body: 'Start End' });
+        // @ts-expect-error Private property
+        component.lastCursorPosition = 6;
+
+        await component.onInsertImage();
+
+        expect(component.form.controls.body.value).toContain('{{{img}}}');
+      });
+
+      it('should insert at end if cursor position is 0', async () => {
+        component.form.patchValue({ body: 'Existing text' });
+        // @ts-expect-error Private property
+        component.lastCursorPosition = 0;
+
+        await component.onInsertImage();
+
+        expect(component.form.controls.body.value).toContain('{{{img}}}');
+        expect(component.form.controls.body.value).toContain('Existing text');
+      });
+
+      it('should not insert if dialog is cancelled', async () => {
+        dialogOpenSpy.mockResolvedValue('close');
+        component.form.patchValue({ body: 'Original text' });
+
+        await component.onInsertImage();
+
+        expect(component.form.controls.body.value).toBe('Original text');
+      });
+    });
+
+    describe('ngOnChanges', () => {
+      it('should replace image ID placeholders with full syntax when images are available', () => {
+        const imageId1 = '507f1f77bcf86cd799439011';
+        const imageId2 = '507f191e810c19729de860ea';
+
+        component.form.patchValue({
+          body: `Text {{{${imageId1}}}} more {{{${imageId2}}}}`,
+        });
+        const mockImages = [
+          {
+            ...MOCK_IMAGES[0],
+            id: imageId1,
+            mainUrl: 'http://example.com/img1.jpg',
+            mainWidth: 500,
+            caption: 'Test caption 1',
+          },
+          {
+            ...MOCK_IMAGES[1],
+            id: imageId2,
+            mainUrl: 'http://example.com/img2.jpg',
+            mainWidth: 600,
+            caption: 'Test caption 2',
+          },
+        ];
+
+        // Set the bodyImages input directly on the component
+        component.bodyImages = mockImages;
+
+        component.ngOnChanges({
+          bodyImages: {
+            previousValue: [],
+            currentValue: mockImages,
+            firstChange: false,
+            isFirstChange: () => false,
+          },
+        });
+
+        const body = component.form.controls.body.value;
+        expect(body).toContain(
+          '{{{http://example.com/img1.jpg}}}(((500)))<<<Test caption 1>>>',
+        );
+        expect(body).toContain(
+          '{{{http://example.com/img2.jpg}}}(((600)))<<<Test caption 2>>>',
+        );
+      });
+
+      it('should not replace placeholders if no matching images', () => {
+        component.form.patchValue({ body: 'Text {{{unknown-id}}}' });
+        fixture.componentRef.setInput('bodyImages', []);
+
+        component.ngOnChanges({
+          bodyImages: {
+            previousValue: [],
+            currentValue: [],
+            firstChange: false,
+            isFirstChange: () => false,
+          },
+        });
+
+        expect(component.form.controls.body.value).toBe('Text {{{unknown-id}}}');
+      });
+    });
+  });
+
   describe('template rendering', () => {
     describe('modification info', () => {
       it('should render if originalArticle is defined', () => {
@@ -509,6 +658,23 @@ describe('ArticleFormComponent', () => {
 
         expect(insertImageButton.nativeElement.disabled).toBe(false);
         expect(insertImageSpy).toHaveBeenCalledTimes(1);
+      });
+
+      it('should be disabled when MAX_ARTICLE_BODY_IMAGES limit is reached', () => {
+        component.form.patchValue({ body: '{{{img1}}} {{{img2}}} {{{img3}}}' });
+
+        expect(component.canInsertImage).toBe(false);
+        expect(component.bodyImageCount).toBe(3);
+      });
+
+      it('should be enabled when below MAX_ARTICLE_BODY_IMAGES limit', () => {
+        component.form.patchValue({ body: '{{{img1}}} {{{img2}}}' });
+        fixture.detectChanges();
+
+        const insertImageButton = query(fixture.debugElement, '.insert-image-button');
+
+        expect(insertImageButton.nativeElement.disabled).toBe(false);
+        expect(component.canInsertImage).toBe(true);
       });
     });
 
