@@ -197,7 +197,7 @@ export const selectIdsOfArticleBannerImagesWithMissingOrExpiredThumbnailUrls = (
     ).sort();
   });
 
-export const selectImageByArticleId = (articleId: Id | null) =>
+export const selectBannerImageByArticleId = (articleId: Id | null) =>
   createSelector(
     selectAllImages,
     ArticlesSelectors.selectArticleById(articleId),
@@ -205,5 +205,32 @@ export const selectImageByArticleId = (articleId: Id | null) =>
     (allImages, article, articleFormData) => {
       const imageId = articleFormData.bannerImageId || article?.bannerImageId;
       return allImages?.find(image => image?.id === imageId) ?? null;
+    },
+  );
+
+export const selectBodyImagesByArticleId = (articleId: Id | null) =>
+  createSelector(
+    selectAllImages,
+    ArticlesSelectors.selectArticleById(articleId),
+    ArticlesSelectors.selectArticleFormDataById(articleId),
+    (allImages, article, articleFormData) => {
+      const body = articleFormData.body || article?.body || '';
+
+      // Find all {{{...}}} patterns in the body
+      const imagePattern = /{{{([^}]+)}}}/g;
+      const imageIds: Id[] = [];
+      let match: RegExpExecArray | null;
+
+      while ((match = imagePattern.exec(body)) !== null) {
+        const content = match[1];
+        // Only add if it looks like an ID (not a URL)
+        if (!content.includes('/') && !content.startsWith('http')) {
+          imageIds.push(content);
+        }
+      }
+
+      // Remove duplicates and return corresponding images
+      const uniqueIds = uniq(imageIds);
+      return allImages.filter(image => uniqueIds.includes(image.id));
     },
   );

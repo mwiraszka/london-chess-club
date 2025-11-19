@@ -6,6 +6,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnInit,
   Output,
 } from '@angular/core';
@@ -23,6 +24,7 @@ import { FormErrorIconComponent } from '@app/components/form-error-icon/form-err
 import { ImageExplorerComponent } from '@app/components/image-explorer/image-explorer.component';
 import { MarkdownRendererComponent } from '@app/components/markdown-renderer/markdown-renderer.component';
 import { ModificationInfoComponent } from '@app/components/modification-info/modification-info.component';
+import { MAX_ARTICLE_BODY_IMAGES } from '@app/constants';
 import { ImagePreloadDirective } from '@app/directives/image-preload.directive';
 import { TooltipDirective } from '@app/directives/tooltip.directive';
 import {
@@ -33,8 +35,10 @@ import {
   Dialog,
   Id,
   Image,
+  NgChanges,
 } from '@app/models';
 import { DialogService } from '@app/services';
+import { isCollectionId } from '@app/utils';
 import { textValidator } from '@app/validators';
 
 @UntilDestroy()
@@ -53,8 +57,9 @@ import { textValidator } from '@app/validators';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ArticleFormComponent implements OnInit {
+export class ArticleFormComponent implements OnInit, OnChanges {
   @Input({ required: true }) bannerImage!: Image | null;
+  @Input({ required: true }) bodyImages!: Image[];
   @Input({ required: true }) formData!: ArticleFormData;
   @Input({ required: true }) hasUnsavedChanges!: boolean;
   @Input({ required: true }) originalArticle!: Article | null;
@@ -70,11 +75,25 @@ export class ArticleFormComponent implements OnInit {
   @Output() restore = new EventEmitter<Id | null>();
 
   public form!: FormGroup<ArticleFormGroup>;
+  public readonly maxBodyImages = MAX_ARTICLE_BODY_IMAGES;
+
+  private lastCursorPosition = 0;
 
   constructor(
     private readonly dialogService: DialogService,
     private readonly formBuilder: FormBuilder,
   ) {}
+
+  public get bodyImageCount(): number {
+    const body = this.form?.controls.body.value || '';
+    const imagePattern = /{{{([^}]+)}}}/g;
+    const matches = body.match(imagePattern);
+    return matches ? matches.length : 0;
+  }
+
+  public get canInsertImage(): boolean {
+    return this.bodyImageCount < MAX_ARTICLE_BODY_IMAGES;
+  }
 
   public ngOnInit(): void {
     if (!this.bannerImage && this.formData.bannerImageId) {
@@ -86,6 +105,46 @@ export class ArticleFormComponent implements OnInit {
 
     if (this.hasUnsavedChanges) {
       this.form.markAllAsTouched();
+    }
+  }
+
+  public ngOnChanges(changes: NgChanges<ArticleFormComponent>): void {
+    if (changes.bodyImages) {
+      let body = this.form.controls.body.value;
+
+      // Find all {{{ ... }}} patterns in the body
+      const imagePattern = /{{{([^}]+)}}}/g;
+      let match: RegExpExecArray | null;
+      const replacements: Array<{ oldString: string; newString: string }> = [];
+
+      while ((match = imagePattern.exec(body)) !== null) {
+        const content = match[1];
+
+        // Check if the content is a valid image id
+        if (isCollectionId(content)) {
+          // Find the corresponding image in bodyImages
+          const image = this.bodyImages.find(img => img.id === content);
+
+          if (image?.mainUrl) {
+            const newString = `{{{${image.mainUrl}}}}(((${image.mainWidth || 300})))<<<${image.caption || ''}>>>`;
+
+            replacements.push({
+              oldString: match[0],
+              newString,
+            });
+          }
+        }
+      }
+
+      // Apply all replacements
+      replacements.forEach(({ oldString, newString }) => {
+        body = body.replace(oldString, newString);
+      });
+
+      // Update the form if any replacements were made
+      if (replacements.length > 0) {
+        this.form.patchValue({ body }, { emitEvent: false });
+      }
     }
   }
 
@@ -115,7 +174,7 @@ export class ArticleFormComponent implements OnInit {
     setTimeout(() => this.ngOnInit());
   }
 
-  public async onOpenImageExplorer(): Promise<void> {
+  public async onSelectBannerImage(): Promise<void> {
     const dialogResponse = await this.dialogService.open<ImageExplorerComponent, Id>({
       componentType: ImageExplorerComponent,
       isModal: true,
@@ -128,8 +187,27 @@ export class ArticleFormComponent implements OnInit {
     }
   }
 
-  public onRevertImage(): void {
+  public onRevertBannerImage(): void {
     this.form.patchValue({ bannerImageId: this.originalArticle?.bannerImageId ?? '' });
+  }
+
+  public async onInsertImage(): Promise<void> {
+    const dialogResponse = await this.dialogService.open<ImageExplorerComponent, Id>({
+      componentType: ImageExplorerComponent,
+      isModal: true,
+    });
+
+    if (dialogResponse !== 'close') {
+      const imageId = dialogResponse.split('-')[0];
+
+      const body = this.form.controls.body.value;
+      const imageString = `{{{${imageId}}}}`;
+      const insertIndex = this.lastCursorPosition || body.length;
+
+      this.form.patchValue({
+        body: `${body.slice(0, insertIndex)}\n\n${imageString}\n\n${body.slice(insertIndex)}`,
+      });
+    }
   }
 
   public onCancel(): void {
@@ -198,5 +276,15 @@ export class ArticleFormComponent implements OnInit {
 
     // Manually trigger form data change to pass initial form data to store
     this.form.updateValueAndValidity();
+  }
+
+  /**
+   * Updates the stored cursor position when the user interacts with the body textarea
+   */
+  public onBodyTextareaInteraction(event: Event): void {
+    const textarea = event.target as HTMLTextAreaElement;
+    if (textarea.selectionEnd !== undefined) {
+      this.lastCursorPosition = textarea.selectionEnd;
+    }
   }
 }

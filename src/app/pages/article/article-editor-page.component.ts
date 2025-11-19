@@ -28,6 +28,7 @@ import { ImagesActions, ImagesSelectors } from '@app/store/images';
 
       <lcc-article-form
         [bannerImage]="vm.bannerImage"
+        [bodyImages]="vm.bodyImages"
         [formData]="vm.formData"
         [hasUnsavedChanges]="vm.hasUnsavedChanges"
         [originalArticle]="vm.originalArticle"
@@ -54,6 +55,7 @@ export class ArticleEditorPageComponent implements EditorPage, OnInit {
   };
   public viewModel$?: Observable<{
     bannerImage: Image | null;
+    bodyImages: Image[];
     formData: ArticleFormData;
     hasUnsavedChanges: boolean;
     originalArticle: Article | null;
@@ -75,14 +77,16 @@ export class ArticleEditorPageComponent implements EditorPage, OnInit {
           this.store.select(ArticlesSelectors.selectArticleById(articleId)),
           this.store.select(ArticlesSelectors.selectArticleFormDataById(articleId)),
           this.store.select(ArticlesSelectors.selectHasUnsavedChanges(articleId)),
-          this.store.select(ImagesSelectors.selectImageByArticleId(articleId)),
+          this.store.select(ImagesSelectors.selectBannerImageByArticleId(articleId)),
+          this.store.select(ImagesSelectors.selectBodyImagesByArticleId(articleId)),
         ]),
       ),
-      map(([originalArticle, formData, hasUnsavedChanges, bannerImage]) => ({
+      map(([originalArticle, formData, hasUnsavedChanges, bannerImage, bodyImages]) => ({
         originalArticle,
         formData,
         hasUnsavedChanges,
         bannerImage,
+        bodyImages,
         pageTitle: originalArticle
           ? `Edit ${originalArticle.title}`
           : 'Compose an article',

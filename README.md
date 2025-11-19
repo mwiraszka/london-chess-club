@@ -34,7 +34,7 @@ Below you'll find an overview of the tools and technologies that power the app, 
 <details>
 <summary>v5.10.0 - November 18th, 2025</summary>
 
-- 🚀 Add support for embedding images in articles
+- 🚀 Allow for up to 3 images inside the article body, with support for custom sizing and caption text under each image
 - 🚀 Transform the next event banner at the top of the screen into a looping marquee banner if there isn't enough room to display all the text
 - 🚀 Add a button in the user settings menu to immediately fetch any new website data (by default fetched automatically every 30 mins). Also implement a basic pull-to-refresh mechanism on mobile to do the same thing.
 - 🚀 Add support for GIFs

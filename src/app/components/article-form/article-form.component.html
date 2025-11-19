@@ -11,21 +11,36 @@
 
       <div class="image-controls-container">
         <button
-          class="image-explorer-button lcc-secondary-button"
+          class="select-banner-image-button lcc-secondary-button"
           type="button"
-          tooltip="Open Image Explorer"
-          (click)="onOpenImageExplorer()">
-          <mat-icon>image_search</mat-icon>
+          tooltip="Select a new banner image"
+          (click)="onSelectBannerImage()">
+          <mat-icon>panorama</mat-icon>
         </button>
         <button
-          class="revert-image-button lcc-secondary-button"
+          class="revert-banner-image-button lcc-secondary-button"
           type="button"
-          tooltip="Revert to original image"
+          tooltip="Revert banner to original image"
           [disabled]="
             (originalArticle?.bannerImageId ?? '') === form.controls.bannerImageId.value
           "
-          (click)="onRevertImage()">
+          (click)="onRevertBannerImage()">
           <mat-icon>restore_page</mat-icon>
+        </button>
+
+        <hr />
+
+        <button
+          class="insert-image-button lcc-secondary-button"
+          type="button"
+          [tooltip]="
+            canInsertImage
+              ? 'Insert image into article body'
+              : 'Maximum of ' + maxBodyImages + ' body images reached'
+          "
+          [disabled]="!canInsertImage"
+          (click)="onInsertImage()">
+          <mat-icon>image</mat-icon>
         </button>
       </div>
     </div>
@@ -53,7 +68,10 @@
       id="body-input"
       name="body"
       formControlName="body"
-      maxlength="50000">
+      maxlength="50000"
+      (click)="onBodyTextareaInteraction($event)"
+      (keyup)="onBodyTextareaInteraction($event)"
+      (select)="onBodyTextareaInteraction($event)">
     </textarea>
     <lcc-form-error-icon [control]="form.controls.body"></lcc-form-error-icon>
 

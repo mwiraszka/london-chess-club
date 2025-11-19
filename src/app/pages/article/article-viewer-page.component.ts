@@ -71,7 +71,7 @@ export class ArticleViewerPageComponent implements OnInit {
           this.store
             .select(ArticlesSelectors.selectArticleById(articleId))
             .pipe(filter(isDefined)),
-          this.store.select(ImagesSelectors.selectImageByArticleId(articleId)),
+          this.store.select(ImagesSelectors.selectBannerImageByArticleId(articleId)),
           this.store.select(AuthSelectors.selectIsAdmin),
         ]),
       ),

@@ -7,10 +7,10 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { BasicDialogComponent } from '@app/components/basic-dialog/basic-dialog.component';
 import { ImageExplorerComponent } from '@app/components/image-explorer/image-explorer.component';
 import { MarkdownRendererComponent } from '@app/components/markdown-renderer/markdown-renderer.component';
-import { ARTICLE_FORM_DATA_PROPERTIES } from '@app/constants';
+import { ARTICLE_FORM_DATA_PROPERTIES, MAX_ARTICLE_BODY_IMAGES } from '@app/constants';
 import { MOCK_ARTICLES } from '@app/mocks/articles.mock';
 import { MOCK_IMAGES } from '@app/mocks/images.mock';
-import { DialogService } from '@app/services';
+import { DialogService, ToastService } from '@app/services';
 import { query } from '@app/utils';
 
 import { ArticleFormComponent } from './article-form.component';
@@ -20,18 +20,22 @@ describe('ArticleFormComponent', () => {
   let component: ArticleFormComponent;
 
   let dialogService: DialogService;
+  let toastService: ToastService;
 
   let cancelSpy: jest.SpyInstance;
   let changeSpy: jest.SpyInstance;
+  let cursorPositionSpy: jest.SpyInstance;
   let dialogOpenSpy: jest.SpyInstance;
-  let imageExplorerSpy: jest.SpyInstance;
+  let toastDisplaySpy: jest.SpyInstance;
   let initFormSpy: jest.SpyInstance;
   let initFormValueChangeListenerSpy: jest.SpyInstance;
+  let insertImageSpy: jest.SpyInstance;
   let requestFetchMainImageSpy: jest.SpyInstance;
   let requestPublishArticleSpy: jest.SpyInstance;
   let requestUpdateArticleSpy: jest.SpyInstance;
   let restoreSpy: jest.SpyInstance;
-  let revertImageSpy: jest.SpyInstance;
+  let revertBannerImageSpy: jest.SpyInstance;
+  let selectBannerImageSpy: jest.SpyInstance;
   let submitSpy: jest.SpyInstance;
 
   beforeEach(async () => {
@@ -41,6 +45,10 @@ describe('ArticleFormComponent', () => {
         {
           provide: DialogService,
           useValue: { open: jest.fn() },
+        },
+        {
+          provide: ToastService,
+          useValue: { displayToast: jest.fn() },
         },
         FormBuilder,
       ],
@@ -55,12 +63,12 @@ describe('ArticleFormComponent', () => {
     component = fixture.componentInstance;
 
     dialogService = TestBed.inject(DialogService);
+    toastService = TestBed.inject(ToastService);
 
     cancelSpy = jest.spyOn(component.cancel, 'emit');
     changeSpy = jest.spyOn(component.change, 'emit');
-    restoreSpy = jest.spyOn(component.restore, 'emit');
     dialogOpenSpy = jest.spyOn(dialogService, 'open');
-    imageExplorerSpy = jest.spyOn(component, 'onOpenImageExplorer');
+    toastDisplaySpy = jest.spyOn(toastService, 'displayToast');
     // @ts-expect-error Private class member
     initFormSpy = jest.spyOn(component, 'initForm');
     initFormValueChangeListenerSpy = jest.spyOn(
@@ -68,13 +76,19 @@ describe('ArticleFormComponent', () => {
       // @ts-expect-error Private class member
       'initFormValueChangeListener',
     );
+    insertImageSpy = jest.spyOn(component, 'onInsertImage');
     requestFetchMainImageSpy = jest.spyOn(component.requestFetchMainImage, 'emit');
     requestPublishArticleSpy = jest.spyOn(component.requestPublishArticle, 'emit');
     requestUpdateArticleSpy = jest.spyOn(component.requestUpdateArticle, 'emit');
-    revertImageSpy = jest.spyOn(component, 'onRevertImage');
+    restoreSpy = jest.spyOn(component.restore, 'emit');
+    // @ts-expect-error Private class member
+    cursorPositionSpy = jest.spyOn(component, 'cursorPosition');
+    revertBannerImageSpy = jest.spyOn(component, 'onRevertBannerImage');
+    selectBannerImageSpy = jest.spyOn(component, 'onSelectBannerImage');
     submitSpy = jest.spyOn(component, 'onSubmit');
 
     component.bannerImage = null;
+    component.bodyImages = [];
     component.formData = pick(MOCK_ARTICLES[0], ARTICLE_FORM_DATA_PROPERTIES);
     component.hasUnsavedChanges = false;
     component.originalArticle = null;
@@ -224,14 +238,14 @@ describe('ArticleFormComponent', () => {
     });
   });
 
-  describe('onOpenImageExplorer', () => {
+  describe('onSelectBannerImage', () => {
     it('should set selected image as the new banner image', async () => {
       const newImageId = 'new_image_id';
       dialogOpenSpy.mockResolvedValue(`${newImageId}-thumb`);
       component.form.patchValue({ bannerImageId: 'old-image-id' });
       jest.clearAllMocks();
 
-      await component.onOpenImageExplorer();
+      await component.onSelectBannerImage();
 
       expect(dialogOpenSpy).toHaveBeenCalledWith({
         componentType: ImageExplorerComponent,
@@ -246,7 +260,7 @@ describe('ArticleFormComponent', () => {
       component.form.patchValue({ bannerImageId: 'old-image-id' });
       jest.clearAllMocks();
 
-      await component.onOpenImageExplorer();
+      await component.onSelectBannerImage();
 
       expect(dialogOpenSpy).toHaveBeenCalledWith({
         componentType: ImageExplorerComponent,
@@ -257,7 +271,7 @@ describe('ArticleFormComponent', () => {
     });
   });
 
-  describe('onRevertImage', () => {
+  describe('onRevertBannerImage', () => {
     it('should patch value originalArticle bannerImageId if originalArticle is defined', () => {
       fixture.componentRef.setInput('originalArticle', MOCK_ARTICLES[3]);
       fixture.componentRef.setInput(
@@ -270,7 +284,7 @@ describe('ArticleFormComponent', () => {
         MOCK_ARTICLES[2].bannerImageId,
       );
 
-      component.onRevertImage();
+      component.onRevertBannerImage();
 
       expect(component.form.controls.bannerImageId.value).toBe(
         MOCK_ARTICLES[3].bannerImageId,
@@ -289,9 +303,51 @@ describe('ArticleFormComponent', () => {
         MOCK_ARTICLES[2].bannerImageId,
       );
 
-      component.onRevertImage();
+      component.onRevertBannerImage();
 
       expect(component.form.controls.bannerImageId.value).toBe('');
+    });
+  });
+
+  describe('onInsertImage', () => {
+    it('should insert selected image within body text at current cursor position', async () => {
+      const imageId = 'abc123';
+      dialogOpenSpy.mockResolvedValue(`${imageId}-thumb`);
+      component['lastCursorPosition'] = 3;
+      component.form.patchValue({ body: 'Some text' });
+      jest.clearAllMocks();
+
+      await component.onInsertImage();
+
+      expect(dialogOpenSpy).toHaveBeenCalledWith({
+        componentType: ImageExplorerComponent,
+        isModal: true,
+      });
+      expect(component.form.controls.body.value).toBe('Som\n\n{{{abc123}}}\n\ne text');
+    });
+
+    it('should not alter body text if dialog is closed', async () => {
+      dialogOpenSpy.mockResolvedValue('close');
+      component['lastCursorPosition'] = 3;
+      component.form.patchValue({ body: 'Some text' });
+      jest.clearAllMocks();
+
+      await component.onInsertImage();
+
+      expect(dialogOpenSpy).toHaveBeenCalledWith({
+        componentType: ImageExplorerComponent,
+        isModal: true,
+      });
+      expect(component.form.controls.body.value).toBe('Some text');
+    });
+
+    it('should not open image explorer when max images reached', async () => {
+      component.form.patchValue({ body: '{{{img1}}}\n\n{{{img2}}}\n\n{{{img3}}}' });
+      jest.clearAllMocks();
+
+      await component.onInsertImage();
+
+      expect(dialogOpenSpy).not.toHaveBeenCalled();
     });
   });
 
@@ -397,18 +453,21 @@ describe('ArticleFormComponent', () => {
       });
     });
 
-    describe('image explorer button', () => {
-      it('should call onImageExplorer when clicked', async () => {
+    describe('select banner image button', () => {
+      it('should call onSelectBannerImage when clicked', async () => {
         dialogOpenSpy.mockResolvedValue('close');
-        const imageExplorerButton = query(fixture.debugElement, '.image-explorer-button');
-        imageExplorerButton.triggerEventHandler('click');
+        const selectBannerImageButton = query(
+          fixture.debugElement,
+          '.select-banner-image-button',
+        );
+        selectBannerImageButton.triggerEventHandler('click');
 
-        expect(imageExplorerButton.nativeElement.disabled).toBe(false);
-        expect(imageExplorerSpy).toHaveBeenCalledTimes(1);
+        expect(selectBannerImageButton.nativeElement.disabled).toBe(false);
+        expect(selectBannerImageSpy).toHaveBeenCalledTimes(1);
       });
     });
 
-    describe('revert image button', () => {
+    describe('revert banner image button', () => {
       it('should be disabled if original banner image is already set', () => {
         component.form.controls.bannerImageId.setValue('same-id');
         fixture.componentRef.setInput('originalArticle', {
@@ -418,7 +477,8 @@ describe('ArticleFormComponent', () => {
         fixture.detectChanges();
 
         expect(
-          query(fixture.debugElement, '.revert-image-button').nativeElement.disabled,
+          query(fixture.debugElement, '.revert-banner-image-button').nativeElement
+            .disabled,
         ).toBe(true);
       });
 
@@ -430,11 +490,25 @@ describe('ArticleFormComponent', () => {
         });
         fixture.detectChanges();
 
-        const revertImageButton = query(fixture.debugElement, '.revert-image-button');
-        revertImageButton.triggerEventHandler('click');
+        const revertBannerImageButton = query(
+          fixture.debugElement,
+          '.revert-banner-image-button',
+        );
+        revertBannerImageButton.triggerEventHandler('click');
 
-        expect(revertImageButton.nativeElement.disabled).toBe(false);
-        expect(revertImageSpy).toHaveBeenCalledTimes(1);
+        expect(revertBannerImageButton.nativeElement.disabled).toBe(false);
+        expect(revertBannerImageSpy).toHaveBeenCalledTimes(1);
+      });
+    });
+
+    describe('insert image button', () => {
+      it('should call onInsertImage when clicked', async () => {
+        dialogOpenSpy.mockResolvedValue('close');
+        const insertImageButton = query(fixture.debugElement, '.insert-image-button');
+        insertImageButton.triggerEventHandler('click');
+
+        expect(insertImageButton.nativeElement.disabled).toBe(false);
+        expect(insertImageSpy).toHaveBeenCalledTimes(1);
       });
     });
 

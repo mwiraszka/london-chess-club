@@ -7,7 +7,7 @@ import { catchError, filter, map, switchMap, take } from 'rxjs/operators';
 
 import { Injectable } from '@angular/core';
 
-import { Article, DataPaginationOptions } from '@app/models';
+import { Article, DataPaginationOptions, LccError } from '@app/models';
 import { ArticlesApiService } from '@app/services';
 import { AppActions } from '@app/store/app';
 import { AuthSelectors } from '@app/store/auth';
@@ -141,6 +141,19 @@ export class ArticlesEffects {
         this.store.select(AuthSelectors.selectUser).pipe(filter(isDefined)),
       ]),
       switchMap(([, formData, user]) => {
+        // Validate body image count
+        const imagePattern = /{{{([^}]+)}}}/g;
+        const matches = formData.body?.match(imagePattern);
+        const imageCount = matches ? matches.length : 0;
+
+        if (imageCount > 3) {
+          const error: LccError = {
+            name: 'LCCError',
+            message: `Articles can contain a maximum of 3 body images. Please remove ${imageCount - 3} image(s).`,
+          };
+          return of(ArticlesActions.publishArticleFailed({ error }));
+        }
+
         const article: Article = {
           ...formData,
           id: '',
@@ -178,6 +191,19 @@ export class ArticlesEffects {
         this.store.select(AuthSelectors.selectUser).pipe(filter(isDefined)),
       ]),
       switchMap(([, article, formData, user]) => {
+        // Validate body image count
+        const imagePattern = /{{{([^}]+)}}}/g;
+        const matches = formData.body?.match(imagePattern);
+        const imageCount = matches ? matches.length : 0;
+
+        if (imageCount > 3) {
+          const error: LccError = {
+            name: 'LCCError',
+            message: `Articles can contain a maximum of 3 body images. Please remove ${imageCount - 3} image(s).`,
+          };
+          return of(ArticlesActions.updateArticleFailed({ error }));
+        }
+
         const updatedArticle: Article = {
           ...article,
           ...formData,

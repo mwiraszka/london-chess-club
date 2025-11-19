@@ -186,6 +186,36 @@ export class ImagesEffects {
     ),
   );
 
+  fetchArticleBodyImages$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(ArticlesActions.fetchArticleSucceeded, ArticlesActions.formDataChanged),
+      concatLatestFrom(action =>
+        action.type === ArticlesActions.fetchArticleSucceeded.type
+          ? this.store.select(
+              ImagesSelectors.selectBodyImagesByArticleId(action.article.id),
+            )
+          : this.store.select(
+              ImagesSelectors.selectBodyImagesByArticleId(action.articleId),
+            ),
+      ),
+      switchMap(([, bodyImages]) => {
+        // Find images that need their main URLs fetched
+        const imagesToFetch = bodyImages.filter(
+          image =>
+            !image.mainUrl ||
+            (image.urlExpirationDate && isExpired(image.urlExpirationDate)),
+        );
+
+        // Fetch each image's main URL in the background
+        return from(
+          imagesToFetch.map(image =>
+            ImagesActions.fetchMainImageInBackgroundRequested({ imageId: image.id }),
+          ),
+        );
+      }),
+    );
+  });
+
   fetchMainImage$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(ImagesActions.fetchMainImageRequested),
