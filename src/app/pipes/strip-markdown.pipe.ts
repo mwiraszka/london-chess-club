@@ -16,7 +16,9 @@ export class StripMarkdownPipe implements PipeTransform {
       return '';
     }
 
-    return removeMd(markdown)
+    return removeMd(
+      markdown.replace(/{{{[^}]+}}}(?:\(\(\([^)]+\)\)\))?(?:<<<.*?>>>)?/gs, ''),
+    )
       .replace(/\|--/g, '')
       .replace(/\|/g, '')
       .replace(/&#39;/g, "'");

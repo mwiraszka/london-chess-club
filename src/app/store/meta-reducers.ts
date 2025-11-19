@@ -52,13 +52,41 @@ export function updateStateVersionsInLocalStorageMetaReducer(
     if (keysToUpdate.length) {
       console.info(`[LCC] Welcome to version ${currentVersion}`);
 
+      const imagesStateRemoved = keysToUpdate.some(key =>
+        key.startsWith('imagesState_v'),
+      );
+
       keysToUpdate.forEach(key => {
-        localStorage.setItem(
-          key.split('_v')[0] + `_v${currentVersion}`,
-          localStorage.getItem(key) || '',
-        );
+        const stateName = key.split('_v')[0];
+        const stateValue = localStorage.getItem(key) || '';
+
+        // Keep all state from previous version except imagesState
+        if (stateName !== 'imagesState') {
+          localStorage.setItem(`${stateName}_v${currentVersion}`, stateValue);
+        }
+
         localStorage.removeItem(key);
       });
+
+      // Clear browser cache storage when imagesState is removed
+      if (imagesStateRemoved && 'caches' in window) {
+        caches
+          .keys()
+          .then(cacheNames => {
+            return Promise.all(
+              cacheNames.map(cacheName => {
+                console.info(`[LCC] Clearing cache: ${cacheName}`);
+                return caches.delete(cacheName);
+              }),
+            );
+          })
+          .then(() => {
+            console.info('[LCC] All browser caches cleared for new version');
+          })
+          .catch(error => {
+            console.error('[LCC] Failed to clear browser caches:', error);
+          });
+      }
     }
 
     return reducer(state, action);

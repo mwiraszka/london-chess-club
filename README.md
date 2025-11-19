@@ -32,6 +32,14 @@ Below you'll find an overview of the tools and technologies that power the app, 
 | 🔧  | Behind-the-scenes changes         |
 
 <details>
+<summary>v5.10.1 - November 19th, 2025</summary>
+
+- 🐛 Bust image cache with each new app version release and remove some potential race conditions when determining what image data to fetch and when
+- 🐛 Ensure new special embedded image syntax is hidden from article previews
+
+</details>
+
+<details>
 <summary>v5.10.0 - November 18th, 2025</summary>
 
 - 🚀 Allow for up to 3 images inside the article body, with support for custom sizing and caption text under each image

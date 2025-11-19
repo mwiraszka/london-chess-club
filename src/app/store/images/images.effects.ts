@@ -159,6 +159,7 @@ export class ImagesEffects {
       ofType(
         ArticlesActions.fetchHomePageArticlesSucceeded,
         ArticlesActions.fetchFilteredArticlesSucceeded,
+        ImagesActions.fetchAllImagesMetadataSucceeded,
       ),
       switchMap(() =>
         this.store.select(ArticlesSelectors.selectHomePageArticles).pipe(
@@ -166,14 +167,17 @@ export class ImagesEffects {
             this.store.select(ArticlesSelectors.selectFilteredArticles),
           ),
           map(([home, filtered]) => [...home, ...filtered].sort()),
+          take(1),
         ),
       ),
       switchMap(articles =>
-        this.store.select(
-          ImagesSelectors.selectIdsOfArticleBannerImagesWithMissingOrExpiredThumbnailUrls(
-            articles,
-          ),
-        ),
+        this.store
+          .select(
+            ImagesSelectors.selectIdsOfArticleBannerImagesWithMissingOrExpiredThumbnailUrls(
+              articles,
+            ),
+          )
+          .pipe(take(1)),
       ),
       distinctUntilChanged((prev, curr) => isEqual(prev, curr)),
       filter(ids => ids.length > 0),
