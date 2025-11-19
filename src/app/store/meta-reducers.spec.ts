@@ -58,7 +58,7 @@ describe('Meta Reducers', () => {
 
     it('should preserve state from previous version', () => {
       const oldAppState = JSON.stringify({ theme: 'dark' });
-      localStorage.setItem('appState_v1.0.0', oldAppState);
+      localStorage.setItem('appState_v5.10.0', oldAppState);
 
       const updateStateMetaReducer =
         updateStateVersionsInLocalStorageMetaReducer(mockReducer);
