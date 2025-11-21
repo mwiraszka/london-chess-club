@@ -27,7 +27,7 @@
   background-color: var(--lcc-color--button-primaryButtonBackground);
   color: var(--lcc-color--button-primaryButtonForeground);
 
-  &:hover {
+  &:hover:not(:disabled) {
     background-color: var(--lcc-color--button-primaryButtonBackgroundOnHover);
   }
 }
@@ -39,7 +39,7 @@
   background-color: unset !important;
   color: var(--lcc-color--button-secondaryButtonForeground);
 
-  &:hover {
+  &:hover:not(:disabled) {
     border-color: var(--lcc-color--button-secondaryButtonBorderOnHover);
     color: var(--lcc-color--button-secondaryButtonForegroundOnHover);
   }
@@ -49,7 +49,7 @@
     border-color: var(--lcc-color--button-lightSecondaryButtonBorder);
     color: var(--lcc-color--button-lightSecondaryButtonForeground);
 
-    &:hover {
+    &:hover:not(:disabled) {
       border-color: var(--lcc-color--button-lightSecondaryButtonBorderOnHover);
       color: var(--lcc-color--button-lightSecondaryButtonForegroundOnHover);
     }
@@ -60,7 +60,7 @@
     border: var(--lcc-color--button-darkSecondaryButtonBorder);
     color: var(--lcc-color--button-darkSecondaryButtonForeground);
 
-    &:hover {
+    &:hover:not(:disabled) {
       border-color: var(--lcc-color--button-darkSecondaryButtonBorderOnHover);
       color: var(--lcc-color--button-darkSecondaryButtonForegroundOnHover);
     }
@@ -74,7 +74,7 @@
   background-color: var(--lcc-color--button-warningButtonBackground);
   color: var(--lcc-color--button-warningButtonForeground);
 
-  &:hover {
+  &:hover:not(:disabled) {
     background-color: var(--lcc-color--button-warningButtonBackgroundOnHover);
   }
 }

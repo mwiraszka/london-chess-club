@@ -96,6 +96,10 @@
     justify-content: center;
     padding: 4px;
 
+    &:not(:disabled) {
+      color: var(--lcc-color--general-warning);
+    }
+
     & > input {
       display: none;
     }

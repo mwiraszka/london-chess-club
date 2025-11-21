@@ -182,6 +182,7 @@ body[data-theme='dark'] {
   --lcc-color--general-overlayLightBackdrop: #{clr(grayscale, black-20, 0.4)};
   --lcc-color--general-overlayHeavyBackdrop: #{clr(grayscale, black-10, 0.7)};
   --lcc-color--general-scrollbar: #{clr(grayscale, gray-50, 0.7)};
+  --lcc-color--general-warning: #{clr(warning, lighter)};
 
   --lcc-color--header-background: #{clr(primary, darker)};
   --lcc-color--header-brandingBackground: #{clr(grayscale, white-85)};
