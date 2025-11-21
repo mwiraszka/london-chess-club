@@ -3,6 +3,7 @@ export { hasLowercaseLetterValidator } from './has-lowercase-letter.validator';
 export { hasNumberValidator } from './has-number.validator';
 export { hasSpecialCharValidator } from './has-special-char.validator';
 export { hasUppercaseLetterValidator } from './has-uppercase-letter.validator';
+export { idValidator } from './id.validator';
 export { matchingPasswordsValidator } from './matching-passwords.validator';
 export { ordinalityValidator } from './ordinality.validator';
 export { phoneNumberValidator } from './phone-number.validator';

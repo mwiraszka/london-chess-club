@@ -34,7 +34,7 @@ import {
 } from '@app/models';
 import { DialogService } from '@app/services';
 import { isValidTime } from '@app/utils';
-import { textValidator, timeValidator } from '@app/validators';
+import { idValidator, textValidator, timeValidator } from '@app/validators';
 
 @UntilDestroy()
 @Component({
@@ -171,7 +171,7 @@ export class EventFormComponent implements OnInit {
       }),
       articleId: new FormControl(this.formData.articleId, {
         nonNullable: true,
-        validators: Validators.pattern(/^[a-fA-F0-9]{24}$/),
+        validators: idValidator,
       }),
     });
   }

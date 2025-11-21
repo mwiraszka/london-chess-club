@@ -89,6 +89,10 @@
     align-items: center;
     justify-content: center;
     padding: 4px;
+
+    &:not(:disabled) {
+      color: var(--lcc-color--general-warning);
+    }
   }
 
   hr {

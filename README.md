@@ -32,6 +32,14 @@ Below you'll find an overview of the tools and technologies that power the app, 
 | 🔧  | Behind-the-scenes changes         |
 
 <details>
+<summary>v5.10.3 - November 21st, 2025</summary>
+
+- 🐛 Apply correct styling rules to disabled buttons in forms
+- 🐛 Add en-dash to list of accepted characters in form fields
+
+</details>
+
+<details>
 <summary>v5.10.2 - November 19th, 2025</summary>
 
 - 🐛 Force a reset of stale data for any local storage keys from v5.9.x or older
