@@ -32,6 +32,13 @@ Below you'll find an overview of the tools and technologies that power the app, 
 | 🔧  | Behind-the-scenes changes         |
 
 <details>
+<summary>v5.10.4 - November 21st, 2025</summary>
+
+- 🐛 Add backslash to list of accepted characters in form fields and add a proper validation error tooltip message for id validator
+
+</details>
+
+<details>
 <summary>v5.10.3 - November 21st, 2025</summary>
 
 - 🐛 Apply correct styling rules to disabled buttons in forms
