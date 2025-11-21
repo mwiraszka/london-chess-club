@@ -56,7 +56,6 @@ export class FormErrorIconComponent {
     } else if (this.control.hasError('passwordMismatch')) {
       return 'Passwords must match';
     } else {
-      console.log(':: this.control', this.control);
       return 'Unknown error';
     }
   }
