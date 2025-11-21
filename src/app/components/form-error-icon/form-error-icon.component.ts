@@ -39,6 +39,8 @@ export class FormErrorIconComponent {
       return 'Invalid rating';
     } else if (this.control.hasError('invalidYearOfBirth')) {
       return 'Invalid year';
+    } else if (this.control.hasError('invalidId')) {
+      return 'Invalid ID';
     } else if (this.control.hasError('minlength')) {
       return 'Input is too short';
     } else if (this.control.hasError('maxlength')) {
