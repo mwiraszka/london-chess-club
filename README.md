@@ -13,12 +13,26 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 | 🐛  | Bug fixes                         |
 | 🔧  | Behind-the-scenes changes         |
 
+<details>
+<summary>v5.10.6 - November 22nd, 2025</summary>
+
+- 🔧 Add a 5-second timeout to all auth requests
+- 🔧 Add missing changelog entry
+
+</details>
+
+<details>
+<summary>v5.10.5 - November 21st, 2025</summary>
+
+- 🔧 Update GitHub URL
+- 🔧 Reorganize this README file
+
+</details>
 
 <details>
 <summary>v5.10.4 - November 21st, 2025</summary>
 
-- 🔧 Update GitHub URL
-- 🔧 Reorganize this README file
+- 🐛 Add backslash to list of accepted characters in form fields and add a proper validation error tooltip message for id validator
 
 </details>
 

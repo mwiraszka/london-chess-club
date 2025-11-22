@@ -1,7 +1,7 @@
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';
 import { Store } from '@ngrx/store';
-import { of } from 'rxjs';
+import { of, race, timer } from 'rxjs';
 import { catchError, filter, map, switchMap } from 'rxjs/operators';
 
 import { Injectable } from '@angular/core';
@@ -11,15 +11,22 @@ import { parseError } from '@app/utils';
 
 import { AuthActions, AuthSelectors } from '.';
 
+const AUTH_REQUEST_TIMEOUT = 5000; // 5 seconds
+
 @Injectable()
 export class AuthEffects {
   logIn$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(AuthActions.loginRequested),
       switchMap(({ email, password }) => {
-        return this.authApiService.logIn(email, password).pipe(
-          map(response => AuthActions.loginSucceeded({ user: response.data })),
-          catchError(error => of(AuthActions.loginFailed({ error: parseError(error) }))),
+        return race(
+          this.authApiService.logIn(email, password).pipe(
+            map(response => AuthActions.loginSucceeded({ user: response.data })),
+            catchError(error =>
+              of(AuthActions.loginFailed({ error: parseError(error) })),
+            ),
+          ),
+          timer(AUTH_REQUEST_TIMEOUT).pipe(map(() => AuthActions.requestTimedOut())),
         );
       }),
     );
@@ -31,9 +38,14 @@ export class AuthEffects {
       concatLatestFrom(() => this.store.select(AuthSelectors.selectUser)),
       filter(([, user]) => !!user),
       switchMap(([{ sessionExpired }]) => {
-        return this.authApiService.logOut().pipe(
-          map(() => AuthActions.logoutSucceeded({ sessionExpired })),
-          catchError(error => of(AuthActions.logoutFailed({ error: parseError(error) }))),
+        return race(
+          this.authApiService.logOut().pipe(
+            map(() => AuthActions.logoutSucceeded({ sessionExpired })),
+            catchError(error =>
+              of(AuthActions.logoutFailed({ error: parseError(error) })),
+            ),
+          ),
+          timer(AUTH_REQUEST_TIMEOUT).pipe(map(() => AuthActions.requestTimedOut())),
         );
       }),
     );
@@ -43,11 +55,14 @@ export class AuthEffects {
     return this.actions$.pipe(
       ofType(AuthActions.codeForPasswordChangeRequested),
       switchMap(({ email }) => {
-        return this.authApiService.sendCodeForPasswordChange(email).pipe(
-          map(() => AuthActions.codeForPasswordChangeSucceeded()),
-          catchError(error =>
-            of(AuthActions.codeForPasswordChangeFailed({ error: parseError(error) })),
+        return race(
+          this.authApiService.sendCodeForPasswordChange(email).pipe(
+            map(() => AuthActions.codeForPasswordChangeSucceeded()),
+            catchError(error =>
+              of(AuthActions.codeForPasswordChangeFailed({ error: parseError(error) })),
+            ),
           ),
+          timer(AUTH_REQUEST_TIMEOUT).pipe(map(() => AuthActions.requestTimedOut())),
         );
       }),
     );
@@ -57,11 +72,14 @@ export class AuthEffects {
     return this.actions$.pipe(
       ofType(AuthActions.passwordChangeRequested),
       switchMap(({ email, password, code }) => {
-        return this.authApiService.changePassword(email, password, code).pipe(
-          map(response => AuthActions.passwordChangeSucceeded({ user: response.data })),
-          catchError(error =>
-            of(AuthActions.passwordChangeFailed({ error: parseError(error) })),
+        return race(
+          this.authApiService.changePassword(email, password, code).pipe(
+            map(response => AuthActions.passwordChangeSucceeded({ user: response.data })),
+            catchError(error =>
+              of(AuthActions.passwordChangeFailed({ error: parseError(error) })),
+            ),
           ),
+          timer(AUTH_REQUEST_TIMEOUT).pipe(map(() => AuthActions.requestTimedOut())),
         );
       }),
     );
@@ -71,11 +89,14 @@ export class AuthEffects {
     return this.actions$.pipe(
       ofType(AuthActions.sessionRefreshRequested),
       switchMap(() => {
-        return this.authApiService.refreshSession().pipe(
-          map(() => AuthActions.sessionRefreshSucceeded()),
-          catchError(error =>
-            of(AuthActions.sessionRefreshFailed({ error: parseError(error) })),
+        return race(
+          this.authApiService.refreshSession().pipe(
+            map(() => AuthActions.sessionRefreshSucceeded()),
+            catchError(error =>
+              of(AuthActions.sessionRefreshFailed({ error: parseError(error) })),
+            ),
           ),
+          timer(AUTH_REQUEST_TIMEOUT).pipe(map(() => AuthActions.requestTimedOut())),
         );
       }),
     );
