@@ -2,6 +2,9 @@
 
 Welcome to the source code repository for the LCC web app! <https://londonchess.ca>
 
+## Found a bug? Have a feature request?
+
+Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on GitHub, or [email](mailto:michal@londonchess.ca?subject=LCC%20Website) me directly.
 ## Release notes
 
 |     |                                   |
@@ -10,10 +13,12 @@ Welcome to the source code repository for the LCC web app! <https://londonchess.
 | 🐛  | Bug fixes                         |
 | 🔧  | Behind-the-scenes changes         |
 
+
 <details>
 <summary>v5.10.4 - November 21st, 2025</summary>
 
 - 🔧 Update GitHub URL
+- 🔧 Reorganize this README file
 
 </details>
 
@@ -55,6 +60,11 @@ Welcome to the source code repository for the LCC web app! <https://londonchess.
 - 🔧 Security updates
 
 </details>
+
+<details>
+<summary style="cursor: pointer">
+v0.8.0-alpha - v5.9.17
+</summary>
 
 <details>
 <summary>v5.9.17 - November 17th, 2025</summary>
@@ -627,11 +637,6 @@ Welcome to the source code repository for the LCC web app! <https://londonchess.
 - 🔧 Improve efficiency of custom sorting algorithm (used for sorting members, club events and articles), add support for sorting by an additional secondary key, and handle certain edge cases more appropriately
 
 </details>
-
-<details>
-<summary style="cursor: pointer">
-Archived (September 8th, 2022 – January 24th, 2025)
-</summary>
 
 <details>
 <summary>v4.1.12 - January 24th, 2025</summary>
@@ -1703,7 +1708,3 @@ v0.8.0-alpha - September 8th, 2022
 | [![NGINX](readme-icons/nginx.png)](https://nginx.org/en) | `NGINX` | HTTP web server and reverse proxy |
 | [![NgRx](readme-icons/ngrx.png)](https://ngrx.io) | `NgRx` | reactive state management |
 | [![Ngx Markdown](readme-icons/ngx-markdown.png)](https://github.com/jfcere/ngx-markdown) | `Ngx Markdown` | markdown parsing |
-
-## Found a bug? Have a feature request?
-
-Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on GitHub, or [email](mailto:michal@londonchess.ca?subject=LCC%20Website) me directly.
