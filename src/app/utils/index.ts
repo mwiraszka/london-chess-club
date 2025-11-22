@@ -44,6 +44,7 @@ export { actionSanitizer } from './store/action-sanitizer.util';
 
 export { query, queryAll, queryTextContent } from './test/debug-element-queries.util';
 
+export { hasCallState } from './type-guards/has-call-state.util';
 export { isCollectionId } from './type-guards/is-collection-id.util';
 export { isDefined } from './type-guards/is-defined.util';
 export { isEntity } from './type-guards/is-entity.util';

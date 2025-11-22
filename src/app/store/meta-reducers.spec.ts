@@ -1,11 +1,18 @@
 import { Action, ActionReducer } from '@ngrx/store';
 
+import { CallState } from '@app/models';
 import { UserActivityService } from '@app/services';
 
 import { version } from '../../../package.json';
+import { initialState as articlesInitialState } from './articles/articles.reducer';
+import { initialState as authInitialState } from './auth/auth.reducer';
+import { initialState as eventsInitialState } from './events/events.reducer';
+import { initialState as imagesInitialState } from './images/images.reducer';
+import { initialState as membersInitialState } from './members/members.reducer';
 import {
   MetaState,
   actionLogMetaReducer,
+  loadingStateResetMetaReducer,
   metaReducers,
   sessionValidationMetaReducer,
   updateStateVersionsInLocalStorageMetaReducer,
@@ -337,10 +344,260 @@ describe('Meta Reducers', () => {
     });
   });
 
+  describe('loadingStateResetMetaReducer', () => {
+    it('should reset loading state for authState on rehydration', () => {
+      const loadingCallState: CallState = {
+        status: 'loading',
+        loadStart: new Date().toISOString(),
+        error: null,
+      };
+
+      const state: MetaState = {
+        authState: {
+          ...authInitialState,
+          callState: loadingCallState,
+          user: {
+            id: '123',
+            firstName: 'John',
+            lastName: 'Doe',
+            email: 'john@example.com',
+            isAdmin: true,
+          },
+        },
+      };
+
+      mockReducer = jest.fn(() => state);
+
+      const wrappedLoadingStateResetMetaReducer =
+        loadingStateResetMetaReducer(mockReducer);
+      const action = { type: '@ngrx/store/update-reducers' };
+
+      const result = wrappedLoadingStateResetMetaReducer(mockState, action);
+
+      expect(result.authState?.callState).toEqual(authInitialState.callState);
+      expect(result.authState?.user).toBeDefined();
+    });
+
+    it('should reset loading state for articlesState on rehydration', () => {
+      const loadingCallState: CallState = {
+        status: 'loading',
+        loadStart: new Date().toISOString(),
+        error: null,
+      };
+
+      const state: MetaState = {
+        articlesState: {
+          ...articlesInitialState,
+          callState: loadingCallState,
+        },
+      };
+
+      mockReducer = jest.fn(() => state);
+
+      const wrappedLoadingStateResetMetaReducer =
+        loadingStateResetMetaReducer(mockReducer);
+      const action = { type: '@ngrx/store/update-reducers' };
+
+      const result = wrappedLoadingStateResetMetaReducer(mockState, action);
+
+      expect(result.articlesState?.callState).toEqual(articlesInitialState.callState);
+    });
+
+    it('should reset loading state for eventsState on rehydration', () => {
+      const loadingCallState: CallState = {
+        status: 'loading',
+        loadStart: new Date().toISOString(),
+        error: null,
+      };
+
+      const state: MetaState = {
+        eventsState: {
+          ...eventsInitialState,
+          callState: loadingCallState,
+        },
+      };
+
+      mockReducer = jest.fn(() => state);
+
+      const wrappedLoadingStateResetMetaReducer =
+        loadingStateResetMetaReducer(mockReducer);
+      const action = { type: '@ngrx/store/update-reducers' };
+
+      const result = wrappedLoadingStateResetMetaReducer(mockState, action);
+
+      expect(result.eventsState?.callState).toEqual(eventsInitialState.callState);
+    });
+
+    it('should reset loading state for imagesState on rehydration', () => {
+      const loadingCallState: CallState = {
+        status: 'loading',
+        loadStart: new Date().toISOString(),
+        error: null,
+      };
+
+      const state: MetaState = {
+        imagesState: {
+          ...imagesInitialState,
+          callState: loadingCallState,
+        },
+      };
+
+      mockReducer = jest.fn(() => state);
+
+      const wrappedLoadingStateResetMetaReducer =
+        loadingStateResetMetaReducer(mockReducer);
+      const action = { type: '@ngrx/store/update-reducers' };
+
+      const result = wrappedLoadingStateResetMetaReducer(mockState, action);
+
+      expect(result.imagesState?.callState).toEqual(imagesInitialState.callState);
+    });
+
+    it('should reset loading state for membersState on rehydration', () => {
+      const loadingCallState: CallState = {
+        status: 'loading',
+        loadStart: new Date().toISOString(),
+        error: null,
+      };
+
+      const state: MetaState = {
+        membersState: {
+          ...membersInitialState,
+          callState: loadingCallState,
+        },
+      };
+
+      mockReducer = jest.fn(() => state);
+
+      const wrappedLoadingStateResetMetaReducer =
+        loadingStateResetMetaReducer(mockReducer);
+      const action = { type: '@ngrx/store/update-reducers' };
+
+      const result = wrappedLoadingStateResetMetaReducer(mockState, action);
+
+      expect(result.membersState?.callState).toEqual(membersInitialState.callState);
+    });
+
+    it('should reset loading state for multiple states on rehydration', () => {
+      const loadingCallState: CallState = {
+        status: 'loading',
+        loadStart: new Date().toISOString(),
+        error: null,
+      };
+
+      const state: MetaState = {
+        authState: {
+          ...authInitialState,
+          callState: loadingCallState,
+        },
+        articlesState: {
+          ...articlesInitialState,
+          callState: loadingCallState,
+        },
+        eventsState: {
+          ...eventsInitialState,
+          callState: { status: 'idle', loadStart: null, error: null },
+        },
+      };
+
+      mockReducer = jest.fn(() => state);
+
+      const wrappedLoadingStateResetMetaReducer =
+        loadingStateResetMetaReducer(mockReducer);
+      const action = { type: '@ngrx/store/update-reducers' };
+
+      const result = wrappedLoadingStateResetMetaReducer(mockState, action);
+
+      expect(result.authState?.callState).toEqual(authInitialState.callState);
+      expect(result.articlesState?.callState).toEqual(articlesInitialState.callState);
+      expect(result.eventsState?.callState.status).toBe('idle');
+    });
+
+    it('should not modify state when no loading states exist', () => {
+      const state: MetaState = {
+        authState: {
+          ...authInitialState,
+          callState: { status: 'idle', loadStart: null, error: null },
+        },
+        articlesState: {
+          ...articlesInitialState,
+          callState: { status: 'idle', loadStart: null, error: null },
+        },
+      };
+
+      mockReducer = jest.fn(() => state);
+
+      const wrappedLoadingStateResetMetaReducer =
+        loadingStateResetMetaReducer(mockReducer);
+      const action = { type: '@ngrx/store/update-reducers' };
+
+      const result = wrappedLoadingStateResetMetaReducer(mockState, action);
+
+      expect(result).toBe(state);
+    });
+
+    it('should preserve error states on rehydration', () => {
+      const errorCallState: CallState = {
+        status: 'error',
+        loadStart: null,
+        error: { name: 'LCCError', message: 'Test error' },
+      };
+
+      const state: MetaState = {
+        authState: {
+          ...authInitialState,
+          callState: errorCallState,
+        },
+      };
+
+      mockReducer = jest.fn(() => state);
+
+      const wrappedLoadingStateResetMetaReducer =
+        loadingStateResetMetaReducer(mockReducer);
+      const action = { type: '@ngrx/store/update-reducers' };
+
+      const result = wrappedLoadingStateResetMetaReducer(mockState, action);
+
+      expect(result.authState?.callState).toEqual(errorCallState);
+    });
+
+    it('should not modify state on non-rehydration actions', () => {
+      const loadingCallState: CallState = {
+        status: 'loading',
+        loadStart: new Date().toISOString(),
+        error: null,
+      };
+
+      const state: MetaState = {
+        authState: {
+          ...authInitialState,
+          callState: loadingCallState,
+        },
+      };
+
+      mockReducer = jest.fn(() => state);
+
+      const wrappedLoadingStateResetMetaReducer =
+        loadingStateResetMetaReducer(mockReducer);
+      const action = { type: '[Auth] Login requested' };
+
+      const result = wrappedLoadingStateResetMetaReducer(mockState, action);
+
+      expect(result.authState?.callState).toEqual(loadingCallState);
+    });
+  });
+
   describe('metaReducers array', () => {
     it('should export metaReducers array', () => {
       expect(metaReducers).toBeDefined();
       expect(Array.isArray(metaReducers)).toBe(true);
+    });
+
+    it('should include loadingStateResetMetaReducer', () => {
+      const loadingStateReset = metaReducers.find(
+        metaReducer => metaReducer.name === 'loadingStateResetMetaReducer',
+      );
+      expect(loadingStateReset).toBeDefined();
     });
 
     it('should include sessionValidationMetaReducer', () => {
