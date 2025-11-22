@@ -4,6 +4,7 @@ import { compact } from 'lodash';
 import { localStorageSync } from 'ngrx-store-localstorage';
 
 import { UserActivityService } from '@app/services';
+import { hasCallState } from '@app/utils';
 
 import { environment } from '@env';
 
@@ -153,6 +154,56 @@ export function hydrationMetaReducer(
 }
 
 /**
+ * Resets loading states on rehydration to prevent stuck loading spinners
+ */
+export function loadingStateResetMetaReducer(
+  reducer: ActionReducer<MetaState>,
+): ActionReducer<MetaState> {
+  return (state, action) => {
+    const nextState = reducer(state, action);
+
+    // Only reset on update-reducers action (after hydration completes)
+    if (action.type === '@ngrx/store/update-reducers' && nextState) {
+      const statesWithCallState: Array<keyof MetaState> = [
+        'articlesState',
+        'authState',
+        'eventsState',
+        'imagesState',
+        'membersState',
+      ];
+
+      let updatedState: MetaState | null = null;
+
+      const idleCallState = {
+        status: 'idle' as const,
+        loadStart: null,
+        error: null,
+      };
+
+      statesWithCallState.forEach(stateKey => {
+        const stateSlice = nextState[stateKey];
+        if (hasCallState(stateSlice) && stateSlice.callState.status === 'loading') {
+          if (!updatedState) {
+            updatedState = { ...nextState };
+          }
+          // Use type assertion to work around TypeScript's complex union type
+          (updatedState[stateKey] as typeof stateSlice) = {
+            ...stateSlice,
+            callState: idleCallState,
+          };
+        }
+      });
+
+      if (updatedState) {
+        return updatedState;
+      }
+    }
+
+    return nextState;
+  };
+}
+
+/**
  * Validates and clears expired auth state to invalidate a potential expired session on rehydration
  */
 export function sessionValidationMetaReducer(
@@ -189,5 +240,6 @@ export const metaReducers: Array<MetaReducer<MetaState, Action<string>>> = compa
   environment.production ? undefined : actionLogMetaReducer,
   updateStateVersionsInLocalStorageMetaReducer,
   hydrationMetaReducer,
+  loadingStateResetMetaReducer,
   sessionValidationMetaReducer,
 ]);
