@@ -1,11 +1,11 @@
 {
   "name": "lcc-frontend",
-  "version": "5.10.4",
+  "version": "5.10.5",
   "description": "Frontend for the London Chess Club website, built with Angular",
   "author": "Michal Wiraszka (https://wiraszka.com)",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mwiraszka/LondonChessClub.git"
+    "url": "https://github.com/mwiraszka/london-chess-club.git"
   },
   "private": false,
   "license": "MIT",
