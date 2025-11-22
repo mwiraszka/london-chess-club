@@ -25,6 +25,8 @@ const IGNORED_ERROR_PATTERNS: RegExp[] = [
   /\[LCC] Sort error: property 'key' does not exist/, // custom sort util negative tests
   /\[LCC] Unable to convert data URL and filename to File:/, // dataUrlToFile negative test cases
   /Could not parse CSS stylesheet/, // JSDOM CSS parsing errors with Angular CDK
+  /\[LCC].*"name":"LCCError"/, // LCCError test cases (stringified objects)
+  /"name":"LCCError"/, // LCCError test cases without prefix
 ];
 
 const IGNORED_WARN_PATTERNS: RegExp[] = [
@@ -42,16 +44,25 @@ const IGNORED_INFO_PATTERNS: RegExp[] = [
   /^Request$/, // Logging interceptor request logs
   /\[LCC] Clearing stale data from local storage/, // Meta-reducer version migration logs
   /\[LCC] Removed stale key:/, // Meta-reducer removing old storage keys
+  /\[LCC] Welcome to version/, // App version welcome message
 ];
 
 function shouldIgnore(message: unknown, patterns: RegExp[]): boolean {
-  const msg =
-    typeof message === 'string' ? message.trim() : (message?.toString?.() ?? '').trim();
+  let msg: string;
+  if (typeof message === 'string') {
+    msg = message.trim();
+  } else if (typeof message === 'object' && message !== null) {
+    // Handle objects (like LCCError) by stringifying them
+    msg = JSON.stringify(message);
+  } else {
+    msg = (message?.toString?.() ?? '').trim();
+  }
   return patterns.some(p => p.test(msg));
 }
 
 console.error = (...args: unknown[]) => {
-  if (shouldIgnore(args[0], IGNORED_ERROR_PATTERNS)) {
+  // Check if any argument should be ignored
+  if (args.some(arg => shouldIgnore(arg, IGNORED_ERROR_PATTERNS))) {
     return;
   }
   ORIGINAL_CONSOLE_ERROR(...(args as unknown[]));
