@@ -20,19 +20,7 @@
   </section>
 
   <section class="where-and-when-section">
-    <div class="address-and-time-container">
-      <div class="address">
-        <mat-icon>location_on</mat-icon>
-        <div>
-          Kiwanis Seniors' Community Centre<br />
-          78 Riverside Drive, London ON
-        </div>
-      </div>
-      <div class="time">
-        <span>Thursdays, 6:00pm &ndash; 9:00pm</span>
-      </div>
-    </div>
-    <lcc-club-map></lcc-club-map>
+    <lcc-club-card [club]="lccClub"></lcc-club-card>
     <a
       class="lcc-link"
       routerLink="/regional-clubs"

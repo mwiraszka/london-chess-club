@@ -14,6 +14,8 @@
   }
 
   lcc-regional-club-card {
-    width: 100%;
+    &:last-child {
+      margin-bottom: 32px;
+    }
   }
 }

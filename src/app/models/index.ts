@@ -5,7 +5,7 @@ export type { Article, ArticleFormData, ArticleFormGroup } from './article.model
 export type { CalendarDay, CalendarMonth } from './calendar.model';
 export type { CallState } from './call-state.model';
 export type { ChampionshipTableRowData } from './championship-data.model';
-export type { ClubDocument } from './club-document.model';
+export type { Club, ClubDocument } from './club.model';
 export type { Id, IsoDate, Pixels, Url } from './core.model';
 export type { DateFormat } from './date-format.model';
 export type {
@@ -43,6 +43,5 @@ export type { ModificationInfo } from './modification-info.model';
 export type { NavPath } from './nav-path.model';
 export type { NgChanges } from './ng-changes.model';
 export type { DataPaginationOptions, Filter } from './pagination.model';
-export type { RegionalClub } from './regional-club.model';
 export type { Toast } from './toast.model';
 export type { User } from './user.model';
