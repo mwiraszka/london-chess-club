@@ -134,7 +134,7 @@ describe('FooterComponent', () => {
         const websiteLinks = queryAll(fixture.debugElement, '.website a');
 
         expect(aboutLinks.length).toBe(4);
-        expect(eventsLinks.length).toBe(2);
+        expect(eventsLinks.length).toBe(3);
         expect(archivesLinks.length).toBe(2);
         expect(documentsLinks.length).toBe(3);
         expect(websiteLinks.length).toBe(2);

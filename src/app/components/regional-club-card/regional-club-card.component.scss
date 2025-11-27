@@ -1,0 +1,75 @@
+@use '../../../styles/abstracts/mixins' as *;
+
+:host {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  padding: 16px 8px;
+  background-color: var(--lcc-color--general-cardBackground);
+  color: var(--lcc-color--homePage-primaryText);
+  border-radius: var(--lcc-borderRadius--large);
+  box-shadow: 3px 3px 5px var(--lcc-color--homePage-boxShadow);
+  line-height: 20px;
+  font-size: 14px;
+
+  @include respond-to('gt-xxs') {
+    padding: 16px;
+  }
+
+  @include respond-to('gt-md') {
+    font-size: 16px;
+  }
+
+  &:hover {
+    animation: raise 0.2s ease forwards;
+    box-shadow: 4px 4px 8px var(--lcc-color--homePage-boxShadow);
+  }
+
+  .club-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 260px;
+  }
+
+  h3 {
+    font-size: 16px;
+
+    @include respond-to('gt-md') {
+      font-size: 18px;
+    }
+  }
+
+  .address {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+
+    .map-icon {
+      @include icon-size(24px);
+
+      min-width: 24px;
+    }
+  }
+
+  .schedule {
+    white-space: pre-line;
+  }
+
+  .email {
+    .email-label {
+      display: block;
+    }
+  }
+
+  .secondary-text {
+    color: var(--lcc-color--homePage-secondaryText);
+  }
+
+  .external-link-icon {
+    @include icon-size(16px);
+
+    margin-left: 4px;
+    margin-bottom: 1px;
+  }
+}

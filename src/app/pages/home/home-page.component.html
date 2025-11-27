@@ -65,53 +65,10 @@
     <lcc-link-list [links]="[newsPageLink]"></lcc-link-list>
   </section>
 
-  <section class="regional-clubs-section">
-    <h2 class="section-heading">Regional clubs</h2>
-
-    <div class="regional-clubs-container">
-      @for (club of REGIONAL_CLUBS; track club.name) {
-        <div class="club-card">
-          <div class="club-card-content">
-            <h3 class="club-name">{{ club.name }}</h3>
-            <div class="address">
-              <mat-icon class="map-icon">location_on</mat-icon>
-              <a
-                class="address-link lcc-link"
-                href="{{ club.mapUrl }}"
-                rel="noopener noreferrer"
-                target="_blank">
-                {{ club.addressLine1 }}<br />
-                {{ club.addressLine2 }}<br />
-                {{ club.addressLine3 }}
-                <mat-icon class="external-link-icon">open_in_new</mat-icon>
-              </a>
-            </div>
-            <div class="schedule secondary-text">
-              {{ club.scheduleText }}
-            </div>
-            @if (club.email) {
-              <div class="email">
-                <label class="email-label secondary-text">contact: </label>
-                <a
-                  [href]="'mailto:' + club.email"
-                  class="email-link lcc-link"
-                  rel="noopener noreferrer"
-                  target="_blank">
-                  <span>{{ club.email }}</span>
-                  <mat-icon class="external-link-icon">open_in_new</mat-icon>
-                </a>
-              </div>
-            }
-          </div>
-        </div>
-      }
-    </div>
-  </section>
-
   <section class="photos-section">
     <lcc-photo-grid
       [isAdmin]="vm.isAdmin"
-      [maxAlbums]="12"
+      [maxAlbums]="20"
       [photoImages]="vm.photoImages"
       (requestDeleteAlbum)="onRequestDeleteAlbum($event)">
     </lcc-photo-grid>

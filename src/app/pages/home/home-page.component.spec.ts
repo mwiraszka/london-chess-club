@@ -276,7 +276,6 @@ describe('HomePageComponent', () => {
         expect(query(fixture.debugElement, '.welcome-section')).toBeFalsy();
         expect(query(fixture.debugElement, '.schedule-section')).toBeFalsy();
         expect(query(fixture.debugElement, '.articles-section')).toBeFalsy();
-        expect(query(fixture.debugElement, '.regional-clubs-section')).toBeFalsy();
         expect(query(fixture.debugElement, '.photos-section')).toBeFalsy();
       });
     });
@@ -302,10 +301,6 @@ describe('HomePageComponent', () => {
         expect(
           query(fixture.debugElement, '.articles-section lcc-link-list'),
         ).toBeTruthy();
-
-        expect(
-          queryAll(fixture.debugElement, '.regional-clubs-section .club-card'),
-        ).toHaveLength(4);
 
         expect(
           query(fixture.debugElement, '.photos-section lcc-photo-grid'),
