@@ -16,7 +16,7 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 <details>
 <summary>v5.10.8 - November 27th, 2025</summary>
 
-- 🚀 Create dedicated page for regional clubs and add Stratford club to list
+- 🚀 Create a dedicated page for regional clubs (`/regional-clubs` path); add Stratford club and some contact emails
 
 </details>
 
