@@ -20,11 +20,13 @@
   </section>
 
   <section class="where-and-when-section">
-    <lcc-club-card [club]="lccClub"></lcc-club-card>
+    <lcc-club-card
+      [club]="lccClub"
+      [showMap]="false">
+    </lcc-club-card>
     <a
       class="lcc-link"
-      routerLink="/regional-clubs"
-      fragment="lcc-code-of-conduct.pdf">
+      routerLink="/regional-clubs">
       More chess clubs in the region</a
     >
   </section>

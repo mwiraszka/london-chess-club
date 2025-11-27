@@ -31,4 +31,9 @@
   </div>
 </section>
 
-<lcc-club-map [club]="club"></lcc-club-map>
+@if (showMap) {
+  <lcc-club-map
+    [club]="club"
+    tooltip="Open in Google Maps">
+  </lcc-club-map>
+}

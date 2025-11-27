@@ -10,15 +10,8 @@
   border-radius: var(--lcc-borderRadius--large);
   box-shadow: 3px 3px 5px var(--lcc-color--homePage-boxShadow);
   line-height: 20px;
-  font-size: 14px;
-
-  @include respond-to('gt-xxs') {
-    padding: 16px;
-  }
-
-  @include respond-to('gt-md') {
-    font-size: 16px;
-  }
+  font-size: 16px;
+  width: 100%;
 
   &:hover {
     animation: raise 0.2s ease forwards;
@@ -29,7 +22,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 450px;
     background-color: var(--lcc-color--clubCard-liftedSectionBackground);
     border-radius: 3px;
   }
@@ -38,17 +30,13 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
-    width: 280px;
-    padding: 16px;
+    width: 320px;
+    padding: 16px 32px;
   }
 
   h3 {
-    font-size: 16px;
-    margin-bottom: 16px;
-
-    @include respond-to('gt-md') {
-      font-size: 18px;
-    }
+    font-size: 18px;
+    margin-bottom: 4px;
   }
 
   .address {
@@ -84,8 +72,12 @@
   }
 
   lcc-club-map {
-    min-width: 280px;
-    max-width: 400px;
+    width: 100%;
+    display: block;
+
+    @include respond-to('lt-md') {
+      display: none;
+    }
   }
 
   .secondary-text {
