@@ -17,6 +17,7 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 <summary>v5.10.8 - November 27th, 2025</summary>
 
 - 🚀 Create a dedicated page for regional clubs (`/regional-clubs` path); add Stratford club and some contact emails
+- 🚀 Add support for fancy quotes and additional typographic characters in text fields (curly quotes: ' ' " ", guillemets: ‹ › « », bullet: •, ellipsis: …, section sign: §, copyright/trademark: © ® ™, degree symbol: °, prime symbols: ′ ″)
 
 </details>
 
