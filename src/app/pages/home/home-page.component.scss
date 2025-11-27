@@ -151,17 +151,23 @@
             &::after {
               width: unset;
             }
+          }
+        }
 
-            .external-link-icon {
-              @include icon-size(16px);
-
-              margin-bottom: 1px;
-            }
+        .email {
+          .email-label {
+            display: block;
           }
         }
 
         .secondary-text {
           color: var(--lcc-color--homePage-secondaryText);
+        }
+
+        .external-link-icon {
+          @include icon-size(16px);
+
+          margin-bottom: 1px;
         }
       }
     }

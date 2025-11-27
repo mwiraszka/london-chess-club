@@ -14,6 +14,13 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 | 🔧  | Behind-the-scenes changes         |
 
 <details>
+<summary>v5.10.8 - November 27th, 2025</summary>
+
+- 🚀 Create dedicated page for regional clubs and add Stratford club to list
+
+</details>
+
+<details>
 <summary>v5.10.7 - November 22nd, 2025</summary>
 
 - 🐛 Clear any orphaned loading call states upon rehydration

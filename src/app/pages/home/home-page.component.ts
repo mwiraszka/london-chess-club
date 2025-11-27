@@ -15,6 +15,7 @@ import { ClubLinksComponent } from '@app/components/club-links/club-links.compon
 import { EventsTableComponent } from '@app/components/events-table/events-table.component';
 import { LinkListComponent } from '@app/components/link-list/link-list.component';
 import { PhotoGridComponent } from '@app/components/photo-grid/photo-grid.component';
+import { REGIONAL_CLUBS } from '@app/constants/regional-clubs';
 import { TooltipDirective } from '@app/directives/tooltip.directive';
 import {
   AdminButton,
@@ -52,6 +53,8 @@ import { ImagesActions, ImagesSelectors } from '@app/store/images';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomePageComponent implements OnInit {
+  public readonly REGIONAL_CLUBS = REGIONAL_CLUBS;
+
   public viewModel$?: Observable<{
     allImages: Image[];
     homePageArticles: Article[];
