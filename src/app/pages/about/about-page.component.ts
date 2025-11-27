@@ -2,18 +2,22 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 
-import { ClubMapComponent } from '@app/components/club-map/club-map.component';
+import { ClubCardComponent } from '@app/components/club-card/club-card.component';
 import { PageHeaderComponent } from '@app/components/page-header/page-header.component';
+import { LCC_CLUB } from '@app/constants/clubs';
+import { Club } from '@app/models';
 import { MetaAndTitleService } from '@app/services';
 
 @Component({
   selector: 'lcc-about-page',
   templateUrl: './about-page.component.html',
   styleUrl: './about-page.component.scss',
-  imports: [ClubMapComponent, MatIconModule, PageHeaderComponent, RouterLink],
+  imports: [MatIconModule, PageHeaderComponent, RouterLink, ClubCardComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AboutPageComponent implements OnInit {
+  public readonly lccClub: Club = LCC_CLUB;
+
   constructor(private readonly metaAndTitleService: MetaAndTitleService) {}
 
   public ngOnInit(): void {

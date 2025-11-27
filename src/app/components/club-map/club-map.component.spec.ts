@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { LCC_CLUB } from '@app/constants/clubs';
 import { query } from '@app/utils';
 
 import { ClubMapComponent } from './club-map.component';
@@ -17,9 +18,10 @@ describe('ClubMapComponent', () => {
 
     fixture = TestBed.createComponent(ClubMapComponent);
     component = fixture.componentInstance;
+    component.club = LCC_CLUB;
 
     // @ts-expect-error Private class member
-    initMapSpy = jest.spyOn(component, 'initMap');
+    initMapSpy = jest.spyOn(component, 'initMap').mockResolvedValue();
   });
 
   it('should create', () => {
@@ -27,26 +29,33 @@ describe('ClubMapComponent', () => {
   });
 
   describe('initialization', () => {
-    it('should call initMap', () => {
+    it('should initialize the loader in ngOnInit', () => {
       component.ngOnInit();
 
-      expect(initMapSpy).toHaveBeenCalledTimes(1);
+      // @ts-expect-error Private class member
+      expect(component.loader).toBeDefined();
     });
 
-    it('should set the map options correctly', () => {
-      // @ts-expect-error Private class member
-      const mapOptions = component.mapOptions;
+    it('should call initMap on ngAfterViewInit', () => {
+      component.ngAfterViewInit();
 
-      expect(mapOptions.center).toEqual({ lat: 42.982546, lng: -81.261387 });
-      expect(mapOptions.mapId).toBe('club-map');
-      expect(mapOptions.mapTypeControl).toBe(false);
-      expect(mapOptions.zoom).toBe(15);
+      expect(initMapSpy).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('template rendering', () => {
-    it('should render the club map element that hosts the Google Maps widget', () => {
-      expect(query(fixture.debugElement, '#club-map')).toBeTruthy();
+    it('should render an anchor element with the correct href', () => {
+      fixture.detectChanges();
+
+      const anchor = query(fixture.debugElement, 'a');
+      expect(anchor).toBeTruthy();
+      expect(anchor?.nativeElement.getAttribute('href')).toBe(LCC_CLUB.mapUrl);
+    });
+
+    it('should render the club map div element with dynamic id', () => {
+      fixture.detectChanges();
+
+      expect(query(fixture.debugElement, `#${LCC_CLUB.id}-location`)).toBeTruthy();
     });
   });
 });

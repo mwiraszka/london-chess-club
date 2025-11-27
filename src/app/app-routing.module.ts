@@ -117,6 +117,13 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'regional-clubs',
+    loadChildren: () =>
+      import('./pages/regional-clubs/regional-clubs-page-routing.module').then(
+        m => m.RegionalClubsPageRoutingModule,
+      ),
+  },
+  {
     path: 'schedule',
     loadChildren: () =>
       import('./pages/schedule/schedule-page-routing.module').then(

@@ -1,0 +1,18 @@
+import { CommonModule } from '@angular/common';
+import { Component, Input } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
+
+import { ClubMapComponent } from '@app/components/club-map/club-map.component';
+import { TooltipDirective } from '@app/directives/tooltip.directive';
+import { Club } from '@app/models';
+
+@Component({
+  selector: 'lcc-club-card',
+  templateUrl: './club-card.component.html',
+  styleUrls: ['./club-card.component.scss'],
+  imports: [ClubMapComponent, CommonModule, MatIconModule, TooltipDirective],
+})
+export class ClubCardComponent {
+  @Input() showMap = true;
+  @Input({ required: true }) club!: Club;
+}

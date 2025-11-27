@@ -75,9 +75,9 @@ describe('AboutPageComponent', () => {
       expect(query(fixture.debugElement, '.leadership-section')).toBeTruthy();
     });
 
-    it('should render map in where-and-when section', () => {
+    it('should render club card in where-and-when section', () => {
       expect(
-        query(fixture.debugElement, '.where-and-when-section lcc-club-map'),
+        query(fixture.debugElement, '.where-and-when-section lcc-club-card'),
       ).toBeTruthy();
     });
   });

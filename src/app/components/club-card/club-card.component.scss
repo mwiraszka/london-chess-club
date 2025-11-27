@@ -1,0 +1,86 @@
+@use '../../../styles/abstracts/mixins' as *;
+
+:host {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  min-height: 300px;
+  background-color: var(--lcc-color--general-cardBackground);
+  color: var(--lcc-color--homePage-primaryText);
+  border-radius: var(--lcc-borderRadius--large);
+  box-shadow: 3px 3px 5px var(--lcc-color--homePage-boxShadow);
+  line-height: 20px;
+  font-size: 16px;
+  width: 100%;
+
+  &:hover {
+    animation: raise 0.2s ease forwards;
+    box-shadow: 4px 4px 8px var(--lcc-color--homePage-boxShadow);
+  }
+
+  .club-info-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--lcc-color--clubCard-liftedSectionBackground);
+    border-radius: 3px;
+  }
+
+  .club-info-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 320px;
+    padding: 16px 32px;
+  }
+
+  h3 {
+    font-size: 18px;
+    margin-bottom: 4px;
+  }
+
+  .address {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+
+    .map-icon {
+      @include icon-size(24px);
+    }
+  }
+
+  .schedule {
+    white-space: pre-line;
+  }
+
+  .email {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+
+    .email-icon {
+      @include icon-size(16px);
+    }
+
+    .external-link-icon {
+      @include icon-size(16px);
+
+      margin-left: 4px;
+      margin-bottom: 1px;
+    }
+  }
+
+  lcc-club-map {
+    width: 100%;
+    display: block;
+
+    @include respond-to('lt-md') {
+      display: none;
+    }
+  }
+
+  .secondary-text {
+    color: var(--lcc-color--homePage-secondaryText);
+  }
+}

@@ -92,9 +92,12 @@ section {
       }
     }
 
-    lcc-club-map {
-      width: 100%;
+    lcc-club-card {
       padding: 8px;
+
+      ::ng-deep {
+        width: 100% !important;
+      }
     }
   }
 
