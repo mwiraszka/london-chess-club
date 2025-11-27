@@ -5,8 +5,9 @@ import { Store } from '@ngrx/store';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 
+import { DialogService } from '@app/services';
 import { AppActions } from '@app/store/app';
 import { ArticlesActions, ArticlesSelectors } from '@app/store/articles';
 import { AuthActions } from '@app/store/auth';
@@ -30,6 +31,15 @@ export class NavEffects {
       ),
       map(([path]) => NavActions.appendPathToHistory({ path })),
     ),
+  );
+
+  closeAllDialogsOnNavigation$ = createEffect(
+    () =>
+      this.router.events.pipe(
+        filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+        tap(() => this.dialogService.closeAll()),
+      ),
+    { dispatch: false },
   );
 
   redirectOnAccessDenied$ = createEffect(
@@ -258,6 +268,7 @@ export class NavEffects {
 
   constructor(
     private readonly actions$: Actions,
+    private readonly dialogService: DialogService,
     private readonly router: Router,
     private readonly store: Store,
   ) {}

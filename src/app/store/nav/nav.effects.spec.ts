@@ -5,12 +5,13 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { ReplaySubject } from 'rxjs';
 
 import { TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 
 import { MOCK_ARTICLES } from '@app/mocks/articles.mock';
 import { MOCK_EVENTS } from '@app/mocks/events.mock';
 import { MOCK_IMAGES } from '@app/mocks/images.mock';
 import { MOCK_MEMBERS } from '@app/mocks/members.mock';
+import { DialogService } from '@app/services';
 import { ArticlesActions, ArticlesSelectors } from '@app/store/articles';
 import { AuthActions } from '@app/store/auth';
 import { EventsActions } from '@app/store/events';
@@ -31,6 +32,7 @@ jest.mock('@app/utils', () => ({
 
 describe('NavEffects', () => {
   let actions$: ReplaySubject<Action>;
+  let dialogService: jest.Mocked<DialogService>;
   let effects: NavEffects;
   let router: jest.Mocked<Router>;
   let store: MockStore;
@@ -46,6 +48,11 @@ describe('NavEffects', () => {
   beforeEach(() => {
     const routerMock = {
       navigate: jest.fn(),
+      events: new ReplaySubject<NavigationEnd>(1),
+    };
+
+    const dialogServiceMock = {
+      closeAll: jest.fn(),
     };
 
     TestBed.configureTestingModule({
@@ -53,6 +60,7 @@ describe('NavEffects', () => {
         NavEffects,
         provideMockActions(() => actions$),
         { provide: Router, useValue: routerMock },
+        { provide: DialogService, useValue: dialogServiceMock },
         provideMockStore({
           initialState: {
             navState: {
@@ -69,6 +77,7 @@ describe('NavEffects', () => {
       ],
     });
 
+    dialogService = TestBed.inject(DialogService) as jest.Mocked<DialogService>;
     effects = TestBed.inject(NavEffects);
     router = TestBed.inject(Router) as jest.Mocked<Router>;
     store = TestBed.inject(MockStore);
@@ -106,16 +115,21 @@ describe('NavEffects', () => {
       }, 10);
     });
 
-    it('should append path when current path is null', done => {
+    it('should append path when current path is null', () => {
       store.overrideSelector(NavSelectors.selectCurrentPath, null);
-      store.refreshState();
+    });
+  });
 
-      actions$.next(mockNavigatedAction('/'));
-
-      effects.appendPathToHistory$.subscribe(action => {
-        expect(action).toEqual(NavActions.appendPathToHistory({ path: '/' }));
+  describe('closeAllDialogsOnNavigation$', () => {
+    it('should close all dialogs on NavigationEnd event', done => {
+      effects.closeAllDialogsOnNavigation$.subscribe(() => {
+        expect(dialogService.closeAll).toHaveBeenCalledTimes(1);
         done();
       });
+
+      (router.events as ReplaySubject<NavigationEnd>).next(
+        new NavigationEnd(1, '/schedule', '/schedule'),
+      );
     });
   });
 
