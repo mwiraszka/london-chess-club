@@ -1,0 +1,19 @@
+@use '../../../styles/abstracts/mixins' as *;
+
+:host {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 8px;
+
+  @include respond-to('gt-md') {
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  }
+
+  @include respond-to('gt-lg') {
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  }
+
+  lcc-regional-club-card {
+    width: 100%;
+  }
+}

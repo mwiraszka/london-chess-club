@@ -60,16 +60,16 @@
     .email-label {
       display: block;
     }
+
+    .external-link-icon {
+      @include icon-size(16px);
+
+      margin-left: 4px;
+      margin-bottom: 1px;
+    }
   }
 
   .secondary-text {
     color: var(--lcc-color--homePage-secondaryText);
-  }
-
-  .external-link-icon {
-    @include icon-size(16px);
-
-    margin-left: 4px;
-    margin-bottom: 1px;
   }
 }

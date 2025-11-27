@@ -4,7 +4,7 @@
   <div class="address">
     <mat-icon class="map-icon">location_on</mat-icon>
     <a
-      class="address-link lcc-link"
+      class="address-link"
       [href]="club.mapUrl"
       rel="noopener noreferrer"
       target="_blank">
@@ -13,7 +13,6 @@
       <span>{{ club.addressLine2 }}</span>
       <br />
       <span>{{ club.addressLine3 }}</span>
-      <mat-icon class="external-link-icon">open_in_new</mat-icon>
     </a>
   </div>
 
@@ -23,7 +22,7 @@
 
   @if (club.email) {
     <div class="email">
-      <label class="email-label secondary-text">contact: </label>
+      <label class="email-label secondary-text">contact:</label>
       <a
         [href]="'mailto:' + club.email"
         class="email-link lcc-link"

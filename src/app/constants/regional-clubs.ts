@@ -2,6 +2,15 @@ import { RegionalClub } from '@app/models';
 
 export const REGIONAL_CLUBS: RegionalClub[] = [
   {
+    name: 'London Chess Club',
+    mapUrl: 'https://maps.app.goo.gl/9KbVMTcdTD938QAz9',
+    addressLine1: "Kiwanis Seniors' Community Centre",
+    addressLine2: '78 Riverside Drive',
+    addressLine3: 'London, ON N6H 1B4',
+    scheduleText: 'Thursdays, 6:00pm – 9:00pm\n\n(free parking behind building)',
+    email: 'welcome@londonchess.ca',
+  },
+  {
     name: 'St. Thomas Chess Club',
     mapUrl: 'https://maps.app.goo.gl/RUJk2MGqZsTACu4y9',
     addressLine1: 'Central United Church',
@@ -39,10 +48,11 @@ export const REGIONAL_CLUBS: RegionalClub[] = [
   },
   {
     name: 'Stratford Public Library Chess',
-    mapUrl: 'https://maps.app.goo.gl/b5r4x94poGWBXsRM6',
-    addressLine1: 'Baden Branch Library',
-    addressLine2: "115 Snyder's Road East",
-    addressLine3: 'Baden, ON N3A 2V4',
-    scheduleText: 'Wednesdays, 6:00pm – 7:45pm',
+    mapUrl: 'https://maps.app.goo.gl/G29enJVYt2rsygog7',
+    addressLine1: 'Stratford Public Library',
+    addressLine2: '19 St. Andrew Street',
+    addressLine3: 'Stratford, ON N5A 1A2',
+    scheduleText: 'Mondays, 6:30pm – 8:30pm',
+    email: 'idemeester@splibrary.ca',
   },
 ];

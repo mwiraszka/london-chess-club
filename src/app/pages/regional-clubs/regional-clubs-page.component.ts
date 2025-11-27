@@ -18,21 +18,7 @@ import { MetaAndTitleService } from '@app/services';
       <lcc-regional-club-card [club]="club"></lcc-regional-club-card>
     }
   `,
-  styles: [
-    `
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 8px;
-
-      @include respond-to('gt-md') {
-        grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-      }
-
-      @include respond-to('gt-lg') {
-        grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-      }
-    `,
-  ],
+  styleUrl: './regional-clubs-page.component.scss',
   imports: [CommonModule, PageHeaderComponent, RegionalClubCardComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
