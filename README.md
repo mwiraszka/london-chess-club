@@ -14,6 +14,13 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 | 🔧  | Behind-the-scenes changes         |
 
 <details>
+<summary>v5.10.9 - December 7th, 2025</summary>
+
+- 🚀 Add PGNs for 2025 LCC Championship
+
+</details>
+
+<details>
 <summary>v5.10.8 - November 27th, 2025</summary>
 
 - 🚀 Create a dedicated Regional Clubs page, accessible from About page and footer; add Stratford club and some contact emails
