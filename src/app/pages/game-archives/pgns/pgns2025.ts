@@ -3292,6 +3292,7 @@ Kg6 69. Qf5+ Kg7 70. Be5+ Kh6 71. Rh8# 1-0
 [WhiteElo "1342"]
 [BlackElo "1263"]
 [ECO "C50"]
+[EventDate "2025.??.??"]
 [PlyCount "33"]
 
 1. e4 Nc6 2. Nc3 Nf6 3. Bc4 e5 4. Nf3 Bc5 5. O-O a6 6. d3 b5 7. Bd5 Nxd5 8.
@@ -3308,6 +3309,7 @@ Qxh7 Qe6 15. Qxg8+ Kd7 16. Qd8+ Kc6 17. Qxc7# 1-0
 [WhiteElo "1224"]
 [BlackElo "1228"]
 [ECO "D00"]
+[EventDate "2025.??.??"]
 [PlyCount "95"]
 
 1. d4 d5 2. Nc3 Nf6 3. Nf3 Nc6 4. Bf4 Bf5 5. e3 e6 6. Bb5 Be7 7. Bxc6+ bxc6
@@ -3518,6 +3520,7 @@ Qb8+ Ka6 94. Qdd6+ Ka5 95. Qbb4# 1-0
 [WhiteElo "1228"]
 [BlackElo "1342"]
 [ECO "A01"]
+[EventDate "2025.??.??"]
 [PlyCount "82"]
 
 1. b3 d5 2. Bb2 Nc6 3. g3 Nf6 4. Bg2 Bf5 5. d3 e5 6. e3 Bc5 7. Nd2 O-O 8.
@@ -3527,5 +3530,134 @@ Bg2 Qg4 22. b5 Na5 23. Ne5 Qf5 24. Bh3 Qg5 25. Bc3 Bf5 26. Bxf5 Qxf5 27. f3
 Nb3 28. Rb1 Ba5 29. fxe4 Bxc3+ 30. Qxc3 Qxe4 31. Ke2 Rad8 32. Rbd1 Nxd4+
 33. Rxd4 Rxd4 34. Qxd4 Qxh1 35. Qxa4 Qh2+ 36. Kd3 Rd8+ 37. Ke4 Qh1+ 38. Nf3
 Re8+ 39. Kf5 Qxf3 40. b6 g6+ 41. Kf6 Re6# 0-1
+
+`,`[Event "2025 London Ch A MATCH"]
+[Site "?"]
+[Date "2025.11.06"]
+[Round "1"]
+[White "Bartar, Rene"]
+[Black "Ramirez, Emilio"]
+[Result "1-0"]
+[WhiteElo "2027"]
+[BlackElo "2107"]
+[ECO "B09"]
+[EventDate "2025.??.??"]
+[PlyCount "95"]
+
+1. e4 d6 2. d4 Nf6 3. Nc3 g6 4. f4 Bg7 5. Nf3 c5 6. dxc5 Qa5 7. Qd4 O-O 8.
+Bd2 Nc6 9. Qg1 Qxc5 10. Qxc5 dxc5 11. e5 Nd7 12. O-O-O f6 13. Bc4+ Kh8 14.
+exf6 Bxf6 15. h4 Nb6 16. Bd3 Nb4 17. Be4 Nc4 18. h5 Kg7 19. hxg6 hxg6 20.
+Nh4 Nd6 21. Bf3 Nf5 22. Nxf5+ Bxf5 23. Ne4 Nxa2+ 24. Kb1 Nb4 25. g4 Bxe4
+26. Bxe4 Kf7 27. Rh7+ Kg8 28. Bxg6 Rad8 29. Rh2 Nd5 30. Rdh1 Bg7 31. f5 Nb6
+32. g5 Be5 33. Re2 Nc4 34. Bc1 Rd5 35. b3 Nd6 36. c4 Rd3 37. Rxe5 Rxb3+ 38.
+Kc2 Rf3 39. Rxe7 Nxc4 40. Reh7 R8xf5 41. Bxf5 Rxf5 42. Rxb7 Rf2+ 43. Kc3
+Nd6 44. Rd7 Ne4+ 45. Kd3 Ng3 46. Re1 Kf8 47. g6 Nf5 48. Rf7+ 1-0
+
+`,`[Event "2025 London Ch A MATCH"]
+[Site "?"]
+[Date "2025.11.20"]
+[Round "2"]
+[White "Ramirez, Emilio"]
+[Black "Bartar, Rene"]
+[Result "0-1"]
+[WhiteElo "2107"]
+[BlackElo "2027"]
+[ECO "E06"]
+[EventDate "2025.??.??"]
+[PlyCount "70"]
+
+1. d4 Nf6 2. Nf3 d5 3. g3 e6 4. Bg2 Be7 5. c4 Ne4 6. O-O f5 7. Bf4 Nd7 8.
+h4 h6 9. e3 g5 10. Ne5 Ndf6 11. Ng6 Rg8 12. Nxe7 Qxe7 13. hxg5 hxg5 14. Be5
+Ng4 15. Bf3 Nxe5 16. dxe5 Qh7 17. Bxe4 Rh8 18. Re1 dxe4 19. Kf1 Qh1+ 20.
+Ke2 Qf3+ 21. Kd2 Qxf2+ 22. Re2 Qxg3 23. Nc3 Qxe5 24. Kc2 Bd7 25. Rd2 O-O-O
+26. Qe2 Bc6 27. Rad1 Rxd2+ 28. Rxd2 f4 29. Rd4 f3 30. Qd1 g4 31. b4 a6 32.
+a4 b5 33. axb5 axb5 34. cxb5 Bxb5 35. Rxe4 Ba4+ 0-1
+
+`,`[Event "2025 London Ch A MATCH"]
+[Site "?"]
+[Date "2025.11.27"]
+[Round "3"]
+[White "Bartar, Rene"]
+[Black "Ramirez, Emilio"]
+[Result "1/2-1/2"]
+[WhiteElo "2027"]
+[BlackElo "2107"]
+[ECO "B13"]
+[EventDate "2025.??.??"]
+[PlyCount "45"]
+
+1. e4 c6 2. d4 d5 3. exd5 cxd5 4. Nf3 Nc6 5. c3 Bg4 6. h3 Bh5 7. Qb3 Qd7 8.
+Ne5 Nxe5 9. dxe5 a6 10. c4 Rc8 11. Nc3 dxc4 12. Bxc4 Qd4 13. Qa4+ Kd8 14.
+Qa5+ Ke8 15. Qa4+ Kd8 16. Qa5+ Rc7 17. Qd5+ Rd7 18. Qxd4 Rxd4 19. Be2 Bg6
+20. Be3 Rd7 21. Bb6+ Kc8 22. Rc1 Kb8 23. Bb5 1/2-1/2
+
+`,`[Event "2025 London Ch B MATCH"]
+[Site "?"]
+[Date "2025.12.04"]
+[Round "1"]
+[White "Narirov, Martin"]
+[Black "Tongarlak, Tarik"]
+[Result "1-0"]
+[WhiteElo "1857"]
+[BlackElo "1817"]
+[ECO "C51"]
+[EventDate "2025.??.??"]
+[PlyCount "97"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bc4 Bc5 4. b4 Bb6 5. a4 a6 6. O-O d6 7. c3 Bg4 8. d3
+Nf6 9. Qb3 Qd7 10. Ng5 Bh5 11. Be3 Bxe3 12. fxe3 h6 13. Nh3 O-O 14. Nd2 Bg4
+15. Kh1 Bxh3 16. gxh3 Qxh3 17. Rf3 Qh5 18. Rg1 Kh8 19. Rgg3 Nd8 20. Rh3 Qg4
+21. Rfg3 Qe2 22. Nf3 Qf1+ 23. Ng1 Nh7 24. Qc2 Ne6 25. Rf3 Qe1 26. d4 Qa1
+27. Rf1 Qa3 28. Nf3 Nhg5 29. Nxg5 Nxg5 30. Rg3 b5 31. Bd5 c6 32. Bb3 Nxe4
+33. Rgg1 bxa4 34. Bxf7 d5 35. Qg2 Ng5 36. Rf3 Ra7 37. Qxg5 Rfxf7 38. Rh3
+Rf6 39. dxe5 Re6 40. Qf5 Rae7 41. Qf8+ Kh7 42. Rxh6+ Rxh6 43. Qxe7 Rg6 44.
+Qh4+ Rh6 45. Qg5 g6 46. Qe7+ Kg8 47. Rf1 Rxh2+ 48. Kxh2 Qb2+ 49. Kg3 1-0
+
+`,`[Event "2025 London Ch C MATCH"]
+[Site "?"]
+[Date "2025.12.04"]
+[Round "1"]
+[White "Collrin, Jack"]
+[Black "Ortiz, Hugo"]
+[Result "0-1"]
+[WhiteElo "1626"]
+[BlackElo "1654"]
+[ECO "B10"]
+[EventDate "2025.??.??"]
+[PlyCount "104"]
+
+1. e4 c6 2. Nf3 d5 3. exd5 cxd5 4. d4 Nc6 5. Bd3 Nf6 6. O-O Bg4 7. c3 e6 8.
+h3 Bh5 9. Bf4 Bd6 10. Bxd6 Qxd6 11. Nbd2 O-O 12. Re1 Qc7 13. Qc2 Rac8 14.
+Ne5 Nxd4 15. Qa4 Nc6 16. Nxc6 bxc6 17. g4 Bg6 18. Bxg6 hxg6 19. Qd4 c5 20.
+Qe5 Qxe5 21. Rxe5 c4 22. Nf3 Rc6 23. Nd4 Rd6 24. b3 Rc8 25. b4 Ne4 26. Rc1
+Ra6 27. f3 Nd6 28. Re2 Rb8 29. Rb1 Nb5 30. Nxb5 Rxb5 31. Kg2 Ra3 32. Rc1 a5
+33. Rb2 axb4 34. cxb4 f6 35. Rcc2 g5 36. Kf2 Kf7 37. Ke2 Ra4 38. Kd2 Raxb4
+39. Rxb4 Rxb4 40. a3 Ra4 41. Ra2 Ke7 42. f4 gxf4 43. h4 e5 44. h5 d4 45.
+Kc2 e4 46. Kb2 e3 47. Ra1 f3 48. Kc2 d3+ 49. Kc3 f2 50. g5 fxg5 51. h6 gxh6
+52. Kb2 e2 0-1
+
+`,`[Event "2025 London Ch D MATCH"]
+[Site "?"]
+[Date "2025.12.04"]
+[Round "1"]
+[White "Prabhu, Mithun"]
+[Black "Kittur, Dhruv"]
+[Result "1-0"]
+[WhiteElo "1535"]
+[BlackElo "1563"]
+[ECO "D00"]
+[EventDate "2025.??.??"]
+[PlyCount "115"]
+
+1. d4 d5 2. Bf4 Nf6 3. e3 Bf5 4. Nf3 Nbd7 5. c3 e6 6. Nbd2 Bd6 7. Bg5 O-O
+8. Be2 Qe7 9. Nh4 h6 10. Nxf5 exf5 11. Bh4 Rae8 12. Qc2 Qe6 13. O-O-O a5
+14. Qa4 b6 15. Bb5 Rd8 16. Bxd7 Qxd7 17. Qxd7 Rxd7 18. f4 Ng4 19. Rde1 Re8
+20. h3 Nxe3 21. Bf2 Bxf4 22. g3 Bxg3 23. Bxg3 Kf8 24. b3 Ng2 25. Rxe8+ Kxe8
+26. Rh2 f4 27. Rxg2 fxg3 28. Rxg3 g6 29. Nf3 Rd6 30. Ne5 Ke7 31. Rf3 Rf6
+32. Re3 Re6 33. Kd2 g5 34. Ke2 f6 35. Ng6+ Kf7 36. Nh8+ Ke7 37. Ng6+ Kd6
+38. h4 Rxe3+ 39. Kxe3 Ke6 40. h5 Kf5 41. Ne7+ Ke6 42. Ng8 f5 43. Nxh6 f4+
+44. Kf3 Kf6 45. Ng4+ Kf5 46. c4 Ke6 47. cxd5+ Kxd5 48. h6 Kxd4 49. h7 Kd3
+50. h8=Q Kc2 51. Qh7+ Kb2 52. Qxc7 Kxa2 53. Qxb6 a4 54. bxa4 Ka3 55. a5 Ka2
+56. a6 Ka3 57. a7 Ka4 58. a8=Q# 1-0
 
 `];
