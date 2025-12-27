@@ -161,8 +161,8 @@ describe('MembersTableComponent', () => {
   describe('city champion', () => {
     it('should identify current city champion', () => {
       const cityChampion = {
-        firstName: 'Serhii',
-        lastName: 'Ivanchuk',
+        firstName: 'Rene',
+        lastName: 'Bartar',
       } as unknown as Member;
 
       expect(component.isCityChampion(cityChampion)).toBe(true);

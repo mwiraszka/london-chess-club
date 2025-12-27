@@ -114,7 +114,7 @@ export class MembersTableComponent {
   }
 
   public isCityChampion(member: Member): boolean {
-    return member.firstName === 'Serhii' && member.lastName === 'Ivanchuk';
+    return member.firstName === 'Rene' && member.lastName === 'Bartar';
   }
 
   private async onDeleteMember(member: Member): Promise<void> {
