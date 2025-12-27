@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { RouterLink } from '@angular/router';
 
 import { PageHeaderComponent } from '@app/components/page-header/page-header.component';
 import { PhotoCarouselComponent } from '@app/components/photo-carousel/photo-carousel.component';
@@ -12,13 +11,7 @@ import { MetaAndTitleService } from '@app/services';
   selector: 'lcc-champion-page',
   templateUrl: './champion-page.component.html',
   styleUrl: './champion-page.component.scss',
-  imports: [
-    MatIconModule,
-    PageHeaderComponent,
-    PhotoCarouselComponent,
-    RouterLink,
-    TooltipDirective,
-  ],
+  imports: [MatIconModule, PageHeaderComponent, PhotoCarouselComponent, TooltipDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChampionPageComponent implements OnInit {
@@ -103,7 +96,11 @@ export class ChampionPageComponent implements OnInit {
   ];
 
   public readonly juniorChampionships: ChampionshipTableRowData[] = [
-    { year: 2025, winners: [{ name: 'Akshaj Achyuth', peakRating: '2009' }] },
+    {
+      year: 2025,
+      winners: [{ name: 'Akshaj Achyuth', peakRating: '2009' }],
+      textStyle: 'font-weight: bold;',
+    },
     { year: 2011, winners: [{ name: 'Kevin Gibson', peakRating: '2244' }] },
     { year: 2010, winners: [{ name: 'Kevin Gibson', peakRating: '2244' }] },
     { year: 2009, winners: [{ name: 'Kevin Gibson', peakRating: '2244' }] },
@@ -172,9 +169,13 @@ export class ChampionPageComponent implements OnInit {
 
   public readonly standardChampionships: ChampionshipTableRowData[] = [
     {
+      year: 2025,
+      winners: [{ name: 'Rene Bartar', peakRating: '2027' }],
+      textStyle: 'font-weight: bold;',
+    },
+    {
       year: 2024,
       winners: [{ name: 'Serhii Ivanchuk', peakRating: '2195' }],
-      textStyle: 'font-weight: bold;',
     },
     { year: 2023, winners: [{ name: 'Serhii Ivanchuk', peakRating: '2195' }] },
     { year: 2022, winners: [{ name: 'Geoffrey Ruelland', peakRating: '2164' }] },

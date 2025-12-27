@@ -14,6 +14,13 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 | 🔧  | Behind-the-scenes changes         |
 
 <details>
+<summary>v5.11.0 - December TBD, 2025</summary>
+
+- 🚀 Update City Champion page and Members table with new 2025 London Chess Champion
+
+</details>
+
+<details>
 <summary>v5.10.9 - December 7th, 2025</summary>
 
 - 🚀 Add PGNs for 2025 LCC Championship
