@@ -33,7 +33,7 @@ jobs:
         run: pnpm run lint
 
       - name: Run unit tests
-        run: pnpm run test -- --ci
+        run: pnpm run test
 
   Update-S3-Bucket:
     runs-on: ubuntu-latest
