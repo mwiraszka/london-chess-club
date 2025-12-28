@@ -66,51 +66,15 @@ section {
       display: flex;
       flex-direction: column;
 
+      ::ng-deep lcc-expansion-panel .expansion-content {
+        padding: 2px 0 0;
+      }
+
       .tables-container {
         width: 100%;
         display: flex;
         flex-direction: column;
         gap: 8px;
-
-        article {
-          flex: 1;
-
-          .expansion-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            padding: 16px 8px;
-            border-radius: 4px;
-            transition: background-color 0.3s;
-            background-color: var(--lcc-color--championPage-expansionHeaderBackground);
-
-            &:hover {
-              background-color: var(
-                --lcc-color--championPage-expansionHeaderBackgroundOnHover
-              );
-            }
-
-            h4 {
-              text-align: center;
-              padding: 4px;
-              font-size: 15px;
-              color: var(--lcc-color--championPage-primaryText);
-
-              b {
-                margin: 0 4px;
-              }
-            }
-
-            mat-icon {
-              @include icon-size(16px);
-              display: flex;
-              justify-content: center;
-
-              color: var(--lcc-color--championPage-primaryText);
-            }
-          }
-        }
       }
     }
 

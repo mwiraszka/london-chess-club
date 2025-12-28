@@ -1,11 +1,12 @@
 <lcc-page-header
-  title="About"
+  heading="About"
   icon="info">
 </lcc-page-header>
 
 <div class="grid-container">
-  <section class="first-visit-section">
-    <p>First visit? Drop-ins welcome!</p>
+  <lcc-expansion-panel
+    class="first-visit-section"
+    heading="First visit">
     <p>
       No membership needed for your first visit. If you're new to the club, we recommend
       arriving 15 minutes early to meet the club's executive committee and coordinators.
@@ -17,9 +18,11 @@
       know. They will help you get registered and answer any questions you may have about
       the event.
     </p>
-  </section>
+  </lcc-expansion-panel>
 
-  <section class="where-and-when-section">
+  <lcc-expansion-panel
+    class="where-and-when-section"
+    heading="Where and when we meet">
     <lcc-club-card
       [club]="lccClub"
       [showMap]="false">
@@ -27,12 +30,13 @@
     <a
       class="lcc-link"
       routerLink="/regional-clubs">
-      More chess clubs in the region</a
-    >
-  </section>
+      More chess clubs in the region
+    </a>
+  </lcc-expansion-panel>
 
-  <section class="club-regulations-section">
-    <h3 class="section-heading">Club Regulations</h3>
+  <lcc-expansion-panel
+    class="club-regulations-section"
+    heading="Club regulations">
     <p>
       The London Chess Club is committed to providing a safe and welcoming environment for
       all members. We expect all members to treat each other with respect and kindness.
@@ -50,8 +54,8 @@
         target="_blank"
         routerLink="/documents"
         fragment="lcc-code-of-conduct.pdf">
-        Code of Conduct</a
-      >
+        Code of Conduct
+      </a>
       and
       <a
         class="lcc-link"
@@ -59,14 +63,15 @@
         target="_blank"
         routerLink="/documents"
         fragment="lcc-bylaws.pdf">
-        Bylaws</a
-      >
+        Bylaws
+      </a>
       documents for more information.
     </p>
-  </section>
+  </lcc-expansion-panel>
 
-  <section class="membership-fee-section">
-    <h3 class="section-heading">Membership Fee</h3>
+  <lcc-expansion-panel
+    class="membership-fee-section"
+    heading="Membership fee">
     <p>
       <b>2025 &mdash; $45</b> <br />
       2026 &mdash; $50 <br />
@@ -82,38 +87,41 @@
         routerLink="/documents"
         target="_blank"
         fragment="membership-fees-2025-to-2028.pdf">
-        Incremental Plan to Break Even</a
-      >
+        Incremental Plan to Break Even
+      </a>
       document for full details.
     </p>
-  </section>
+  </lcc-expansion-panel>
 
-  <section class="supplies-section">
-    <h3 class="section-heading">Chess Supplies</h3>
-    <p> Please bring your own chess sets and clocks! </p>
-    <p
-      >Don't have any? We have supplies available for sale at the club. Contact
+  <lcc-expansion-panel
+    class="supplies-section"
+    heading="Chess supplies">
+    <p>Please bring your own chess sets and clocks!</p>
+    <p>
+      Don't have any? We have supplies available for sale at the club. Contact
       <a
         href="mailto:chesslessons@mail.com"
         class="lcc-link"
         rel="noopener noreferrer"
         target="_blank">
-        Steve Demmery</a
-      >
+        Steve Demmery
+      </a>
       for more information.
     </p>
-  </section>
+  </lcc-expansion-panel>
 
-  <section class="parking-section">
-    <h3 class="section-heading">Parking</h3>
+  <lcc-expansion-panel
+    class="parking-section"
+    heading="Parking">
     <p>
       There is plenty of parking space available behind the building, free of charge
       during chess club hours.
     </p>
-  </section>
+  </lcc-expansion-panel>
 
-  <section class="ratings-section">
-    <h3 class="section-heading">Chess Ratings</h3>
+  <lcc-expansion-panel
+    class="ratings-section"
+    heading="Chess ratings">
     <p>
       We use our own London & Region rating system, managed by Gerry Litchfield. Current
       ratings can be found
@@ -123,10 +131,11 @@
         here</a
       >.
     </p>
-  </section>
+  </lcc-expansion-panel>
 
-  <section class="rules-section">
-    <h3 class="section-heading">Rules of the Game</h3>
+  <lcc-expansion-panel
+    class="rules-section"
+    heading="Rules of the game">
     <p>
       For tournaments we generally follow the
       <a
@@ -144,10 +153,11 @@
       seeking arbitration. If you would like to speak to an arbiter, pause the clock and
       raise your hand to get their attention.
     </p>
-  </section>
+  </lcc-expansion-panel>
 
-  <section class="tournaments-section">
-    <h3 class="section-heading">Tournaments</h3>
+  <lcc-expansion-panel
+    class="tournaments-section"
+    heading="Tournaments">
     <p>
       Chess tournaments are held throughout the year. These include casual blitz
       tournaments, rapid tournaments, and the London Chess Championship held in the fall.
@@ -166,14 +176,15 @@
       <a
         class="lcc-link"
         routerLink="/schedule">
-        schedule</a
-      >
+        schedule
+      </a>
       for a list of upcoming events.
     </p>
-  </section>
+  </lcc-expansion-panel>
 
-  <section class="leadership-section">
-    <h3 class="section-heading">Club Leadership</h3>
+  <lcc-expansion-panel
+    class="leadership-section"
+    heading="Leadership team and volunteers">
     <div class="tables-container">
       <table class="lcc-table executive-committee">
         <thead>
@@ -300,5 +311,5 @@
         email me</a
       >, or find me at the club!
     </p>
-  </section>
+  </lcc-expansion-panel>
 </div>

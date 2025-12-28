@@ -107,7 +107,7 @@ describe('ArticleEditorPageComponent', () => {
           formData: pick(MOCK_ARTICLES[0], ARTICLE_FORM_DATA_PROPERTIES),
           hasUnsavedChanges: false,
           originalArticle: MOCK_ARTICLES[0],
-          pageTitle: `Edit ${MOCK_ARTICLES[0].title}`,
+          pageHeading: `Edit ${MOCK_ARTICLES[0].title}`,
         });
       });
 
@@ -137,7 +137,7 @@ describe('ArticleEditorPageComponent', () => {
           formData: INITIAL_ARTICLE_FORM_DATA,
           hasUnsavedChanges: false,
           originalArticle: null,
-          pageTitle: 'Compose an article',
+          pageHeading: 'Compose an article',
         });
       });
 

@@ -23,7 +23,7 @@ import { ImagesActions, ImagesSelectors } from '@app/store/images';
       <lcc-page-header
         [hasUnsavedChanges]="vm.hasUnsavedChanges"
         icon="admin_panel_settings"
-        [title]="vm.pageTitle">
+        [heading]="vm.pageHeading">
       </lcc-page-header>
 
       <lcc-article-form
@@ -59,7 +59,7 @@ export class ArticleEditorPageComponent implements EditorPage, OnInit {
     formData: ArticleFormData;
     hasUnsavedChanges: boolean;
     originalArticle: Article | null;
-    pageTitle: string;
+    pageHeading: string;
   }>;
 
   constructor(
@@ -87,14 +87,14 @@ export class ArticleEditorPageComponent implements EditorPage, OnInit {
         hasUnsavedChanges,
         bannerImage,
         bodyImages,
-        pageTitle: originalArticle
+        pageHeading: originalArticle
           ? `Edit ${originalArticle.title}`
           : 'Compose an article',
       })),
       tap(viewModel => {
-        this.metaAndTitleService.updateTitle(viewModel.pageTitle);
+        this.metaAndTitleService.updateTitle(viewModel.pageHeading);
         this.metaAndTitleService.updateDescription(
-          `${viewModel.pageTitle} for the London Chess Club.`,
+          `${viewModel.pageHeading} for the London Chess Club.`,
         );
       }),
     );

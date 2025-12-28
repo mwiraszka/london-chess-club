@@ -110,7 +110,7 @@ describe('ImageEditorPageComponent', () => {
             formData: pick(MOCK_IMAGES[0], IMAGE_FORM_DATA_PROPERTIES),
           },
           newImageFormData: null,
-          pageTitle: `Edit ${MOCK_IMAGES[0].filename}`,
+          pageHeading: `Edit ${MOCK_IMAGES[0].filename}`,
         });
       });
 
@@ -139,7 +139,7 @@ describe('ImageEditorPageComponent', () => {
           hasUnsavedChanges: false,
           imageEntity: null,
           newImageFormData: null,
-          pageTitle: 'Add an image',
+          pageHeading: 'Add an image',
         });
       });
 

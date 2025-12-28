@@ -39,7 +39,7 @@ import { isLccError, parseCsv } from '@app/utils';
   template: `
     @if (viewModel$ | async; as vm) {
       <lcc-page-header
-        title="Members"
+        heading="Members"
         icon="groups">
       </lcc-page-header>
 

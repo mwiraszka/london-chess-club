@@ -13,7 +13,7 @@ describe('PageHeaderComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(PageHeaderComponent);
-    fixture.componentRef.setInput('title', 'Mock Title');
+    fixture.componentRef.setInput('heading', 'Mock Heading');
 
     fixture.detectChanges();
   });
@@ -23,10 +23,12 @@ describe('PageHeaderComponent', () => {
   });
 
   describe('template rendering', () => {
-    it('should always display title', () => {
+    it('should always display heading', () => {
       fixture.detectChanges();
 
-      expect(queryTextContent(fixture.debugElement, '.page-title')).toBe('Mock Title');
+      expect(queryTextContent(fixture.debugElement, '.page-heading')).toBe(
+        'Mock Heading',
+      );
     });
 
     it('should display icon when provided', () => {
@@ -48,7 +50,7 @@ describe('PageHeaderComponent', () => {
       fixture.detectChanges();
 
       expect(
-        query(fixture.debugElement, '.page-title').classes['end-with-asterisk'],
+        query(fixture.debugElement, '.page-heading').classes['end-with-asterisk'],
       ).toBe(true);
     });
 
@@ -57,7 +59,7 @@ describe('PageHeaderComponent', () => {
       fixture.detectChanges();
 
       expect(
-        query(fixture.debugElement, '.page-title').classes['end-with-asterisk'],
+        query(fixture.debugElement, '.page-heading').classes['end-with-asterisk'],
       ).toBeUndefined();
     });
 
@@ -66,7 +68,7 @@ describe('PageHeaderComponent', () => {
       fixture.detectChanges();
 
       expect(
-        query(fixture.debugElement, '.page-title').classes['end-with-asterisk'],
+        query(fixture.debugElement, '.page-heading').classes['end-with-asterisk'],
       ).toBeUndefined();
     });
   });

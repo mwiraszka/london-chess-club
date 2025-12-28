@@ -25,11 +25,11 @@ export class AuthGuard implements CanActivate {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const [, entity, action] = ((route as any)._routerState?.url ?? '').split('/');
 
-        const pageTitle = ['add', 'edit'].includes(action)
+        const pageHeading = ['add', 'edit'].includes(action)
           ? startCase(`${action} ${entity}`)
           : '';
 
-        this.store.dispatch(NavActions.pageAccessDenied({ pageTitle }));
+        this.store.dispatch(NavActions.pageAccessDenied({ pageHeading }));
         return false;
       }),
     );

@@ -31,7 +31,7 @@ import { EventsActions, EventsSelectors } from '@app/store/events';
   template: `
     @if (viewModel$ | async; as vm) {
       <lcc-page-header
-        title="Schedule"
+        heading="Schedule"
         icon="calendar_month">
       </lcc-page-header>
 

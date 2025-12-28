@@ -524,7 +524,7 @@ describe('AppEffects', () => {
 
     describe('Nav actions', () => {
       it('should display toast for pageAccessDenied', done => {
-        actions$.next(NavActions.pageAccessDenied({ pageTitle: 'Admin Panel' }));
+        actions$.next(NavActions.pageAccessDenied({ pageHeading: 'Admin Panel' }));
 
         effects.notify$.subscribe(() => {
           expect(toastService.displayToast).toHaveBeenCalledWith({

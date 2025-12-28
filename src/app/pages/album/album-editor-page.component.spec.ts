@@ -108,7 +108,7 @@ describe('AlbumEditorPageComponent', () => {
           hasUnsavedChanges: false,
           imageEntities: expect.any(Array),
           newImagesFormData: {},
-          pageTitle: 'Edit Album of the Year',
+          pageHeading: 'Edit Album of the Year',
         });
       });
 
@@ -138,7 +138,7 @@ describe('AlbumEditorPageComponent', () => {
           hasUnsavedChanges: false,
           imageEntities: expect.any(Array),
           newImagesFormData: {},
-          pageTitle: 'Create an album',
+          pageHeading: 'Create an album',
         });
       });
 

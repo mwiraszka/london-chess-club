@@ -19,7 +19,7 @@ import { ImagesActions, ImagesSelectors } from '@app/store/images';
   template: `
     @if (viewModel$ | async; as vm) {
       <lcc-page-header
-        title="Photo Gallery"
+        heading="Photo Gallery"
         icon="photo_camera">
       </lcc-page-header>
 

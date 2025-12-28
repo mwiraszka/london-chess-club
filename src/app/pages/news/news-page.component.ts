@@ -22,7 +22,7 @@ import { ImagesSelectors } from '@app/store/images';
   template: `
     @if (viewModel$ | async; as vm) {
       <lcc-page-header
-        title="News"
+        heading="News"
         icon="map">
       </lcc-page-header>
 

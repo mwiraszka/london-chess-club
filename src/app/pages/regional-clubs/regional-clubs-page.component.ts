@@ -9,7 +9,7 @@ import { MetaAndTitleService } from '@app/services';
   selector: 'lcc-regional-clubs-page',
   template: `
     <lcc-page-header
-      title="Regional Clubs"
+      heading="Regional Clubs"
       icon="diversity_3">
     </lcc-page-header>
 

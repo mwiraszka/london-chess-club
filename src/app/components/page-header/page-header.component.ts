@@ -12,9 +12,9 @@ import { MatIconModule } from '@angular/material/icon';
       </mat-icon>
     }
     <h2
-      class="page-title"
+      class="page-heading"
       [class.end-with-asterisk]="hasUnsavedChanges">
-      {{ title }}
+      {{ heading }}
     </h2>
   `,
   styleUrl: './page-header.component.scss',
@@ -22,7 +22,7 @@ import { MatIconModule } from '@angular/material/icon';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PageHeaderComponent {
-  @Input({ required: true }) public title!: string;
+  @Input({ required: true }) public heading!: string;
 
   @Input() public hasUnsavedChanges: boolean | null = null;
   @Input() public icon: string | null = null;

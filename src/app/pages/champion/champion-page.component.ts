@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 
+import { ExpansionPanelComponent } from '@app/components/expansion-panel/expansion-panel.component';
 import { PageHeaderComponent } from '@app/components/page-header/page-header.component';
 import { PhotoCarouselComponent } from '@app/components/photo-carousel/photo-carousel.component';
 import { TooltipDirective } from '@app/directives/tooltip.directive';
@@ -11,7 +12,13 @@ import { MetaAndTitleService } from '@app/services';
   selector: 'lcc-champion-page',
   templateUrl: './champion-page.component.html',
   styleUrl: './champion-page.component.scss',
-  imports: [MatIconModule, PageHeaderComponent, PhotoCarouselComponent, TooltipDirective],
+  imports: [
+    ExpansionPanelComponent,
+    MatIconModule,
+    PageHeaderComponent,
+    PhotoCarouselComponent,
+    TooltipDirective,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChampionPageComponent implements OnInit {
@@ -261,10 +268,6 @@ export class ChampionPageComponent implements OnInit {
     { year: 1968, winners: [{ name: 'Peter Murray', peakRating: '2289' }] },
     { year: 1967, winners: [{ name: 'Peter Murray', peakRating: '2289' }] },
   ];
-
-  public activePanelExpanded = false;
-  public juniorPanelExpanded = false;
-  public speedPanelExpanded = false;
 
   public seeFullActiveTable = false;
   public seeFullJuniorTable = false;

@@ -23,7 +23,7 @@ import { MembersActions, MembersSelectors } from '@app/store/members';
       <lcc-page-header
         [hasUnsavedChanges]="vm.hasUnsavedChanges"
         icon="admin_panel_settings"
-        [title]="vm.pageTitle">
+        [heading]="vm.pageHeading">
       </lcc-page-header>
 
       <lcc-member-form
@@ -55,7 +55,7 @@ export class MemberEditorPageComponent implements EditorPage, OnInit {
     hasUnsavedChanges: boolean;
     isSafeMode: boolean;
     originalMember: Member | null;
-    pageTitle: string;
+    pageHeading: string;
   }>;
 
   constructor(
@@ -81,14 +81,14 @@ export class MemberEditorPageComponent implements EditorPage, OnInit {
         formData,
         hasUnsavedChanges,
         isSafeMode,
-        pageTitle: originalMember
+        pageHeading: originalMember
           ? `Edit ${originalMember.firstName} ${originalMember.lastName}`
           : 'Add a member',
       })),
       tap(viewModel => {
-        this.metaAndTitleService.updateTitle(viewModel.pageTitle);
+        this.metaAndTitleService.updateTitle(viewModel.pageHeading);
         this.metaAndTitleService.updateDescription(
-          `${viewModel.pageTitle} for the London Chess Club.`,
+          `${viewModel.pageHeading} for the London Chess Club.`,
         );
       }),
     );

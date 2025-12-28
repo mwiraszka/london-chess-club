@@ -21,8 +21,8 @@ import { ImagesActions, ImagesSelectors } from '@app/store/images';
     @if (viewModel$ | async; as vm) {
       <lcc-page-header
         [hasUnsavedChanges]="vm.hasUnsavedChanges"
-        icon="admin_panel_settings"
-        [title]="vm.pageTitle">
+        [heading]="vm.pageHeading"
+        icon="admin_panel_settings">
       </lcc-page-header>
 
       <lcc-album-form
@@ -59,7 +59,7 @@ export class AlbumEditorPageComponent implements EditorPage, OnInit {
     hasUnsavedChanges: boolean;
     imageEntities: { image: Image; formData: ImageFormData }[];
     newImagesFormData: Record<string, ImageFormData>;
-    pageTitle: string;
+    pageHeading: string;
   }>;
 
   constructor(
@@ -94,13 +94,13 @@ export class AlbumEditorPageComponent implements EditorPage, OnInit {
           hasUnsavedChanges,
           imageEntities,
           newImagesFormData,
-          pageTitle: album ? `Edit ${album}` : 'Create an album',
+          pageHeading: album ? `Edit ${album}` : 'Create an album',
         }),
       ),
       tap(viewModel => {
-        this.metaAndTitleService.updateTitle(viewModel.pageTitle);
+        this.metaAndTitleService.updateTitle(viewModel.pageHeading);
         this.metaAndTitleService.updateDescription(
-          `${viewModel.pageTitle} for the London Chess Club.`,
+          `${viewModel.pageHeading} for the London Chess Club.`,
         );
       }),
     );

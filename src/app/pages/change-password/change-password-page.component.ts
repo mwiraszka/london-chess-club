@@ -15,7 +15,7 @@ import { AuthActions, AuthSelectors } from '@app/store/auth';
   selector: 'lcc-change-password-page',
   template: `
     @if (viewModel$ | async; as vm) {
-      <lcc-page-header title="Change Password"></lcc-page-header>
+      <lcc-page-header heading="Change Password"></lcc-page-header>
       <lcc-change-password-form
         [hasCode]="vm.hasCode"
         (requestChangePassword)="onRequestChangePassword($event)"
