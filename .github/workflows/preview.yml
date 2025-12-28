@@ -26,8 +26,10 @@ jobs:
 
       - name: Debug node_modules
         run: |
-          ls -d node_modules/@angular/core/testing || echo "@angular/core/testing not found"
-          ls -d node_modules/@ngrx/store/testing || echo "@ngrx/store/testing not found"
+          ls -F node_modules/@angular/core/
+          cat node_modules/@angular/core/package.json | grep -A 5 '"./testing"'
+          ls -F node_modules/@ngrx/store/
+          cat node_modules/@ngrx/store/package.json | grep -A 5 '"./testing"'
 
       - name: Build Angular project
         run: pnpm run build:preview

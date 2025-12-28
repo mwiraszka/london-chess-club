@@ -10,6 +10,15 @@ const jestConfig: Config = {
     '^lichess-pgn-viewer$': '<rootDir>/src/__mocks__/lichess-pgn-viewer.js',
   },
   preset: 'jest-preset-angular',
+  transform: {
+    '^.+\\.(ts|js|mjs|html)$': [
+      'jest-preset-angular',
+      {
+        tsconfig: '<rootDir>/tsconfig.spec.json',
+        stringifyContentPathRegex: '\\.(html|svg)$',
+      },
+    ],
+  },
   setupFilesAfterEnv: ['<rootDir>/setup-jest.ts'],
   testEnvironment: 'jest-environment-jsdom',
 };
