@@ -8,6 +8,7 @@
     "url": "https://github.com/mwiraszka/london-chess-club.git"
   },
   "private": false,
+  "type": "module",
   "license": "MIT",
   "scripts": {
     "ng": "ng",

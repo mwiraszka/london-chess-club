@@ -65,7 +65,7 @@ export class ImagePreloadDirective implements OnInit, OnChanges {
       // Display a blur effect during the transition
       this.filter = 'blur(3px)';
 
-      const fullImage = new Image();
+      const fullImage = new window.Image();
 
       fullImage.src = this.image.mainUrl;
       fullImage.onload = () => {
