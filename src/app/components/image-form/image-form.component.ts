@@ -1,6 +1,5 @@
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { debounceTime } from 'rxjs/operators';
-import * as uuid from 'uuid';
 
 import {
   ChangeDetectionStrategy,
@@ -37,6 +36,7 @@ import {
 } from '@app/models';
 import { DialogService, ImageFileService } from '@app/services';
 import { isLccError } from '@app/utils';
+import { generateUuid } from '@app/utils/common/generate-uuid.util';
 import { textValidator } from '@app/validators';
 
 @UntilDestroy()
@@ -222,7 +222,10 @@ export class ImageFormComponent implements OnInit {
 
   private initForm(): void {
     const formData: ImageFormData = this.imageEntity?.formData ??
-      this.newImageFormData ?? { ...INITIAL_IMAGE_FORM_DATA, id: `new-${uuid.v4()}` };
+      this.newImageFormData ?? {
+        ...INITIAL_IMAGE_FORM_DATA,
+        id: `new-${generateUuid()}`,
+      };
 
     this.form = this.formBuilder.group<ImageFormGroup>({
       id: new FormControl(formData.id, {

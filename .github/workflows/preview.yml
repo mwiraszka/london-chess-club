@@ -12,15 +12,16 @@ jobs:
       - name: Check out GitHub branch
         uses: actions/checkout@v4
 
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-
-      - name: Set up GitHub action
-        uses: pnpm/action-setup@v3
-        with:
-          version: 9
+          cache: 'pnpm'
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -32,7 +33,7 @@ jobs:
         run: pnpm run lint
 
       - name: Run unit tests
-        run: pnpm run test
+        run: pnpm run test -- --ci
 
   Update-S3-Bucket:
     runs-on: ubuntu-latest
@@ -40,15 +41,16 @@ jobs:
       - name: Check out GitHub branch
         uses: actions/checkout@v4
 
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-
-      - name: Set up GitHub action
-        uses: pnpm/action-setup@v3
-        with:
-          version: 9
+          cache: 'pnpm'
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile

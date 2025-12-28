@@ -1,5 +1,3 @@
-import * as uuid from 'uuid';
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -13,6 +11,7 @@ import {
 import { MatIconModule } from '@angular/material/icon';
 
 import { TooltipDirective } from '@app/directives/tooltip.directive';
+import { generateUuid } from '@app/utils/common/generate-uuid.util';
 
 @Component({
   selector: 'lcc-toggle-switch',
@@ -65,7 +64,7 @@ export class ToggleSwitchComponent implements OnInit {
   public uniqueId!: string;
 
   public ngOnInit(): void {
-    this.uniqueId = uuid.v4().slice(-8);
+    this.uniqueId = generateUuid().slice(-8);
   }
 
   public onToggleChange(): void {

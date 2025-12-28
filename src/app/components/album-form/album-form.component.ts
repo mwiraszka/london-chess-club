@@ -1,6 +1,5 @@
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { debounceTime } from 'rxjs/operators';
-import * as uuid from 'uuid';
 
 import {
   ChangeDetectionStrategy,
@@ -39,6 +38,7 @@ import {
 } from '@app/models';
 import { DialogService, ImageFileService } from '@app/services';
 import { isLccError } from '@app/utils';
+import { generateUuid } from '@app/utils/common/generate-uuid.util';
 import { ordinalityValidator, textValidator } from '@app/validators';
 
 @UntilDestroy()
@@ -199,7 +199,10 @@ export class AlbumFormComponent implements OnInit {
     }
     let ordinalityCounter = 1;
     const processFiles = Array.from(files).map(async file => {
-      const result = await this.imageFileService.storeImageFile(`new-${uuid.v4()}`, file);
+      const result = await this.imageFileService.storeImageFile(
+        `new-${generateUuid()}`,
+        file,
+      );
 
       if (isLccError(result)) {
         this.fileActionFail.emit(result);
