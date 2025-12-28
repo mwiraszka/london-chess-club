@@ -43,7 +43,7 @@ export class DatePickerComponent implements ControlValueAccessor {
 
   constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize')
   private onResize = () => (this.screenWidth = window.innerWidth);
 
   public writeValue(date: IsoDate): void {

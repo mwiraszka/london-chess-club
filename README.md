@@ -17,6 +17,8 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 <summary>v5.11.0 - December TBD, 2025</summary>
 
 - 🚀 Update City Champion page and Members table with new 2025 London Chess Champion
+- 🔧 Upgrade Angular to v21.0.x and various other third-party packages to their latest versions
+- 🔧 Security updates
 
 </details>
 

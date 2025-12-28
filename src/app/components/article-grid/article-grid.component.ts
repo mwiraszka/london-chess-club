@@ -67,7 +67,7 @@ export class ArticleGridComponent implements OnInit, OnChanges {
   private bannerImagesMap = new Map<Id, Image>();
   private limitToFourArticles = false;
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize')
   private setHomePageArticleCount = () => {
     if (this.isHomePage) {
       this.limitToFourArticles =

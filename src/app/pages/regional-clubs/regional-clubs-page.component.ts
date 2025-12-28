@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
 import { ClubCardComponent } from '@app/components/club-card/club-card.component';
@@ -19,7 +18,7 @@ import { MetaAndTitleService } from '@app/services';
     }
   `,
   styleUrl: './regional-clubs-page.component.scss',
-  imports: [CommonModule, PageHeaderComponent, ClubCardComponent],
+  imports: [ClubCardComponent, PageHeaderComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegionalClubsPageComponent implements OnInit {
