@@ -87,24 +87,26 @@
     "typescript-eslint": "8.50.1",
     "yargs": "18.0.0"
   },
-  "resolutions": {
-    "abab": "2.0.6",
-    "domexception": "4.0.0",
-    "glob": "11.1.0",
-    "inflight": "1.0.7",
-    "js-yaml": "4.1.1",
-    "rimraf": "6.0.1",
-    "@humanwhocodes/config-array": "0.13.0",
-    "@humanwhocodes/object-schema": "2.0.3",
-    "tar-fs": ">=2.1.4",
-    "vite": ">=7.1.11",
-    "ngrx-store-localstorage>@angular/common": "21.0.6",
-    "ngrx-store-localstorage>@angular/core": "21.0.6",
-    "ngrx-store-localstorage>@ngrx/store": "21.0.1",
-    "ngx-markdown>@angular/common": "21.0.6",
-    "ngx-markdown>@angular/core": "21.0.6",
-    "ngx-markdown>@angular/platform-browser": "21.0.6",
-    "ngx-markdown>zone.js": "0.16.0"
+  "pnpm": {
+    "overrides": {
+      "abab": "2.0.6",
+      "domexception": "4.0.0",
+      "glob": "11.1.0",
+      "inflight": "1.0.7",
+      "js-yaml": "4.1.1",
+      "rimraf": "6.0.1",
+      "@humanwhocodes/config-array": "0.13.0",
+      "@humanwhocodes/object-schema": "2.0.3",
+      "tar-fs": ">=2.1.4",
+      "vite": ">=7.1.11",
+      "ngrx-store-localstorage>@angular/common": "21.0.6",
+      "ngrx-store-localstorage>@angular/core": "21.0.6",
+      "ngrx-store-localstorage>@ngrx/store": "21.0.1",
+      "ngx-markdown>@angular/common": "21.0.6",
+      "ngx-markdown>@angular/core": "21.0.6",
+      "ngx-markdown>@angular/platform-browser": "21.0.6",
+      "ngx-markdown>zone.js": "0.16.0"
+    }
   },
   "packageManager": "pnpm@9.12.3+sha256.24235772cc4ac82a62627cd47f834c72667a2ce87799a846ec4e8e555e2d4b8b"
 }
