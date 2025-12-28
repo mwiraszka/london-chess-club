@@ -1,6 +1,5 @@
 import { pick } from 'lodash';
 
-import { provideHttpClient } from '@angular/common/http';
 import { HttpParams } from '@angular/common/http';
 import {
   HttpTestingController,
@@ -40,7 +39,7 @@ describe('ImagesApiService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ImagesApiService, provideHttpClient(), provideHttpClientTesting()],
+      providers: [ImagesApiService, provideHttpClientTesting()],
     });
 
     service = TestBed.inject(ImagesApiService);

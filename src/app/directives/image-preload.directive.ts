@@ -6,9 +6,10 @@ import {
   OnChanges,
   OnInit,
   Renderer2,
+  SimpleChanges,
 } from '@angular/core';
 
-import { Image, NgChanges } from '@app/models';
+import { Image } from '@app/models';
 import { calculateAspectRatio } from '@app/utils';
 
 /**
@@ -50,7 +51,7 @@ export class ImagePreloadDirective implements OnInit, OnChanges {
     this.updateImage();
   }
 
-  public ngOnChanges(changes: NgChanges<ImagePreloadDirective>): void {
+  public ngOnChanges(changes: SimpleChanges<ImagePreloadDirective>): void {
     if (changes.image) {
       this.updateImage();
     }

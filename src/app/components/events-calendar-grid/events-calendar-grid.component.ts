@@ -9,6 +9,7 @@ import {
   OnChanges,
   OnInit,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
@@ -24,7 +25,6 @@ import {
   DataPaginationOptions,
   Dialog,
   Event,
-  NgChanges,
 } from '@app/models';
 import { FormatDatePipe, HighlightPipe, KebabCasePipe } from '@app/pipes';
 import { DialogService } from '@app/services';
@@ -70,7 +70,7 @@ export class EventsCalendarGridComponent implements OnInit, OnChanges {
     this.updateCalendarMonths();
   }
 
-  public ngOnChanges(changes: NgChanges<EventsCalendarGridComponent>): void {
+  public ngOnChanges(changes: SimpleChanges<EventsCalendarGridComponent>): void {
     if (changes.events) {
       this.updateCalendarMonths();
     }

@@ -1,6 +1,5 @@
 import { provideMockStore } from '@ngrx/store/testing';
 
-import { provideHttpClient } from '@angular/common/http';
 import {
   HttpTestingController,
   provideHttpClientTesting,
@@ -31,7 +30,6 @@ describe('AuthApiService', () => {
     TestBed.configureTestingModule({
       providers: [
         AuthApiService,
-        provideHttpClient(),
         provideHttpClientTesting(),
         provideMockStore({
           selectors: [{ selector: AuthSelectors.selectUserId, value: '123' }],
