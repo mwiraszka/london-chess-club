@@ -37,6 +37,9 @@ jobs:
       - name: Run linter
         run: pnpm run lint
 
+      - name: Type check tests
+        run: pnpm exec tsc -p tsconfig.spec.json --noEmit
+
       - name: Run unit tests
         run: pnpm run test
 
