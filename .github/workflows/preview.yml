@@ -24,6 +24,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Debug node_modules
+        run: |
+          ls -d node_modules/@angular/core/testing || echo "@angular/core/testing not found"
+          ls -d node_modules/@ngrx/store/testing || echo "@ngrx/store/testing not found"
+
       - name: Build Angular project
         run: pnpm run build:preview
 

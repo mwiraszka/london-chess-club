@@ -2,7 +2,8 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/spec",
-    "types": ["jest"]
+    "types": ["jest"],
+    "moduleResolution": "node"
   },
   "files": ["src/window-global-fix.ts"],
   "include": ["src/**/*.spec.ts", "src/**/*.d.ts"]
