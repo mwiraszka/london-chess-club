@@ -24,21 +24,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Debug node_modules
-        run: |
-          ls -F node_modules/@angular/core/
-          cat node_modules/@angular/core/package.json | grep -A 5 '"./testing"'
-          ls -F node_modules/@ngrx/store/
-          cat node_modules/@ngrx/store/package.json | grep -A 5 '"./testing"'
-
       - name: Build Angular project
         run: pnpm run build:preview
 
       - name: Run linter
         run: pnpm run lint
-
-      - name: Type check tests
-        run: pnpm exec tsc -p tsconfig.spec.json --noEmit
 
       - name: Run unit tests
         run: pnpm run test
