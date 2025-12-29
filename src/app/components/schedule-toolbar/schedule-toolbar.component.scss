@@ -1,14 +1,14 @@
 :host {
-  width: 100%;
   display: flex;
   flex-flow: row wrap;
   align-items: center;
   justify-content: center;
   gap: 16px;
+  width: 100%;
   padding: 8px 16px;
-  background-color: var(--lcc-color--dataToolbar-background);
   border-radius: var(--lcc-borderRadius--small);
   box-shadow: 0 2px 4px 0 var(--lcc-color--table-boxShadow);
+  background-color: var(--lcc-color--dataToolbar-background);
 
   .today-button {
     padding: 4px 8px;
@@ -24,8 +24,8 @@
 
   ::ng-deep lcc-toggle-switch {
     mat-icon {
-      color: var(--lcc-color--scheduleToolbar-scheduleViewIcon);
       margin-right: 4px;
+      color: var(--lcc-color--scheduleToolbar-scheduleViewIcon);
     }
   }
 

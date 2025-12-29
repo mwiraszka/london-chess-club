@@ -7,6 +7,7 @@ import {
   OnChanges,
   OnInit,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
@@ -22,7 +23,6 @@ import {
   Dialog,
   Id,
   Image,
-  NgChanges,
 } from '@app/models';
 import {
   FormatDatePipe,
@@ -67,7 +67,7 @@ export class ArticleGridComponent implements OnInit, OnChanges {
   private bannerImagesMap = new Map<Id, Image>();
   private limitToFourArticles = false;
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize')
   private setHomePageArticleCount = () => {
     if (this.isHomePage) {
       this.limitToFourArticles =
@@ -102,7 +102,7 @@ export class ArticleGridComponent implements OnInit, OnChanges {
     this.setHomePageArticleCount();
   }
 
-  public ngOnChanges(changes: NgChanges<ArticleGridComponent>): void {
+  public ngOnChanges(changes: SimpleChanges<ArticleGridComponent>): void {
     if (changes.images) {
       this.bannerImagesMap.clear();
       this.images.forEach(image => {

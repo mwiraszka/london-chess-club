@@ -22,7 +22,7 @@ import { EventsActions, EventsSelectors } from '@app/store/events';
       <lcc-page-header
         [hasUnsavedChanges]="vm.hasUnsavedChanges"
         icon="admin_panel_settings"
-        [title]="vm.pageTitle">
+        [heading]="vm.pageHeading">
       </lcc-page-header>
 
       <lcc-event-form
@@ -53,7 +53,7 @@ export class EventEditorPageComponent implements EditorPage, OnInit {
     formData: EventFormData;
     hasUnsavedChanges: boolean;
     originalEvent: Event | null;
-    pageTitle: string;
+    pageHeading: string;
   }>;
 
   constructor(
@@ -77,12 +77,12 @@ export class EventEditorPageComponent implements EditorPage, OnInit {
         originalEvent,
         formData,
         hasUnsavedChanges,
-        pageTitle: originalEvent ? `Edit ${originalEvent.title}` : 'Add an event',
+        pageHeading: originalEvent ? `Edit ${originalEvent.title}` : 'Add an event',
       })),
       tap(viewModel => {
-        this.metaAndTitleService.updateTitle(viewModel.pageTitle);
+        this.metaAndTitleService.updateTitle(viewModel.pageHeading);
         this.metaAndTitleService.updateDescription(
-          `${viewModel.pageTitle} for the London Chess Club.`,
+          `${viewModel.pageHeading} for the London Chess Club.`,
         );
       }),
     );

@@ -6,8 +6,8 @@
 
     .heading-link {
       display: inline-block;
-      font-size: 18px;
       margin: 4px 16px;
+      font-size: 18px;
     }
   }
 
@@ -48,8 +48,8 @@
 
     // h2 headings function as the article's scrollable anchors
     h2 {
-      margin-top: 1em;
       padding-top: 16px;
+      margin-top: 1em;
     }
 
     p {
@@ -83,27 +83,27 @@
 
     blockquote {
       position: relative;
-      margin: 0 16px;
       padding: 16px 24px;
-      background-color: var(--lcc-color--markdownRenderer-blockquoteBackground);
+      margin: 0 16px;
       border: 1px solid var(--lcc-color--markdownRenderer-blockquoteBorder);
       border-radius: var(--lcc-borderRadius--large);
+      background-color: var(--lcc-color--markdownRenderer-blockquoteBackground);
 
       & > p {
-        font-family: 'Lucida Sans', 'Lucida Sans Regular', Geneva, Verdana, sans-serif;
         font-size: 16px;
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', Geneva, Verdana, sans-serif;
       }
 
       .lcc-quote-icon {
         position: absolute;
         top: -15px;
         left: -10px;
+        opacity: 0.2;
         width: 40px;
         height: 40px;
         background-size: contain;
-        background-repeat: no-repeat;
         background-position: center;
-        opacity: 0.2;
+        background-repeat: no-repeat;
         filter: invert(50%);
       }
     }

@@ -104,7 +104,7 @@ describe('MemberEditorPageComponent', () => {
           hasUnsavedChanges: false,
           isSafeMode: false,
           originalMember: MOCK_MEMBERS[0],
-          pageTitle: `Edit ${MOCK_MEMBERS[0].firstName} ${MOCK_MEMBERS[0].lastName}`,
+          pageHeading: `Edit ${MOCK_MEMBERS[0].firstName} ${MOCK_MEMBERS[0].lastName}`,
         });
       });
 
@@ -135,7 +135,7 @@ describe('MemberEditorPageComponent', () => {
           hasUnsavedChanges: false,
           isSafeMode: false,
           originalMember: null,
-          pageTitle: 'Add a member',
+          pageHeading: 'Add a member',
         });
       });
 

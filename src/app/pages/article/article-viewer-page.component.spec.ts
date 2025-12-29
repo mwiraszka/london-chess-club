@@ -1,9 +1,9 @@
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { pick } from 'lodash';
-import { MockComponent } from 'ng-mocks';
 import { firstValueFrom, of } from 'rxjs';
 import { take } from 'rxjs/operators';
 
+import { Component, Input } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
@@ -12,6 +12,7 @@ import { BasicDialogComponent } from '@app/components/basic-dialog/basic-dialog.
 import { ARTICLE_FORM_DATA_PROPERTIES, IMAGE_FORM_DATA_PROPERTIES } from '@app/constants';
 import { MOCK_ARTICLES } from '@app/mocks/articles.mock';
 import { MOCK_IMAGES } from '@app/mocks/images.mock';
+import { Article, Image } from '@app/models';
 import { DialogService, MetaAndTitleService } from '@app/services';
 import {
   ArticlesActions,
@@ -23,6 +24,16 @@ import { ImagesState, initialState as imagesInitialState } from '@app/store/imag
 import { query } from '@app/utils';
 
 import { ArticleViewerPageComponent } from './article-viewer-page.component';
+
+@Component({
+  selector: 'lcc-article',
+  template: '',
+  standalone: true,
+})
+class MockArticleComponent {
+  @Input({ required: true }) article!: Article;
+  @Input({ required: true }) bannerImage!: Image | null;
+}
 
 describe('ArticleViewerPageComponent', () => {
   let fixture: ComponentFixture<ArticleViewerPageComponent>;
@@ -108,7 +119,7 @@ describe('ArticleViewerPageComponent', () => {
       .overrideComponent(ArticleViewerPageComponent, {
         remove: { imports: [ArticleComponent] },
         add: {
-          imports: [MockComponent(ArticleComponent)],
+          imports: [MockArticleComponent],
         },
       })
       .compileComponents();

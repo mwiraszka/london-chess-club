@@ -1,4 +1,5 @@
 @use 'sass:color';
+@use './variables' as *;
 
 body ::-webkit-scrollbar,
 body ::-webkit-scrollbar-corner {

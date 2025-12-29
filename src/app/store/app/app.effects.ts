@@ -591,7 +591,7 @@ export class AppEffects {
       case NavActions.pageAccessDenied.type:
         return {
           title: 'Access denied',
-          message: `Please log in as admin to access ${action.pageTitle} page`,
+          message: `Please log in as admin to access ${action.pageHeading} page`,
           type: 'info',
         };
 

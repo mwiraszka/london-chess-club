@@ -2,7 +2,6 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Subject, timer } from 'rxjs';
 import { startWith, switchMap } from 'rxjs/operators';
 
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -18,7 +17,6 @@ import { Image } from '@app/models';
   selector: 'lcc-photo-carousel',
   templateUrl: './photo-carousel.component.html',
   styleUrl: './photo-carousel.component.scss',
-  imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PhotoCarouselComponent implements OnInit {

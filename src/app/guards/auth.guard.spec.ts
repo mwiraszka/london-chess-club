@@ -58,7 +58,7 @@ describe('AuthGuard', () => {
 
       expect(result).toBe(false);
       expect(dispatchSpy).toHaveBeenCalledWith(
-        NavActions.pageAccessDenied({ pageTitle: 'Add Article' }),
+        NavActions.pageAccessDenied({ pageHeading: 'Add Article' }),
       );
     });
   });

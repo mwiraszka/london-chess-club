@@ -44,26 +44,26 @@
 }
 
 .banner-message-container {
-  flex: 1;
+  overflow: hidden;
   display: flex;
-  gap: 4px;
+  flex: 1;
   align-items: center;
   justify-content: space-between;
-  overflow: hidden;
+  gap: 4px;
   max-width: var(--lcc-width--appContent);
 }
 
 .banner-message {
+  overflow: hidden;
+  overflow: hidden;
   display: flex;
-  align-items: center;
-  color: var(--lcc-color--upcomingEventBanner-text);
-  font-size: 14px;
-  overflow: hidden;
   flex: 1;
-  min-width: 0;
-  overflow: hidden;
+  align-items: center;
   width: 100%;
+  min-width: 0;
+  font-size: 14px;
   white-space: nowrap;
+  color: var(--lcc-color--upcomingEventBanner-text);
 
   &.navigatable {
     cursor: pointer;
@@ -83,9 +83,8 @@
   }
 
   b {
-    color: var(--lcc-color--upcomingEventBanner-boldText);
     font-weight: bold;
-    padding: 0 2px;
+    color: var(--lcc-color--upcomingEventBanner-boldText);
   }
 }
 
@@ -95,8 +94,8 @@
 
   .marquee-item {
     display: inline-flex;
-    gap: 8px;
     align-items: center;
+    gap: 8px;
     padding-right: 50px;
   }
 

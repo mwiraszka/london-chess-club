@@ -7,38 +7,38 @@ $card-padding: 8px;
 $side-padding: 8px;
 
 :host {
-  height: 90dvh;
   display: flex;
   flex-direction: column;
   gap: 4px;
+  height: 90dvh;
   background-color: var(--lcc-color--imageExplorer-gridBackground);
 
   lcc-admin-toolbar {
-    margin: 8px 8px 0;
     width: calc(100% - 16px);
+    margin: 8px 8px 0;
   }
 
   lcc-data-toolbar {
-    margin: 0 $side-padding;
     width: calc(100% - #{$side-padding * 2});
+    margin: 0 $side-padding;
   }
 
   .image-grid-wrapper {
-    container-type: inline-size;
+    overflow: auto;
     display: flex;
+    container-type: inline-size;
     justify-content: center;
     min-width: min(90vw, var(--lcc-width--appContent));
-    overflow: auto;
   }
 
   .image-grid {
+    overflow: auto;
+    display: flex;
     flex: 1;
+    flex-flow: row wrap;
     align-items: stretch;
     justify-content: center;
     gap: $grid-gap;
-    display: flex;
-    flex-flow: row wrap;
-    overflow: auto;
     padding: 0 8px $side-padding;
 
     @container (width >= calc(2 * (#{$card-min-width} + (2 * #{$side-padding})))) {
@@ -58,38 +58,38 @@ $side-padding: 8px;
   }
 
   .image-card {
-    max-height: 500px;
     max-width: $card-max-width;
+    max-height: 500px;
     padding: $card-padding;
-    background-color: var(--lcc-color--imageExplorer-gridBackground);
     border: none;
     border-radius: var(--lcc-borderRadius--large);
     box-shadow: 1px 2px 4px var(--lcc-color--general-cardBoxShadow);
+    background-color: var(--lcc-color--imageExplorer-gridBackground);
     transition: all 0.2s ease;
 
     &.selectable:hover {
+      box-shadow: 4px 4px 8px var(--lcc-color--general-cardBoxShadow);
       cursor: pointer;
       animation: raise 0.2s ease forwards;
-      box-shadow: 4px 4px 8px var(--lcc-color--general-cardBoxShadow);
     }
 
     .image-container {
+      overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
-      aspect-ratio: 3 / 2;
-      background-color: var(--lcc-color--contentPlaceholder-background);
-      border-radius: var(--lcc-borderRadius--large);
       margin-bottom: 8px;
+      aspect-ratio: 3 / 2;
+      border-radius: var(--lcc-borderRadius--large);
+      background-color: var(--lcc-color--contentPlaceholder-background);
     }
 
     img {
-      max-width: 100%;
-      max-height: 100%;
-      width: auto;
-      height: auto;
       object-fit: contain;
+      width: auto;
+      max-width: 100%;
+      height: auto;
+      max-height: 100%;
     }
 
     .caption,
@@ -104,8 +104,8 @@ $side-padding: 8px;
 
       label {
         display: inline;
-        font-weight: bold;
         margin-right: 0.5em;
+        font-weight: bold;
       }
 
       b {

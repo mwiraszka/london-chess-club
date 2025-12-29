@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -13,7 +12,6 @@ import { BasicDialogResult, DialogOutput, MemberWithNewRatings } from '@app/mode
   selector: 'lcc-rating-changes',
   templateUrl: './rating-changes.component.html',
   styleUrl: './rating-changes.component.scss',
-  imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RatingChangesComponent implements DialogOutput<BasicDialogResult> {

@@ -1,6 +1,6 @@
 import { pick } from 'lodash';
-import { MockComponent } from 'ng-mocks';
 
+import { Component, Input } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
@@ -14,6 +14,15 @@ import { DialogService } from '@app/services';
 import { query } from '@app/utils';
 
 import { ArticleFormComponent } from './article-form.component';
+
+@Component({
+  selector: 'app-markdown-renderer',
+  template: '',
+  standalone: true,
+})
+class MockMarkdownRendererComponent {
+  @Input() markdown = '';
+}
 
 describe('ArticleFormComponent', () => {
   let fixture: ComponentFixture<ArticleFormComponent>;
@@ -48,7 +57,7 @@ describe('ArticleFormComponent', () => {
     })
       .overrideComponent(ArticleFormComponent, {
         remove: { imports: [MarkdownRendererComponent] },
-        add: { imports: [MockComponent(MarkdownRendererComponent)] },
+        add: { imports: [MockMarkdownRendererComponent] },
       })
       .compileComponents();
 

@@ -10,7 +10,7 @@ import { AuthActions } from '@app/store/auth';
 @Component({
   selector: 'lcc-login-page',
   template: `
-    <lcc-page-header title="Admin Login"></lcc-page-header>
+    <lcc-page-header heading="Admin Login"></lcc-page-header>
     <lcc-login-form (requestLogin)="onRequestLogin($event)"></lcc-login-form>
   `,
   imports: [LoginFormComponent, PageHeaderComponent],

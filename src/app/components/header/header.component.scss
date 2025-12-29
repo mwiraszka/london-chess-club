@@ -13,27 +13,27 @@ $app-header-font-size: 42px;
 .app-header-container {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   width: var(--lcc-width--appContent);
   margin: 0 8px;
 
   .branding {
     display: flex;
     flex-direction: row;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     gap: 8px;
     padding: 8px 0;
 
     .image-container {
+      overflow: hidden;
       display: flex;
+      flex: 0 0 auto;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
       width: 40px;
       height: 40px;
-      flex: 0 0 auto;
 
       @include respond-to('gt-sm') {
         width: 60px;
@@ -42,17 +42,17 @@ $app-header-font-size: 42px;
     }
 
     img {
+      display: block;
+      object-fit: contain;
       width: 100%;
       height: 100%;
-      display: block;
-      background-color: var(--lcc-color--header-brandingBackground) !important;
-      border-radius: 50%;
       padding: 3px;
-      object-fit: contain;
+      border-radius: 50%;
+      background-color: var(--lcc-color--header-brandingBackground) !important;
 
       &:hover {
-        cursor: pointer;
         background-color: var(--lcc-color--header-brandingBackgroundOnHover);
+        cursor: pointer;
       }
     }
 
@@ -66,10 +66,10 @@ $app-header-font-size: 42px;
       }
 
       h1 {
-        color: var(--lcc-color--header-text);
+        font-size: calc(#{$app-header-font-size} - 6px);
         white-space: nowrap;
         font-family: 'Caveat', sans-serif;
-        font-size: calc(#{$app-header-font-size} - 6px);
+        color: var(--lcc-color--header-text);
 
         @include respond-to('gt-sm') {
           font-size: $app-header-font-size;
@@ -94,32 +94,32 @@ $app-header-font-size: 42px;
 
       &.pieces-1 {
         height: 55px;
-        transform: rotate(-3deg);
         filter: opacity(0.65);
+        transform: rotate(-3deg);
       }
 
       &.pieces-2 {
         height: 42px;
-        transform: rotate(1deg);
         filter: opacity(0.55);
+        transform: rotate(1deg);
       }
 
       &.pieces-3 {
         height: 35px;
-        transform: rotate(-2deg);
         filter: opacity(0.45);
+        transform: rotate(-2deg);
       }
 
       &.pieces-4 {
         height: 30px;
-        transform: rotate(1.5deg);
         filter: opacity(0.4);
+        transform: rotate(1.5deg);
       }
 
       &.pieces-5 {
         height: 27px;
-        transform: rotate(-1deg);
         filter: opacity(0.3);
+        transform: rotate(-1deg);
       }
 
       @include respond-to('gt-xxl') {

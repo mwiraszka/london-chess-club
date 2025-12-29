@@ -139,7 +139,7 @@ describe('NavEffects', () => {
       store.refreshState();
 
       effects.redirectOnAccessDenied$.subscribe();
-      actions$.next(NavActions.pageAccessDenied({ pageTitle: 'Members' }));
+      actions$.next(NavActions.pageAccessDenied({ pageHeading: 'Members' }));
 
       expect(router.navigate).toHaveBeenCalledWith(['/members']);
     });
@@ -149,7 +149,7 @@ describe('NavEffects', () => {
       store.refreshState();
 
       effects.redirectOnAccessDenied$.subscribe();
-      actions$.next(NavActions.pageAccessDenied({ pageTitle: 'Admin' }));
+      actions$.next(NavActions.pageAccessDenied({ pageHeading: 'Admin' }));
 
       expect(router.navigate).toHaveBeenCalledWith(['/']);
     });

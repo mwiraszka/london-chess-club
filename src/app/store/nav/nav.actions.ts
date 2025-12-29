@@ -7,7 +7,7 @@ export const navigationRequested = createAction(
 
 export const pageAccessDenied = createAction(
   '[Nav] Page access denied',
-  props<{ pageTitle: string }>(),
+  props<{ pageHeading: string }>(),
 );
 
 export const appendPathToHistory = createAction(

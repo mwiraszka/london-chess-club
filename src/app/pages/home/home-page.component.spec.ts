@@ -13,7 +13,7 @@ import { ArticlesActions, ArticlesSelectors } from '@app/store/articles';
 import { AuthSelectors } from '@app/store/auth';
 import { EventsActions, EventsSelectors } from '@app/store/events';
 import { ImagesActions, ImagesSelectors } from '@app/store/images';
-import { query, queryAll } from '@app/utils';
+import { query } from '@app/utils';
 
 import { HomePageComponent } from './home-page.component';
 

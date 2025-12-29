@@ -3,19 +3,19 @@
 .lcc-form {
   display: flex;
   flex-direction: column;
-  text-align: center;
   align-items: center;
-  width: 100%;
   gap: 20px;
+  width: 100%;
+  text-align: center;
 }
 
 .lcc-form-header {
-  text-align: center;
   padding: 0.6em 1em;
+  text-align: center;
 
   h3 {
-    color: var(--lcc-color--form-headerText);
     width: 100%;
+    color: var(--lcc-color--form-headerText);
   }
 }
 
@@ -26,11 +26,11 @@
   width: 100%;
 
   label:not(.file-button) {
+    align-self: center;
     grid-column: 1 / 2;
     max-width: 100px;
-    align-self: center;
-    text-align: right;
     font-size: 14px;
+    text-align: right;
     color: var(--lcc-color--form-labelText);
     cursor: pointer;
   }
@@ -38,16 +38,16 @@
   input,
   textarea,
   fieldset {
-    grid-column: 2 / 3;
     align-self: center;
+    grid-column: 2 / 3;
   }
 
   fieldset {
+    padding: 4px 12px;
+    text-align: left;
     border: 1px solid var(--lcc-color--input-border);
     border-radius: var(--lcc-borderRadius--small);
     background-color: var(--lcc-color--input-background);
-    padding: 4px 12px;
-    text-align: left;
 
     label {
       margin-left: 4px;
@@ -55,8 +55,8 @@
   }
 
   lcc-form-error-icon {
-    grid-column: 3 / 4;
     align-self: center;
+    grid-column: 3 / 4;
   }
 }
 
@@ -71,8 +71,8 @@
 }
 
 .lcc-required-fields-legend {
-  font-style: italic;
   font-size: 14px;
+  font-style: italic;
   color: var(--lcc-color--form-requiredFieldText);
 
   &::after {
@@ -82,6 +82,6 @@
 }
 
 .lcc-required-field::before {
-  content: '* ';
   color: var(--lcc-color--form-requiredFieldAsterisk);
+  content: '* ';
 }

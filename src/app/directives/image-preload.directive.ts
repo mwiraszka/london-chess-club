@@ -6,9 +6,10 @@ import {
   OnChanges,
   OnInit,
   Renderer2,
+  SimpleChanges,
 } from '@angular/core';
 
-import { Image, NgChanges } from '@app/models';
+import { Image } from '@app/models';
 import { calculateAspectRatio } from '@app/utils';
 
 /**
@@ -50,7 +51,7 @@ export class ImagePreloadDirective implements OnInit, OnChanges {
     this.updateImage();
   }
 
-  public ngOnChanges(changes: NgChanges<ImagePreloadDirective>): void {
+  public ngOnChanges(changes: SimpleChanges<ImagePreloadDirective>): void {
     if (changes.image) {
       this.updateImage();
     }
@@ -59,18 +60,31 @@ export class ImagePreloadDirective implements OnInit, OnChanges {
   protected onImageLoad(): void {
     this.removeShimmerEffect();
 
+    const mainUrl = this.image?.mainUrl;
+    const thumbnailUrl = this.image?.thumbnailUrl;
+
     // If thumbnail URL is currently displayed but the main URL exists, load it
-    if (this.currentSrc === this.image?.thumbnailUrl && this.image?.mainUrl) {
+    if (thumbnailUrl && this.currentSrc === thumbnailUrl && mainUrl) {
       // Display a blur effect during the transition
       this.filter = 'blur(3px)';
 
-      const fullImage = new Image();
+      const fullImage = new window.Image();
 
-      fullImage.src = this.image.mainUrl;
+      fullImage.src = mainUrl;
       fullImage.onload = () => {
-        this.currentSrc = this.image?.mainUrl || this.FALLBACK_SRC;
-        this.filter = 'none';
+        // Only update if we are still showing the same thumbnail and the main URL is still the same
+        if (this.currentSrc === thumbnailUrl && this.image?.mainUrl === mainUrl) {
+          this.currentSrc = mainUrl;
+          this.filter = 'none';
+        }
       };
+      fullImage.onerror = () => {
+        if (this.currentSrc === thumbnailUrl) {
+          this.filter = 'none';
+        }
+      };
+    } else {
+      this.filter = 'none';
     }
   }
 
@@ -80,6 +94,7 @@ export class ImagePreloadDirective implements OnInit, OnChanges {
     }
 
     this.removeShimmerEffect();
+    this.filter = 'none';
 
     // Try alternative URLs if current one failed
     if (this.currentSrc === this.image?.mainUrl) {
@@ -95,6 +110,7 @@ export class ImagePreloadDirective implements OnInit, OnChanges {
     if (!this.image) {
       this.removeShimmerEffect();
       this.currentSrc = this.FALLBACK_SRC;
+      this.filter = 'none';
       return;
     }
 
@@ -105,9 +121,18 @@ export class ImagePreloadDirective implements OnInit, OnChanges {
     const { mainUrl, thumbnailUrl } = this.image;
 
     if (mainUrl || thumbnailUrl) {
-      // Use the main or thumbnail URL and clear any effects
       this.removeShimmerEffect();
+
+      // If we are already showing the thumbnail and the main URL just became available,
+      // transition to it with a blur.
+      if (thumbnailUrl && this.currentSrc === thumbnailUrl && mainUrl) {
+        this.currentSrc = mainUrl;
+        this.filter = 'blur(3px)';
+        return;
+      }
+
       this.currentSrc = mainUrl || thumbnailUrl;
+      this.filter = 'none';
     } else {
       this.displayShimmerEffect();
     }

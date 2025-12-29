@@ -102,7 +102,7 @@ describe('EventEditorPageComponent', () => {
           formData: pick(MOCK_EVENTS[0], EVENT_FORM_DATA_PROPERTIES),
           hasUnsavedChanges: false,
           originalEvent: MOCK_EVENTS[0],
-          pageTitle: `Edit ${MOCK_EVENTS[0].title}`,
+          pageHeading: `Edit ${MOCK_EVENTS[0].title}`,
         });
       });
 
@@ -130,7 +130,7 @@ describe('EventEditorPageComponent', () => {
           formData: INITIAL_EVENT_FORM_DATA,
           hasUnsavedChanges: false,
           originalEvent: null,
-          pageTitle: 'Add an event',
+          pageHeading: 'Add an event',
         });
       });
 

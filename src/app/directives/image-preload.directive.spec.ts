@@ -92,6 +92,24 @@ describe('ImagePreloadDirective', () => {
       expect(directive.aspectRatio).toBe('16 / 9');
     });
 
+    it('should transition from thumbnail to mainUrl with blur when mainUrl becomes available', () => {
+      component.imageData = {
+        thumbnailUrl: 'https://example.com/thumb.jpg',
+      };
+      fixture.detectChanges();
+      expect(directive.currentSrc).toBe('https://example.com/thumb.jpg');
+      expect(directive.filter).toBe('none');
+
+      component.imageData = {
+        mainUrl: 'https://example.com/main.jpg',
+        thumbnailUrl: 'https://example.com/thumb.jpg',
+      };
+      fixture.detectChanges();
+
+      expect(directive.currentSrc).toBe('https://example.com/main.jpg');
+      expect(directive.filter).toBe('blur(3px)');
+    });
+
     it('should display shimmer effect when no URLs are provided', () => {
       component.imageData = {
         caption: 'Test',
@@ -115,6 +133,35 @@ describe('ImagePreloadDirective', () => {
       directive.ngOnInit();
 
       expect(directive.currentSrc).toBe('https://example.com/thumbnail.jpg');
+    });
+
+    it('should transition from thumbnail to mainUrl with blur when mainUrl becomes available', () => {
+      component.imageData = {
+        thumbnailUrl: 'https://example.com/thumb.jpg',
+      };
+      fixture.detectChanges();
+      expect(directive.currentSrc).toBe('https://example.com/thumb.jpg');
+      expect(directive.filter).toBe('none');
+
+      component.imageData = {
+        mainUrl: 'https://example.com/main.jpg',
+        thumbnailUrl: 'https://example.com/thumb.jpg',
+      };
+      fixture.detectChanges();
+
+      expect(directive.currentSrc).toBe('https://example.com/main.jpg');
+      expect(directive.filter).toBe('blur(3px)');
+    });
+
+    it('should not blur when both mainUrl and thumbnailUrl are present initially', () => {
+      component.imageData = {
+        mainUrl: 'https://example.com/main.jpg',
+        thumbnailUrl: 'https://example.com/thumb.jpg',
+      };
+      fixture.detectChanges();
+
+      expect(directive.currentSrc).toBe('https://example.com/main.jpg');
+      expect(directive.filter).toBe('none');
     });
   });
 

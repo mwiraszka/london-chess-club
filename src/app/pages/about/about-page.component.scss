@@ -2,205 +2,90 @@
 
 .grid-container {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  gap: 4px;
   grid-template-areas:
-    'first-visit'
     'where-and-when'
+    'first-visit'
+    'parking'
     'club-regulations'
     'membership-fee'
-    'supplies'
     'ratings'
-    'parking'
+    'supplies'
     'rules'
     'tournaments'
     'leadership';
-  gap: 4px;
+  grid-template-columns: minmax(0, 1fr);
+  width: 100%;
 
   @include respond-to('gt-md') {
     grid-template-columns: 1fr 1fr;
     grid-template-areas:
       'where-and-when where-and-when'
-      'first-visit club-regulations'
-      'membership-fee supplies'
-      'parking ratings'
+      'first-visit parking'
+      'club-regulations membership-fee'
+      'ratings supplies'
       'rules tournaments'
-      'leadership leadership';
+      'leadership .';
   }
 
   @include respond-to('gt-lg') {
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-areas:
-      'first-visit where-and-when club-regulations'
-      'membership-fee supplies ratings'
-      'parking rules tournaments'
-      'leadership leadership leadership';
+      'where-and-when where-and-when where-and-when'
+      'first-visit parking club-regulations'
+      'membership-fee ratings supplies'
+      'rules tournaments leadership';
   }
 }
 
-section {
+lcc-expansion-panel {
   place-self: stretch;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  border-radius: var(--lcc-borderRadius--small);
-  border: 2px solid var(--lcc-color--aboutPage-cellBorder);
-  padding: 16px;
-
-  &.first-visit-section {
-    grid-area: first-visit;
-    background-color: var(--lcc-color--aboutPage-cellBackground2);
-
-    :first-child {
-      color: var(--lcc-color--aboutPage-sectionHeaderText);
-    }
-  }
 
   &.where-and-when-section {
     grid-area: where-and-when;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    background-color: var(--lcc-color--aboutPage-cellBackground1);
 
-    .address-and-time-container {
-      width: 100%;
+    ::ng-deep .expansion-content {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 16px;
-      padding: 16px;
-      color: var(--lcc-color--aboutPage-addressAndTimeText);
-      background-color: var(--lcc-color--aboutPage-cardBackground);
-      border-radius: var(--lcc-borderRadius--large);
-      box-shadow: 3px 3px 5px var(--lcc-color--aboutPage-cardBoxShadow);
-
-      .address {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        white-space: nowrap;
-        gap: 16px;
-      }
-
-      .time {
-        display: flex;
-        align-items: center;
-      }
     }
+  }
 
-    lcc-club-card {
-      padding: 8px;
-
-      ::ng-deep {
-        width: 100% !important;
-      }
-    }
+  &.first-visit-section {
+    grid-area: first-visit;
   }
 
   &.club-regulations-section {
     grid-area: club-regulations;
-    background-color: var(--lcc-color--aboutPage-cellBackground2);
-
-    @include respond-to('gt-md') {
-      background-color: var(--lcc-color--aboutPage-cellBackground1);
-    }
-
-    @include respond-to('gt-lg') {
-      background-color: var(--lcc-color--aboutPage-cellBackground2);
-    }
   }
 
   &.membership-fee-section {
     grid-area: membership-fee;
-    background-color: var(--lcc-color--aboutPage-cellBackground1);
   }
 
   &.supplies-section {
     grid-area: supplies;
-    background-color: var(--lcc-color--aboutPage-cellBackground2);
   }
 
   &.parking-section {
     grid-area: parking;
-    background-color: var(--lcc-color--aboutPage-cellBackground2);
   }
 
   &.ratings-section {
     grid-area: ratings;
-    background-color: var(--lcc-color--aboutPage-cellBackground1);
   }
 
   &.rules-section {
     grid-area: rules;
-    background-color: var(--lcc-color--aboutPage-cellBackground1);
   }
 
   &.tournaments-section {
     grid-area: tournaments;
-    background-color: var(--lcc-color--aboutPage-cellBackground2);
   }
 
   &.leadership-section {
     grid-area: leadership;
-    background-color: var(--lcc-color--aboutPage-cellBackground2);
-
-    @include respond-to('lt-md') {
-      background-color: var(--lcc-color--aboutPage-cellBackground1);
-    }
-
-    .tables-container {
-      display: grid;
-      grid-template-columns: repeat(auto);
-      grid-template-areas:
-        'executive-committee'
-        'coordinators'
-        'board-of-directors';
-      gap: 16px;
-      margin: 16px 0;
-
-      .executive-committee {
-        grid-area: executive-committee;
-      }
-
-      .coordinators {
-        grid-area: coordinators;
-      }
-
-      .board-of-directors {
-        grid-area: board-of-directors;
-      }
-
-      @include respond-to('gt-md') {
-        grid-template-columns: 4fr 3fr;
-        grid-template-areas:
-          'executive-committee .'
-          'coordinators board-of-directors';
-      }
-
-      @include respond-to('gt-lg') {
-        grid-template-columns: 4fr 5fr 4fr;
-        grid-template-areas: 'executive-committee coordinators board-of-directors';
-      }
-
-      table {
-        min-width: 200px;
-        flex: 1 1 0;
-
-        td {
-          width: 50%;
-          vertical-align: middle;
-        }
-      }
-    }
-  }
-
-  .section-heading {
-    font-weight: 400;
-    color: var(--lcc-color--aboutPage-sectionHeaderText);
   }
 
   p {

@@ -5,20 +5,20 @@ $month-max-width: 550px;
 $grid-gap: 16px;
 
 :host {
-  width: 100%;
-  container-type: inline-size;
   display: flex;
+  container-type: inline-size;
   align-items: center;
   justify-content: center;
+  width: 100%;
 }
 
 .months-grid {
+  display: flex;
   flex: 1;
+  flex-flow: row wrap;
   align-items: center;
   justify-content: center;
   gap: $grid-gap;
-  display: flex;
-  flex-flow: row wrap;
 
   @container (width >= calc(2 * #{$month-min-width} + #{$grid-gap})) {
     &:not([month-count='1']) {
@@ -37,14 +37,14 @@ $grid-gap: 16px;
 }
 
 .month {
+  display: flex;
   flex: 1;
+  flex-direction: column;
+  gap: 8px;
   min-width: $month-min-width;
   max-width: $month-max-width;
   aspect-ratio: 7 / 6;
-  display: flex;
-  flex-direction: column;
   text-align: center;
-  gap: 8px;
 
   &.no-events {
     opacity: 0.4;
@@ -71,28 +71,28 @@ $grid-gap: 16px;
   }
 
   .calendar-grid {
-    height: 100%;
     display: grid;
+    gap: 1px;
     grid-template-columns: repeat(7, 1fr);
     grid-template-rows: auto repeat(6, 1fr);
-    gap: 1px;
-    background-color: var(--lcc-color--eventsCalendar-gridBorder);
+    height: 100%;
     border: 1px solid var(--lcc-color--eventsCalendar-gridBorder);
+    background-color: var(--lcc-color--eventsCalendar-gridBorder);
 
     .day-header {
       padding: 4px 2px;
-      text-align: center;
-      font-weight: bold;
       font-size: 13px;
+      font-weight: bold;
+      text-align: center;
       background-color: var(--lcc-color--eventsCalendar-dayHeaderBackground);
       color: var(--lcc-color--eventsCalendar-dayHeaderText);
     }
 
     .calendar-day {
-      min-height: 30px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      min-height: 30px;
       padding: 4px;
       background-color: var(--lcc-color--eventsCalendar-insideMonthBackground);
 
@@ -101,9 +101,9 @@ $grid-gap: 16px;
       }
 
       .day-number {
-        text-align: end;
-        font-weight: bold;
         font-size: 12px;
+        font-weight: bold;
+        text-align: end;
         color: var(--lcc-color--eventsCalendar-insideMonthText);
       }
 
@@ -127,13 +127,13 @@ $grid-gap: 16px;
   .event-indicator {
     width: 16px;
     height: 16px;
-    border-radius: 50%;
     border: 1px solid var(--lcc-color--eventsCalendar-eventIndicatorBorder);
+    border-radius: 50%;
 
     &:not(.no-events) {
       &.other-month {
-        cursor: default;
         opacity: 0.4;
+        cursor: default;
       }
 
       &:not(.other-month) {
@@ -183,8 +183,8 @@ $grid-gap: 16px;
 .event-tooltip {
   display: flex;
   flex-direction: column;
-  gap: 16px;
   align-items: center;
+  gap: 16px;
 
   .event-date-and-time {
     display: flex;
@@ -192,8 +192,8 @@ $grid-gap: 16px;
     align-items: center;
     justify-content: center;
     gap: 4px;
-    color: var(--lcc-color--eventsCalendar-primaryTooltipText);
     font-size: 13px;
+    color: var(--lcc-color--eventsCalendar-primaryTooltipText);
 
     .calendar-icon {
       @include icon-size(16px);
@@ -215,15 +215,15 @@ $grid-gap: 16px;
   }
 
   .event-type-wrapper {
-    width: 100%;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
     gap: 4px;
-    border-radius: var(--lcc-borderRadius--large);
+    width: 100%;
     padding: 2px 8px;
     font-size: 13px;
+    border-radius: var(--lcc-borderRadius--large);
 
     &.blitz-tournament-10-mins {
       background-color: var(--lcc-color--schedule-blitz10TournamentBackground);

@@ -1,23 +1,23 @@
 @use '../abstracts/mixins';
 
 .lcc-table-wrapper {
-  width: 100%;
   overflow-x: auto;
+  width: 100%;
   padding: 4px;
 }
 
 .lcc-table {
-  display: table;
   overflow: hidden;
+  display: table;
   width: auto;
   font-size: 14px;
   border-radius: var(--lcc-borderRadius--small);
-  border-spacing: 0;
   box-shadow: 0 2px 4px 0 var(--lcc-color--table-boxShadow);
-
   // When table cell border radius added, sometimes the table background bleeds through from
   // behind when resizing, so set to the same colour as the row to make this less noticeable
   background-color: var(--lcc-color--table-rowBackgroundOdd);
+
+  border-spacing: 0;
 
   &:hover {
     cursor: default;
@@ -25,11 +25,11 @@
 
   thead {
     th {
-      color: var(--lcc-color--table-headerForeground);
-      background-color: var(--lcc-color--table-headerBackground);
-      white-space: nowrap;
-      font-weight: 200;
       padding: 8px;
+      font-weight: 200;
+      white-space: nowrap;
+      background-color: var(--lcc-color--table-headerBackground);
+      color: var(--lcc-color--table-headerForeground);
 
       @include mixins.respond-to('gt-sm') {
         padding: 8px 16px;

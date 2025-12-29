@@ -2,16 +2,16 @@
 
 :host {
   display: flex;
-  gap: 8px;
-  justify-content: center;
   align-items: center;
-  text-align: start;
+  justify-content: center;
+  gap: 8px;
   width: 100%;
   max-width: var(--lcc-width--smallForm);
   padding: 8px;
+  font-size: 13px;
+  text-align: start;
   border: 1px solid var(--lcc-color--safeModeNotice-border);
   border-radius: var(--lcc-borderRadius--large);
-  font-size: 13px;
   color: var(--lcc-color--safeModeNotice-text);
 
   mat-icon {

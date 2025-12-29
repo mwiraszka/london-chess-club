@@ -1,4 +1,3 @@
-import { provideHttpClient } from '@angular/common/http';
 import { HttpParams } from '@angular/common/http';
 import {
   HttpTestingController,
@@ -29,7 +28,7 @@ describe('MembersApiService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [MembersApiService, provideHttpClient(), provideHttpClientTesting()],
+      providers: [MembersApiService, provideHttpClientTesting()],
     });
 
     service = TestBed.inject(MembersApiService);

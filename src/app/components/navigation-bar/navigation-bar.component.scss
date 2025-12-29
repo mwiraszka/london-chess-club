@@ -7,10 +7,10 @@ $border-thickness: 2px;
   display: flex;
   flex-direction: row;
   justify-content: center;
+  height: 40px;
   padding-top: 2px;
   margin-bottom: 2px;
   background-color: var(--lcc-color--nav-background);
-  height: 40px;
 }
 
 .content-container {
@@ -26,25 +26,25 @@ $border-thickness: 2px;
 
   .nav-link {
     display: flex;
-    align-items: center;
     flex-direction: row;
-    font-size: 14px;
-    font-weight: 400;
+    align-items: center;
     height: auto;
-
     // Add border thickness to side padding for non-active links to prevent layout shifts
     // when a link becomes active and a border is added
     padding: 3px calc(2px + #{$border-thickness});
+    font-size: 14px;
+
+    font-weight: 400;
+    white-space: nowrap;
     border-top: $border-thickness solid transparent;
+    border-bottom: $border-thickness solid var(--lcc-color--nav-border);
     border-top-left-radius: var(--lcc-borderRadius--large);
     border-top-right-radius: var(--lcc-borderRadius--large);
-    border-bottom: $border-thickness solid var(--lcc-color--nav-border);
     color: var(--lcc-color--nav-linkForeground);
-    white-space: nowrap;
 
     &:hover {
-      color: var(--lcc-color--nav-linkForegroundOnHover);
       text-decoration: none;
+      color: var(--lcc-color--nav-linkForegroundOnHover);
 
       .link-icon {
         color: var(--lcc-color--nav-linkForegroundOnHover);
@@ -52,20 +52,20 @@ $border-thickness: 2px;
     }
 
     &.link-active {
+      padding: 3px 2px;
+      border-right: $border-thickness solid var(--lcc-color--nav-border);
+      border-left: $border-thickness solid var(--lcc-color--nav-border);
+      background-color: var(--lcc-color--app-mainBackground);
+      color: var(--lcc-color--nav-linkForegroundWhenActive);
       cursor: default;
       pointer-events: none;
-      background-color: var(--lcc-color--app-mainBackground);
-      padding: 3px 2px;
       border-top-color: var(--lcc-color--nav-border);
-      border-left: $border-thickness solid var(--lcc-color--nav-border);
-      border-right: $border-thickness solid var(--lcc-color--nav-border);
       border-bottom-color: transparent;
-      color: var(--lcc-color--nav-linkForegroundWhenActive);
     }
 
     .link-text {
-      display: none;
       visibility: hidden;
+      display: none;
     }
 
     .link-icon {
@@ -79,20 +79,20 @@ $border-thickness: 2px;
       padding-right: calc(5px + #{$border-thickness});
 
       &.link-active {
-        padding-left: 5px;
         padding-right: 5px;
+        padding-left: 5px;
       }
     }
 
     @include respond-to('gt-md') {
       .link-text {
-        display: block;
         visibility: unset;
+        display: block;
       }
 
       .link-icon {
-        display: none;
         visibility: hidden;
+        display: none;
       }
     }
   }
@@ -100,8 +100,8 @@ $border-thickness: 2px;
 
 .user-settings-button {
   gap: 2px;
-  color: var(--lcc-color--nav-linkForeground);
   border-bottom: $border-thickness solid var(--lcc-color--nav-border);
+  color: var(--lcc-color--nav-linkForeground);
 
   &:hover {
     color: var(--lcc-color--nav-linkForegroundOnHover);
@@ -119,8 +119,8 @@ $border-thickness: 2px;
 .nav-left,
 .nav-right,
 .nav-mid {
-  border-bottom: $border-thickness solid var(--lcc-color--nav-border);
   flex: 1;
+  border-bottom: $border-thickness solid var(--lcc-color--nav-border);
 }
 
 .nav-left,

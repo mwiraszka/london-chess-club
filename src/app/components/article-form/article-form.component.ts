@@ -9,6 +9,7 @@ import {
   OnChanges,
   OnInit,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 import {
   FormBuilder,
@@ -35,7 +36,6 @@ import {
   Dialog,
   Id,
   Image,
-  NgChanges,
 } from '@app/models';
 import { DialogService } from '@app/services';
 import { isCollectionId } from '@app/utils';
@@ -108,7 +108,7 @@ export class ArticleFormComponent implements OnInit, OnChanges {
     }
   }
 
-  public ngOnChanges(changes: NgChanges<ArticleFormComponent>): void {
+  public ngOnChanges(changes: SimpleChanges<ArticleFormComponent>): void {
     if (changes.bodyImages && this.form) {
       let body = this.form.controls.body.value;
 

@@ -12,10 +12,10 @@ import {
   Input,
   OnChanges,
   Renderer2,
+  SimpleChanges,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { NgChanges } from '@app/models';
 import { KebabCasePipe } from '@app/pipes';
 import { RoutingService } from '@app/services';
 
@@ -55,7 +55,7 @@ export class MarkdownRendererComponent implements AfterViewInit, OnChanges {
     this.currentPath = this._document.location.pathname;
   }
 
-  public ngOnChanges(changes: NgChanges<MarkdownRendererComponent>): void {
+  public ngOnChanges(changes: SimpleChanges<MarkdownRendererComponent>): void {
     if (changes.data) {
       // Preprocess images BEFORE markdown rendering
       this.processedData = this.preprocessImages(this.data || '');

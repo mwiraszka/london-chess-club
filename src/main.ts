@@ -11,13 +11,12 @@ import {
 } from '@angular/common/http';
 import { enableProdMode, importProvidersFrom } from '@angular/core';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
-import { provideAnimations } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from '@app/app-routing.module';
 import {
   AuthInterceptorProvider,
   CacheControlInterceptorProvider,
-  LoggingInterceptorProvider
+  LoggingInterceptorProvider,
 } from '@app/interceptors';
 import { AppStoreModule } from '@app/store/app';
 import { ArticlesStoreModule } from '@app/store/articles';
@@ -51,6 +50,12 @@ bootstrapApplication(AppComponent, {
       MarkdownModule.forRoot(),
       MembersStoreModule,
       NavStoreModule,
+      StoreDevtoolsModule.instrument({
+        name: 'London Chess Club - NgRx Store DevTools',
+        logOnly: environment.production,
+        maxAge: 100,
+        actionSanitizer,
+      }),
       StoreModule.forRoot<MetaState, Action<string>>(
         { routerState: routerReducer },
         {
@@ -62,14 +67,7 @@ bootstrapApplication(AppComponent, {
         },
       ),
       StoreRouterConnectingModule.forRoot(),
-      StoreDevtoolsModule.instrument({
-        name: 'London Chess Club - NgRx Store DevTools',
-        logOnly: environment.production,
-        maxAge: 100,
-        actionSanitizer,
-      }),
     ),
-    provideAnimations(),
     provideHttpClient(withInterceptorsFromDi(), withJsonpSupport()),
     AuthInterceptorProvider,
     CacheControlInterceptorProvider,

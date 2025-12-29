@@ -68,8 +68,8 @@ export class NavigationBarComponent {
   public isDropdownOpen = false;
   public screenWidth = window.innerWidth;
 
-  @HostListener('window:resize', ['$event'])
-  private onResize(): void {
+  @HostListener('window:resize')
+  onResize(): void {
     this.screenWidth = window.innerWidth;
   }
 }

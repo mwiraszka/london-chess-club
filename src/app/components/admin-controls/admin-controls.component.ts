@@ -1,6 +1,5 @@
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -27,14 +26,7 @@ import { isTouchDevice } from '@app/utils';
   selector: 'lcc-admin-controls',
   templateUrl: './admin-controls.component.html',
   styleUrl: './admin-controls.component.scss',
-  imports: [
-    CommonModule,
-    IsDefinedPipe,
-    MatIconModule,
-    RouterLink,
-    RouterLinkPipe,
-    TooltipDirective,
-  ],
+  imports: [IsDefinedPipe, MatIconModule, RouterLink, RouterLinkPipe, TooltipDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminControlsComponent implements OnInit, OnDestroy {

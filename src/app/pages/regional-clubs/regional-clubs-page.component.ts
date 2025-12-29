@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
 import { ClubCardComponent } from '@app/components/club-card/club-card.component';
@@ -10,16 +9,18 @@ import { MetaAndTitleService } from '@app/services';
   selector: 'lcc-regional-clubs-page',
   template: `
     <lcc-page-header
-      title="Regional Clubs"
+      heading="Regional Clubs"
       icon="diversity_3">
     </lcc-page-header>
 
-    @for (club of REGIONAL_CLUBS; track club.name) {
-      <lcc-club-card [club]="club"></lcc-club-card>
-    }
+    <div class="club-cards-container">
+      @for (club of REGIONAL_CLUBS; track club.name) {
+        <lcc-club-card [club]="club"></lcc-club-card>
+      }
+    </div>
   `,
   styleUrl: './regional-clubs-page.component.scss',
-  imports: [CommonModule, PageHeaderComponent, ClubCardComponent],
+  imports: [ClubCardComponent, PageHeaderComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegionalClubsPageComponent implements OnInit {

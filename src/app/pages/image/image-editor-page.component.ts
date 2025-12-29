@@ -23,7 +23,7 @@ import { ImagesActions, ImagesSelectors } from '@app/store/images';
       <lcc-page-header
         [hasUnsavedChanges]="vm.hasUnsavedChanges"
         icon="admin_panel_settings"
-        [title]="vm.pageTitle">
+        [heading]="vm.pageHeading">
       </lcc-page-header>
 
       <lcc-image-form
@@ -58,7 +58,7 @@ export class ImageEditorPageComponent implements EditorPage, OnInit {
     hasUnsavedChanges: boolean;
     imageEntity: { image: Image; formData: ImageFormData } | null;
     newImageFormData: ImageFormData | null;
-    pageTitle: string;
+    pageHeading: string;
   }>;
 
   constructor(
@@ -84,12 +84,12 @@ export class ImageEditorPageComponent implements EditorPage, OnInit {
         newImageFormData,
         hasUnsavedChanges,
         imageEntity,
-        pageTitle: imageEntity ? `Edit ${imageEntity.image.filename}` : 'Add an image',
+        pageHeading: imageEntity ? `Edit ${imageEntity.image.filename}` : 'Add an image',
       })),
       tap(viewModel => {
-        this.metaAndTitleService.updateTitle(viewModel.pageTitle);
+        this.metaAndTitleService.updateTitle(viewModel.pageHeading);
         this.metaAndTitleService.updateDescription(
-          `${viewModel.pageTitle} for the London Chess Club.`,
+          `${viewModel.pageHeading} for the London Chess Club.`,
         );
       }),
     );
@@ -99,12 +99,7 @@ export class ImageEditorPageComponent implements EditorPage, OnInit {
     this.store.dispatch(ImagesActions.cancelSelected());
   }
 
-  public onChange(multipleFormData?: (Partial<ImageFormData> & { id: string })[]): void {
-    // TODO: Investigate why this can be undefined
-    if (!multipleFormData) {
-      return;
-    }
-
+  public onChange(multipleFormData: (Partial<ImageFormData> & { id: string })[]): void {
     this.store.dispatch(ImagesActions.formDataChanged({ multipleFormData }));
   }
 

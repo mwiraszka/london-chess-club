@@ -1,30 +1,30 @@
 @use '../../../styles/abstracts/mixins' as *;
 
 :host {
-  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 8px;
+  width: 100%;
   padding: 8px 16px;
-  background-color: var(--lcc-color--dataToolbar-background);
   border-radius: var(--lcc-borderRadius--small);
   box-shadow: 0 2px 4px 0 var(--lcc-color--table-boxShadow);
+  background-color: var(--lcc-color--dataToolbar-background);
 }
 
 .data-toolbar-controls {
-  width: 100%;
   display: flex;
-  justify-content: center;
   flex-flow: row wrap;
+  justify-content: center;
   gap: 8px 32px;
+  width: 100%;
 
   .paginator {
     display: flex;
     flex-direction: row;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     gap: 2px;
 
     @include respond-to('gt-xs') {
@@ -33,8 +33,8 @@
 
     .page-navigation-button {
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
       padding: 0;
 
       @include respond-to('gt-md') {
@@ -47,10 +47,10 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      text-align: center;
       gap: 8px;
-      font-size: 13px;
       padding: 0 4px;
+      font-size: 13px;
+      text-align: center;
       color: var(--lcc-color--dataToolbar-text);
 
       @include respond-to('gt-xs') {
@@ -68,17 +68,17 @@
 
         .page-size-button {
           padding: 4px;
+          font-size: 12px;
           border-color: var(--lcc-color--dataToolbar-buttonBorder);
           color: var(--lcc-color--dataToolbar-text);
-          font-size: 12px;
 
           @include respond-to('gt-xs') {
             font-size: 13px;
           }
 
           &.selected {
-            color: var(--lcc-color--dataToolbar-text);
             border-color: var(--lcc-color--dataToolbar-selectedButtonBorder);
+            color: var(--lcc-color--dataToolbar-text);
           }
         }
       }
@@ -86,20 +86,19 @@
   }
 
   .search-input {
+    align-self: center;
     min-width: 240px;
     max-width: 350px;
-    align-self: center;
   }
 
   .filters {
     display: flex;
     flex-direction: column;
-    gap: 8px;
     align-items: center;
     justify-content: center;
+    gap: 8px;
 
     .filter {
-      list-style: none;
       display: flex;
       flex-direction: row;
       align-items: center;
@@ -107,6 +106,7 @@
       gap: 8px;
       font-size: 14px;
       white-space: nowrap;
+      list-style: none;
       color: var(--lcc-color--dataToolbar-text);
     }
   }
@@ -114,6 +114,6 @@
 
 .pagination-summary {
   font-size: 14px;
-  color: var(--lcc-color--dataToolbar-text);
   text-align: center;
+  color: var(--lcc-color--dataToolbar-text);
 }

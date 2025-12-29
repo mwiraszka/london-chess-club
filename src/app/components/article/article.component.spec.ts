@@ -1,5 +1,4 @@
-import { MockComponent } from 'ng-mocks';
-
+import { Component, Input } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MarkdownRendererComponent } from '@app/components/markdown-renderer/markdown-renderer.component';
@@ -9,6 +8,15 @@ import { query, queryTextContent } from '@app/utils';
 
 import { ArticleComponent } from './article.component';
 
+@Component({
+  selector: 'app-markdown-renderer',
+  template: '',
+  standalone: true,
+})
+class MockMarkdownRendererComponent {
+  @Input() markdown = '';
+}
+
 describe('ArticleComponent', () => {
   let fixture: ComponentFixture<ArticleComponent>;
   let component: ArticleComponent;
@@ -17,7 +25,7 @@ describe('ArticleComponent', () => {
     await TestBed.configureTestingModule({ imports: [ArticleComponent] })
       .overrideComponent(ArticleComponent, {
         remove: { imports: [MarkdownRendererComponent] },
-        add: { imports: [MockComponent(MarkdownRendererComponent)] },
+        add: { imports: [MockMarkdownRendererComponent] },
       })
       .compileComponents();
 

@@ -1,5 +1,4 @@
 import { pick } from 'lodash';
-import * as uuid from 'uuid';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -10,6 +9,7 @@ import { MOCK_IMAGES } from '@app/mocks/images.mock';
 import { ImageFormData, LccError } from '@app/models';
 import { DialogService, ImageFileService } from '@app/services';
 import { query, queryTextContent } from '@app/utils';
+import * as GenerateUuidUtil from '@app/utils/common/generate-uuid.util';
 
 import { AlbumFormComponent } from './album-form.component';
 
@@ -94,7 +94,7 @@ describe('AlbumFormComponent', () => {
     restoreSpy = jest.spyOn(component.restore, 'emit');
     storeImageFileSpy = jest.spyOn(imageFileService, 'storeImageFile');
     submitSpy = jest.spyOn(component, 'onSubmit');
-    uuidSpy = jest.spyOn(uuid, 'v4');
+    uuidSpy = jest.spyOn(GenerateUuidUtil, 'generateUuid');
 
     component.album = null;
     component.existingAlbums = [];

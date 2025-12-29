@@ -1,13 +1,22 @@
-import { MockComponent } from 'ng-mocks';
 import { MarkdownComponent } from 'ngx-markdown';
 import { of } from 'rxjs';
 
+import { Component, Input } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, RouterLink, RouterModule } from '@angular/router';
 
 import { RoutingService } from '@app/services';
 
 import { MarkdownRendererComponent } from './markdown-renderer.component';
+
+@Component({
+  selector: 'markdown',
+  template: '',
+  standalone: true,
+})
+class MockMarkdownComponent {
+  @Input() data = '';
+}
 
 describe('MarkdownRendererComponent', () => {
   let fixture: ComponentFixture<MarkdownRendererComponent>;
@@ -50,7 +59,7 @@ describe('MarkdownRendererComponent', () => {
     })
       .overrideComponent(MarkdownRendererComponent, {
         remove: { imports: [MarkdownComponent] },
-        add: { imports: [MockComponent(MarkdownComponent)] },
+        add: { imports: [MockMarkdownComponent] },
       })
       .compileComponents();
 

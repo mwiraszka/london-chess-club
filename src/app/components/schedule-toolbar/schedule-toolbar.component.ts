@@ -1,6 +1,5 @@
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -48,7 +47,7 @@ import { exportEventsToIcal } from '@app/utils';
     </button>
   `,
   styleUrl: './schedule-toolbar.component.scss',
-  imports: [CommonModule, MatIconModule, ToggleSwitchComponent, TooltipDirective],
+  imports: [MatIconModule, ToggleSwitchComponent, TooltipDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ScheduleToolbarComponent {
