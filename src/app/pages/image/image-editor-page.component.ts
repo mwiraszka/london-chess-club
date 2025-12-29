@@ -99,12 +99,7 @@ export class ImageEditorPageComponent implements EditorPage, OnInit {
     this.store.dispatch(ImagesActions.cancelSelected());
   }
 
-  public onChange(multipleFormData?: (Partial<ImageFormData> & { id: string })[]): void {
-    // TODO: Investigate why this can be undefined
-    if (!multipleFormData) {
-      return;
-    }
-
+  public onChange(multipleFormData: (Partial<ImageFormData> & { id: string })[]): void {
     this.store.dispatch(ImagesActions.formDataChanged({ multipleFormData }));
   }
 

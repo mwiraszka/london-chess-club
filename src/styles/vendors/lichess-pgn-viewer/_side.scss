@@ -1,4 +1,5 @@
 @use 'sass:color';
+@use './variables' as *;
 
 $lpv-bg-inaccuracy-hover: c-dimmer($lpv-inaccuracy, 70%) !default;
 $lpv-bg-mistake-hover: c-dimmer($lpv-mistake, 70%) !default;
