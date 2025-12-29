@@ -14,10 +14,11 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 | 🔧  | Behind-the-scenes changes         |
 
 <details>
-<summary>v5.11.0 - December TBD, 2025</summary>
+<summary>v5.11.0 - December 29th, 2025</summary>
 
 - 🚀 Update City Champion page and Members table with new 2025 London Chess Champion
 - 🚀 Revamp About and Regional Clubs pages
+- 🐛 Fix a bug causing article banner images to remain blurred after the image has loaded
 - 🔧 Upgrade Angular to v21.0.x and various other third-party packages to their latest versions
 - 🔧 Create a simple `generate-uuid()` utility to replace `uuid` package
 - 🔧 Fix the ordering of CSS property style rules for all components
