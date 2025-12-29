@@ -4,13 +4,13 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   grid-template-areas:
-    'first-visit'
     'where-and-when'
+    'first-visit'
+    'parking'
     'club-regulations'
     'membership-fee'
-    'supplies'
     'ratings'
-    'parking'
+    'supplies'
     'rules'
     'tournaments'
     'leadership';
@@ -21,29 +21,25 @@
     grid-template-columns: 1fr 1fr;
     grid-template-areas:
       'where-and-when where-and-when'
-      'first-visit club-regulations'
-      'membership-fee supplies'
-      'parking ratings'
+      'first-visit parking'
+      'club-regulations membership-fee'
+      'ratings supplies'
       'rules tournaments'
-      'leadership leadership';
+      'leadership .';
   }
 
   @include respond-to('gt-lg') {
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-areas:
-      'first-visit where-and-when club-regulations'
-      'membership-fee supplies ratings'
-      'parking rules tournaments'
-      'leadership leadership leadership';
+      'where-and-when where-and-when where-and-when'
+      'first-visit parking club-regulations'
+      'membership-fee ratings supplies'
+      'rules tournaments leadership';
   }
 }
 
 lcc-expansion-panel {
   place-self: stretch;
-
-  &.first-visit-section {
-    grid-area: first-visit;
-  }
 
   &.where-and-when-section {
     grid-area: where-and-when;
@@ -55,6 +51,14 @@ lcc-expansion-panel {
         width: 100% !important;
       }
     }
+
+    .regional-clubs {
+      text-align: center;
+    }
+  }
+
+  &.first-visit-section {
+    grid-area: first-visit;
   }
 
   &.club-regulations-section {
@@ -87,51 +91,6 @@ lcc-expansion-panel {
 
   &.leadership-section {
     grid-area: leadership;
-
-    .tables-container {
-      display: grid;
-      grid-template-columns: repeat(auto);
-      grid-template-areas:
-        'executive-committee'
-        'coordinators'
-        'board-of-directors';
-      gap: 16px;
-      margin: 16px 0;
-
-      .executive-committee {
-        grid-area: executive-committee;
-      }
-
-      .coordinators {
-        grid-area: coordinators;
-      }
-
-      .board-of-directors {
-        grid-area: board-of-directors;
-      }
-
-      @include respond-to('gt-md') {
-        grid-template-columns: 4fr 3fr;
-        grid-template-areas:
-          'executive-committee .'
-          'coordinators board-of-directors';
-      }
-
-      @include respond-to('gt-lg') {
-        grid-template-columns: 4fr 5fr 4fr;
-        grid-template-areas: 'executive-committee coordinators board-of-directors';
-      }
-
-      table {
-        min-width: 200px;
-        flex: 1 1 0;
-
-        td {
-          width: 50%;
-          vertical-align: middle;
-        }
-      }
-    }
   }
 
   p {

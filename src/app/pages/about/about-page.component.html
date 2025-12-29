@@ -5,47 +5,55 @@
 
 <div class="grid-container">
   <lcc-expansion-panel
+    class="where-and-when-section"
+    heading="📍 Where and when we meet">
+    <lcc-club-card [club]="lccClub"> </lcc-club-card>
+    <br />
+    <aside class="regional-clubs">
+      <a
+        class="lcc-link"
+        routerLink="/regional-clubs">
+        More chess clubs in the region
+      </a>
+    </aside>
+  </lcc-expansion-panel>
+
+  <lcc-expansion-panel
     class="first-visit-section"
-    heading="First visit">
+    heading="👋 First visit">
     <p>
-      No membership needed for your first visit. If you're new to the club, we recommend
-      arriving 15 minutes early to meet the club's executive committee and coordinators.
-      They will help you get settled in, introduce you to other members, and answer any
-      questions you may have.
+      Drop-ins welcome! No membership is needed for your first visit. If you're new to the
+      club, we recommend arriving 15 minutes early to meet the club's leadership team and
+      volunteers. They will help you get settled in, introduce you to other members, and
+      answer any questions you may have.
     </p>
+    <br />
     <p>
-      If you're interested in playing in a tournament, please let the tournament director
+      If you're interested in playing in a tournament, please let the Tournament Director
       know. They will help you get registered and answer any questions you may have about
       the event.
     </p>
   </lcc-expansion-panel>
 
   <lcc-expansion-panel
-    class="where-and-when-section"
-    heading="Where and when we meet">
-    <lcc-club-card
-      [club]="lccClub"
-      [showMap]="false">
-    </lcc-club-card>
-    <a
-      class="lcc-link"
-      routerLink="/regional-clubs">
-      More chess clubs in the region
-    </a>
+    class="parking-section"
+    heading="🚗 Parking">
+    <p>
+      There is plenty of parking space available behind the building, free of charge
+      during chess club hours.
+    </p>
   </lcc-expansion-panel>
 
   <lcc-expansion-panel
     class="club-regulations-section"
-    heading="Club regulations">
+    heading="📜 Club regulations">
     <p>
       The London Chess Club is committed to providing a safe and welcoming environment for
       all members. We expect all members to treat each other with respect and kindness.
-    </p>
-    <p>
       Any form of harassment, discrimination, or bullying will not be tolerated and may
       result in expulsion from the club.
     </p>
-
+    <br />
     <p>
       See the club's
       <a
@@ -54,8 +62,8 @@
         target="_blank"
         routerLink="/documents"
         fragment="lcc-code-of-conduct.pdf">
-        Code of Conduct
-      </a>
+        Code of Conduct</a
+      >
       and
       <a
         class="lcc-link"
@@ -63,21 +71,22 @@
         target="_blank"
         routerLink="/documents"
         fragment="lcc-bylaws.pdf">
-        Bylaws
-      </a>
+        Bylaws</a
+      >
       documents for more information.
     </p>
   </lcc-expansion-panel>
 
   <lcc-expansion-panel
     class="membership-fee-section"
-    heading="Membership fee">
+    heading="💵 Membership fee">
     <p>
       <b>2025 &mdash; $45</b> <br />
       2026 &mdash; $50 <br />
       2027 &mdash; $55 <br />
       2028 &mdash; $60 <br />
     </p>
+    <br />
     <p>
       Prorated fees decrease by $5 per month, with a locked maximum fee of $5 for
       memberships starting in October through December. See the
@@ -87,44 +96,19 @@
         routerLink="/documents"
         target="_blank"
         fragment="membership-fees-2025-to-2028.pdf">
-        Incremental Plan to Break Even
-      </a>
+        Incremental Plan to Break Even</a
+      >
       document for full details.
     </p>
   </lcc-expansion-panel>
 
   <lcc-expansion-panel
-    class="supplies-section"
-    heading="Chess supplies">
-    <p>Please bring your own chess sets and clocks!</p>
-    <p>
-      Don't have any? We have supplies available for sale at the club. Contact
-      <a
-        href="mailto:chesslessons@mail.com"
-        class="lcc-link"
-        rel="noopener noreferrer"
-        target="_blank">
-        Steve Demmery
-      </a>
-      for more information.
-    </p>
-  </lcc-expansion-panel>
-
-  <lcc-expansion-panel
-    class="parking-section"
-    heading="Parking">
-    <p>
-      There is plenty of parking space available behind the building, free of charge
-      during chess club hours.
-    </p>
-  </lcc-expansion-panel>
-
-  <lcc-expansion-panel
     class="ratings-section"
-    heading="Chess ratings">
+    heading="🔢 Chess ratings">
+    <p>We use our own London & Region rating system, managed by Gerry Litchfield.</p>
+    <br />
     <p>
-      We use our own London & Region rating system, managed by Gerry Litchfield. Current
-      ratings can be found
+      Current ratings can be found
       <a
         class="lcc-link"
         routerLink="/members">
@@ -134,8 +118,26 @@
   </lcc-expansion-panel>
 
   <lcc-expansion-panel
+    class="supplies-section"
+    heading="♟ Chess supplies">
+    <p>Please bring your own chess sets and clocks!</p>
+    <br />
+    <p>
+      Don't have any? We have supplies available for sale at the club. Contact
+      <a
+        href="mailto:chesslessons@mail.com"
+        class="lcc-link"
+        rel="noopener noreferrer"
+        target="_blank">
+        Steve Demmery</a
+      >
+      for more information.
+    </p>
+  </lcc-expansion-panel>
+
+  <lcc-expansion-panel
     class="rules-section"
-    heading="Rules of the game">
+    heading="📖 Rules of the game">
     <p>
       For tournaments we generally follow the
       <a
@@ -148,6 +150,7 @@
       <i>touch-move</i> rule: we enforce touch-move during rated rapid tournaments but
       <i>clock-move</i> for our casual blitz tournaments.
     </p>
+    <br />
     <p>
       Members are encouraged to try to resolve any disputes with their opponents before
       seeking arbitration. If you would like to speak to an arbiter, pause the clock and
@@ -157,123 +160,41 @@
 
   <lcc-expansion-panel
     class="tournaments-section"
-    heading="Tournaments">
+    heading="🏆 Tournaments">
     <p>
       Chess tournaments are held throughout the year. These include casual blitz
       tournaments, rapid tournaments, and the London Chess Championship held in the fall.
     </p>
+    <br />
     <p>
       Our Blitz tournaments are unrated and free to play, with a time control of 10+0 (10
       minutes for each player, with no increment after each move).
     </p>
+    <br />
     <p>
       Our Rapid tournaments are rated with a time control of either 25+0 or 40+0. For our
       rated tournaments there is a nominal entry fee (usually $10) that goes towards the
       prize pool and covers any expenses in organizing the event.
     </p>
+    <br />
     <p>
       See
       <a
         class="lcc-link"
         routerLink="/schedule">
-        schedule
-      </a>
+        schedule</a
+      >
       for a list of upcoming events.
     </p>
   </lcc-expansion-panel>
 
   <lcc-expansion-panel
     class="leadership-section"
-    heading="Leadership team and volunteers">
-    <div class="tables-container">
-      <table class="lcc-table executive-committee">
-        <thead>
-          <th colspan="2">Executive Committee</th>
-        </thead>
-        <tbody>
-          <tr>
-            <td>👑 President</td>
-            <td>Hardik Shrestha</td>
-          </tr>
-          <tr>
-            <td>👑 Vice President</td>
-            <td>Gregory Wei</td>
-          </tr>
-          <tr>
-            <td>💵 Treasurer</td>
-            <td>Gerry Litchfield</td>
-          </tr>
-          <tr>
-            <td>💻 Tournament Director</td>
-            <td>Ryan Sarson</td>
-          </tr>
-          <tr>
-            <td>✋ Chief of Volunteers</td>
-            <td>Param Agarwal</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <table class="lcc-table coordinators">
-        <thead>
-          <th colspan="2">Coordinators</th>
-        </thead>
-        <tbody>
-          <tr>
-            <td>🎟️ Events Operations Coordinator</td>
-            <td>William Bate</td>
-          </tr>
-          <tr>
-            <td>📸 Media Coordinator</td>
-            <td>Michelle Corredor</td>
-          </tr>
-          <tr>
-            <td>🤝 Relations Coordinator</td>
-            <td>Adam Hampson</td>
-          </tr>
-          <tr>
-            <td>📖 Library Coordinator</td>
-            <td>Laura Pulgarin</td>
-          </tr>
-          <tr>
-            <td>💻 Assistant Tournament Director</td>
-            <td>Sophie Wang</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <table class="lcc-table board-of-directors">
-        <thead>
-          <th colspan="2">Board of Directors</th>
-        </thead>
-        <tbody>
-          <tr>
-            <td>📝 Director</td>
-            <td>Fadi Boles</td>
-          </tr>
-          <tr>
-            <td>📝 Director</td>
-            <td>Leroy Gibson</td>
-          </tr>
-          <tr>
-            <td>📝 Director</td>
-            <td>Mike Harris</td>
-          </tr>
-          <tr>
-            <td>📝 Director</td>
-            <td>Andrew Racknor</td>
-          </tr>
-          <tr>
-            <td>📝 Director</td>
-            <td>Emilio Ramirez</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    heading="💁‍♂️ AGM and leadership team">
     <p>
       Every December we hold our Annual General Meeting (AGM) where we look back on the
-      past year, review the club's finances, and elect any new board & committee members
-      for the following year. All club members are invited to attend the AGM &ndash; see
+      past year, review the club's finances, and elect a leadership team for the following
+      year. All club members are welcome to attend the AGM &ndash; see
       <a
         class="lcc-link"
         routerLink="/schedule">
@@ -281,34 +202,30 @@
       >
       for exact dates.
     </p>
+    <br />
     <p>
-      The board of directors meets monthly to go over the club's finances, plan out future
-      events, and discuss any proposals brought forward by the club's members. You can
-      read minutes from the meetings, as well as the LCC bylaws
+      We are currently reviewing the leadership structure for 2026. If you have any
+      suggestions or would like to volunteer for a position, please don't hesitate to
+      reach out to us at
       <a
+        href="mailto:welcome@londonchess.ca"
         class="lcc-link"
-        routerLink="/documents"
         rel="noopener noreferrer"
         target="_blank">
-        here</a
-      >.
+        welcome@londonchess.ca</a
+      >
+      or speak to Gerry Litchfield or Ryan Sarson at the club.
     </p>
+    <br />
     <p>
-      This website is maintained by Michal Wiraszka. To request a change, please
-      <a
-        href="https://github.com/mwiraszka/london-chess-club/issues"
-        class="lcc-link"
-        rel="noopener noreferrer"
-        target="_blank">
-        submit a new issue
-      </a>
-      on the repository GitHub page,
+      This website is maintained by Michal Wiraszka. To report a bug or request a new
+      feature, you can email me
       <a
         href="mailto:michal@londonchess.ca"
         class="lcc-link"
         rel="noopener noreferrer"
         target="_blank">
-        email me</a
+        here</a
       >, or find me at the club!
     </p>
   </lcc-expansion-panel>

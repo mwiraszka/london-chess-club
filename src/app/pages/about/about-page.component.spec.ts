@@ -62,17 +62,42 @@ describe('AboutPageComponent', () => {
       expect(query(fixture.debugElement, 'lcc-page-header')).toBeTruthy();
     });
 
-    it('should render all grid sections', () => {
-      expect(query(fixture.debugElement, '.first-visit-section')).toBeTruthy();
-      expect(query(fixture.debugElement, '.where-and-when-section')).toBeTruthy();
-      expect(query(fixture.debugElement, '.club-regulations-section')).toBeTruthy();
-      expect(query(fixture.debugElement, '.membership-fee-section')).toBeTruthy();
-      expect(query(fixture.debugElement, '.supplies-section')).toBeTruthy();
-      expect(query(fixture.debugElement, '.parking-section')).toBeTruthy();
-      expect(query(fixture.debugElement, '.ratings-section')).toBeTruthy();
-      expect(query(fixture.debugElement, '.rules-section')).toBeTruthy();
-      expect(query(fixture.debugElement, '.tournaments-section')).toBeTruthy();
-      expect(query(fixture.debugElement, '.leadership-section')).toBeTruthy();
+    it('should render all grid sections as expansion panels', () => {
+      const sections = [
+        '.where-and-when-section',
+        '.first-visit-section',
+        '.parking-section',
+        '.club-regulations-section',
+        '.membership-fee-section',
+        '.ratings-section',
+        '.supplies-section',
+        '.rules-section',
+        '.tournaments-section',
+        '.leadership-section',
+      ];
+
+      sections.forEach(selector => {
+        const element = query(fixture.debugElement, selector);
+        expect(element).toBeTruthy();
+        expect(element.name).toBe('lcc-expansion-panel');
+      });
+    });
+
+    it('should toggle expansion panel content when clicked', () => {
+      const firstSection = query(fixture.debugElement, '.where-and-when-section');
+      const header = query(firstSection, '.expansion-header');
+
+      expect(query(firstSection, '.expansion-content')).toBeFalsy();
+
+      header.triggerEventHandler('click');
+      fixture.detectChanges();
+
+      expect(query(firstSection, '.expansion-content')).toBeTruthy();
+
+      header.triggerEventHandler('click');
+      fixture.detectChanges();
+
+      expect(query(firstSection, '.expansion-content')).toBeFalsy();
     });
   });
 });
