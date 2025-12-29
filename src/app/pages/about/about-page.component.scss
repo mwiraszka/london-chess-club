@@ -1,91 +1,31 @@
 @use '../../../styles/abstracts/mixins' as *;
 
-.grid-container {
-  display: grid;
+.panels-container {
+  display: flex;
+  flex-wrap: wrap;
   gap: 4px;
-  grid-template-areas:
-    'where-and-when'
-    'first-visit'
-    'parking'
-    'club-regulations'
-    'membership-fee'
-    'ratings'
-    'supplies'
-    'rules'
-    'tournaments'
-    'leadership';
-  grid-template-columns: minmax(0, 1fr);
   width: 100%;
-
-  @include respond-to('gt-md') {
-    grid-template-columns: 1fr 1fr;
-    grid-template-areas:
-      'where-and-when where-and-when'
-      'first-visit parking'
-      'club-regulations membership-fee'
-      'ratings supplies'
-      'rules tournaments'
-      'leadership .';
-  }
-
-  @include respond-to('gt-lg') {
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-areas:
-      'where-and-when where-and-when where-and-when'
-      'first-visit parking club-regulations'
-      'membership-fee ratings supplies'
-      'rules tournaments leadership';
-  }
 }
 
 lcc-expansion-panel {
-  place-self: stretch;
+  flex: 1 1 100%;
 
-  &.where-and-when-section {
-    grid-area: where-and-when;
+  @include respond-to('gt-md') {
+    flex: 1 1 calc(50% - 4px);
+  }
+
+  @include respond-to('gt-lg') {
+    flex: 1 1 calc(33.33% - 4px);
+  }
+
+  &.location-and-schedule {
+    flex: 1 1 100% !important;
 
     ::ng-deep .expansion-content {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
     }
-  }
-
-  &.first-visit-section {
-    grid-area: first-visit;
-  }
-
-  &.club-regulations-section {
-    grid-area: club-regulations;
-  }
-
-  &.membership-fee-section {
-    grid-area: membership-fee;
-  }
-
-  &.supplies-section {
-    grid-area: supplies;
-  }
-
-  &.parking-section {
-    grid-area: parking;
-  }
-
-  &.ratings-section {
-    grid-area: ratings;
-  }
-
-  &.rules-section {
-    grid-area: rules;
-  }
-
-  &.tournaments-section {
-    grid-area: tournaments;
-  }
-
-  &.leadership-section {
-    grid-area: leadership;
   }
 
   p {
