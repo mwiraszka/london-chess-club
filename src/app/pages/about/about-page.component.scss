@@ -44,16 +44,11 @@ lcc-expansion-panel {
   &.where-and-when-section {
     grid-area: where-and-when;
 
-    lcc-club-card {
-      padding: 8px;
-
-      ::ng-deep {
-        width: 100% !important;
-      }
-    }
-
-    .regional-clubs {
-      text-align: center;
+    ::ng-deep .expansion-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
   }
 

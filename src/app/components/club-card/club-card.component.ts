@@ -12,6 +12,5 @@ import { Club } from '@app/models';
   imports: [ClubMapComponent, MatIconModule, TooltipDirective],
 })
 export class ClubCardComponent {
-  @Input() showMap = true;
   @Input({ required: true }) club!: Club;
 }

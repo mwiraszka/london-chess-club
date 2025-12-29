@@ -13,9 +13,11 @@ import { MetaAndTitleService } from '@app/services';
       icon="diversity_3">
     </lcc-page-header>
 
-    @for (club of REGIONAL_CLUBS; track club.name) {
-      <lcc-club-card [club]="club"></lcc-club-card>
-    }
+    <div class="club-cards-container">
+      @for (club of REGIONAL_CLUBS; track club.name) {
+        <lcc-club-card [club]="club"></lcc-club-card>
+      }
+    </div>
   `,
   styleUrl: './regional-clubs-page.component.scss',
   imports: [ClubCardComponent, PageHeaderComponent],
