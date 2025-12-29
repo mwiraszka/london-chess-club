@@ -1,14 +1,14 @@
 @use '../../../styles/abstracts/mixins' as *;
 
 :host {
-  width: 100%;
   position: relative;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  width: 100%;
   padding: 8px;
-  background: var(--lcc-color--adminToolbar-outerBackground);
   border-radius: var(--lcc-borderRadius--small);
+  background: var(--lcc-color--adminToolbar-outerBackground);
 
   .admin-icon {
     position: absolute;
@@ -20,20 +20,20 @@
   }
 
   .controls-container {
-    flex: 1;
     display: flex;
+    flex: 1;
     flex-flow: row wrap;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     gap: 0 32px;
-    background: var(--lcc-color--adminToolbar-innerBackground);
     border-radius: var(--lcc-borderRadius--small);
     box-shadow: 0 2px 4px 0 var(--lcc-color--adminToolbar-boxShadow);
+    background: var(--lcc-color--adminToolbar-innerBackground);
 
     lcc-link-list {
+      min-height: 46px;
       // Compensate for reserved space for underline below link which makes it appear uncentered
       margin-top: 2px;
-      min-height: 46px;
     }
 
     .admin-buttons {
@@ -43,10 +43,10 @@
       padding: 8px;
 
       .admin-button {
-        padding: 4px;
         display: flex;
         align-items: center;
         justify-content: center;
+        padding: 4px;
       }
     }
   }

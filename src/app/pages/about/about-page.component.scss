@@ -2,7 +2,7 @@
 
 .grid-container {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  gap: 4px;
   grid-template-areas:
     'where-and-when'
     'first-visit'
@@ -14,7 +14,7 @@
     'rules'
     'tournaments'
     'leadership';
-  gap: 4px;
+  grid-template-columns: minmax(0, 1fr);
   width: 100%;
 
   @include respond-to('gt-md') {

@@ -14,17 +14,17 @@
       vertical-align: top;
 
       .event-date-widget {
-        width: 65px;
-        height: 65px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        text-align: center;
         gap: 2px;
-        background-color: var(--lcc-color--schedule-dateBackground);
-        border-radius: 50%;
+        width: 65px;
+        height: 65px;
         font-size: 13px;
+        text-align: center;
+        border-radius: 50%;
+        background-color: var(--lcc-color--schedule-dateBackground);
       }
     }
 
@@ -43,10 +43,10 @@
         gap: 4px;
 
         .title {
-          color: var(--lcc-color--schedule-titleText);
-          line-height: normal;
-          font-size: 15px !important;
           margin-bottom: 4px;
+          font-size: 15px !important;
+          line-height: normal;
+          color: var(--lcc-color--schedule-titleText);
         }
 
         .type-container {
@@ -55,8 +55,8 @@
           align-items: center;
           gap: 4px;
           width: auto;
-          border-radius: var(--lcc-borderRadius--large);
           padding: 2px 8px;
+          border-radius: var(--lcc-borderRadius--large);
           color: var(--lcc-color--schedule-eventType);
 
           &.blitz-tournament-10-mins {
@@ -99,24 +99,24 @@
         }
 
         .event-details {
-          color: var(--lcc-color--schedule-eventDetailsText);
           padding-top: 16px;
           font-size: 14px;
           font-weight: 200;
+          color: var(--lcc-color--schedule-eventDetailsText);
         }
       }
 
       .created-and-edited {
-        flex: 1;
-        align-self: flex-end;
         display: flex;
+        align-self: flex-end;
+        flex: 1;
         flex-direction: column;
         align-items: flex-end;
-        white-space: nowrap;
         gap: 4px;
-        color: var(--lcc-color--schedule-createdAndEditedText);
         font-size: 11px;
         font-weight: 100;
+        white-space: nowrap;
+        color: var(--lcc-color--schedule-createdAndEditedText);
       }
     }
   }

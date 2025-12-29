@@ -1,26 +1,26 @@
 @use '../../../styles/abstracts/mixins' as *;
 
 :host {
+  overflow: hidden;
   display: flex;
   justify-content: center;
-  min-height: 250px;
-  background-color: var(--lcc-color--general-cardBackground);
-  color: var(--lcc-color--homePage-primaryText);
-  border-radius: var(--lcc-borderRadius--large);
-  box-shadow: 3px 3px 5px var(--lcc-color--homePage-boxShadow);
-  overflow: hidden;
-  line-height: 20px;
-  font-size: 16px;
   width: 100%;
   max-width: 800px;
+  min-height: 250px;
+  font-size: 16px;
+  line-height: 20px;
+  border-radius: var(--lcc-borderRadius--large);
+  box-shadow: 3px 3px 5px var(--lcc-color--homePage-boxShadow);
+  background-color: var(--lcc-color--general-cardBackground);
+  color: var(--lcc-color--homePage-primaryText);
 
   @include respond-to('lt-md') {
     flex-direction: column;
   }
 
   &:hover {
-    animation: raise 0.2s ease forwards;
     box-shadow: 4px 4px 8px var(--lcc-color--homePage-boxShadow);
+    animation: raise 0.2s ease forwards;
   }
 
   .club-info-section {
@@ -32,10 +32,10 @@
     padding: 16px 32px;
 
     hr {
-      border: none;
-      border-top: 2px solid var(--lcc-color--general-dividerLine);
       width: 100%;
       margin: 4px 0 16px;
+      border: none;
+      border-top: 2px solid var(--lcc-color--general-dividerLine);
     }
 
     .club-details {
@@ -56,8 +56,8 @@
       }
 
       .schedule {
-        white-space: pre-line;
         min-width: 200px;
+        white-space: pre-line;
       }
 
       .email {
@@ -74,8 +74,8 @@
         .external-link-icon {
           @include icon-size(16px);
 
-          margin-left: 4px;
           margin-bottom: 1px;
+          margin-left: 4px;
         }
       }
     }
@@ -85,8 +85,8 @@
     display: block;
 
     @include respond-to('lt-md') {
-      height: 300px;
       flex: none;
+      height: 300px;
     }
   }
 

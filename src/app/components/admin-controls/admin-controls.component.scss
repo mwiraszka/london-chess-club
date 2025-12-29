@@ -1,22 +1,22 @@
 @use '../../../styles/abstracts/mixins' as *;
 
 :host {
-  --button-size: var(--admin-control-button-size);
-
   display: flex;
+
   flex-direction: row;
   gap: 2px;
+  --button-size: var(--admin-control-button-size);
 
   .admin-control-button {
     display: flex;
-    justify-content: center;
     align-items: center;
-    border: 2px solid var(--lcc-color--adminControls-buttonBorder);
-    border-radius: var(--lcc-borderRadius--large);
-    background-color: var(--lcc-color--adminControls-buttonBackground);
+    justify-content: center;
     width: var(--button-size);
     height: var(--button-size);
     padding: 0;
+    border: 2px solid var(--lcc-color--adminControls-buttonBorder);
+    border-radius: var(--lcc-borderRadius--large);
+    background-color: var(--lcc-color--adminControls-buttonBackground);
 
     mat-icon {
       @include icon-size(calc(var(--button-size) - 8px));
@@ -24,12 +24,12 @@
 
     &:disabled,
     &.disabled {
-      cursor: default !important;
-      border-color: var(--lcc-color--adminControls-disabledButtonBorder) !important;
       background-color: var(
         --lcc-color--adminControls-disabledButtonBackground
       ) !important;
       color: var(--lcc-color--adminControls-disabledButtonIcon) !important;
+      cursor: default !important;
+      border-color: var(--lcc-color--adminControls-disabledButtonBorder) !important;
 
       & > * {
         cursor: default !important;
@@ -38,8 +38,8 @@
 
     &:focus,
     &:hover {
-      cursor: pointer;
       background-color: var(--lcc-color--adminControls-buttonBackgroundOnHover);
+      cursor: pointer;
     }
 
     &.bookmark-button {

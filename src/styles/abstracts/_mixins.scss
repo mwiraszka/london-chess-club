@@ -71,9 +71,9 @@ $breakpoints: (
 }
 
 @mixin icon-size($size) {
-  width: $size;
-  height: $size;
-  min-width: $size;
-  font-size: $size;
   vertical-align: text-bottom;
+  width: $size;
+  min-width: $size;
+  height: $size;
+  font-size: $size;
 }

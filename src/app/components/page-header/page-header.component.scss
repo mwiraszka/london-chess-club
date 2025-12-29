@@ -1,16 +1,16 @@
 @use '../../../styles/abstracts/mixins' as *;
 
 :host {
-  width: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   gap: 8px;
+  width: 100%;
   padding: 8px;
+  border-radius: var(--lcc-borderRadius--small);
   box-shadow: 1px 1px 8px 1px var(--lcc-color--pageHeader-boxShadow);
   background-color: var(--lcc-color--pageHeader-background);
-  border-radius: var(--lcc-borderRadius--small);
 
   .page-header-icon {
     color: var(--lcc-color--pageHeader-icon);
@@ -29,8 +29,8 @@
       font-style: italic;
 
       &:after {
-        content: ' *';
         color: var(--lcc-color--pageHeader-asteriskText);
+        content: ' *';
       }
     }
   }

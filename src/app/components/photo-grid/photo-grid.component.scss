@@ -1,15 +1,15 @@
 @use '../../../styles/abstracts/mixins' as *;
 
 :host {
-  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 16px;
+  width: 100%;
 }
 
 .grid-container {
-  width: 100%;
   container-type: inline-size;
+  width: 100%;
 }
 
 .album-covers {
@@ -37,15 +37,15 @@
   }
 
   .album-cover {
+    opacity: 0;
     display: block;
     width: calc(100% - 16px);
-    background-color: var(--lcc-color--general-cardBackground);
+    padding: 6px;
+    margin: 8px;
     border: none;
     border-radius: var(--lcc-borderRadius--small);
     box-shadow: 3px 3px 5px var(--lcc-color--photoGrid-boxShadow);
-    padding: 6px;
-    margin: 8px;
-    opacity: 0;
+    background-color: var(--lcc-color--general-cardBackground);
     animation: fade-in-up 0.6s ease-out forwards;
 
     &:first-child {
@@ -56,11 +56,11 @@
     page-break-inside: avoid;
 
     &:hover {
-      transform: scale(1.015);
       box-shadow: 4px 4px 8px var(--lcc-color--photoGrid-boxShadow);
       transition:
         transform 0.2s ease,
         box-shadow 0.2s ease;
+      transform: scale(1.015);
     }
 
     figure {
@@ -69,22 +69,22 @@
       gap: 8px;
 
       img {
+        display: block;
         width: 100%;
         height: auto;
-        display: block;
         margin-bottom: 2px;
         border-radius: var(--lcc-borderRadius--small);
       }
 
       figcaption {
-        text-align: left;
         margin: 0 2px;
+        text-align: left;
 
         .album-name {
-          font-size: 13px;
-          color: var(--lcc-color--photoGrid-albumNameText);
           margin-bottom: 8px;
+          font-size: 13px;
           line-height: 16px;
+          color: var(--lcc-color--photoGrid-albumNameText);
 
           @container (min-width: 700px) {
             font-size: 15px;

@@ -1,18 +1,18 @@
 .expansion-panel {
-  background-color: var(--lcc-color--expansionPanel-background);
-  border-radius: 4px;
   overflow: hidden;
   width: 100%;
+  border-radius: 4px;
+  background-color: var(--lcc-color--expansionPanel-background);
 }
 
 .expansion-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  cursor: pointer;
+  justify-content: space-between;
   padding: 16px 8px;
-  transition: background-color 0.3s;
   background-color: var(--lcc-color--expansionPanel-headerBackground);
+  cursor: pointer;
+  transition: background-color 0.3s;
 
   &:hover {
     background-color: var(--lcc-color--expansionPanel-headerBackgroundOnHover);

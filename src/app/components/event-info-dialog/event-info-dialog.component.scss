@@ -1,21 +1,21 @@
 @use '../../../styles/abstracts/mixins' as *;
 
 :host {
-  width: 400px !important;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  text-align: start;
+  width: 400px !important;
   padding: 16px 32px;
+  text-align: start;
 
   .dialog-title {
-    padding-bottom: 4px;
-    border-bottom: 1px solid var(--lcc-color--eventInfoDialog-dividerLine);
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
     gap: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--lcc-color--eventInfoDialog-dividerLine);
 
     .calendar-icon {
       @include icon-size(18px);
@@ -28,9 +28,9 @@
   .dialog-body {
     display: flex;
     flex-direction: column;
-    gap: 16px;
     align-items: center;
     justify-content: flex-start;
+    gap: 16px;
 
     .event-date-and-time {
       color: var(--lcc-color--eventInfoDialog-primaryText);
@@ -42,14 +42,14 @@
     }
 
     .event-type-wrapper {
-      width: 100%;
       display: flex;
       flex-direction: row;
       align-items: center;
       justify-content: center;
       gap: 4px;
-      border-radius: var(--lcc-borderRadius--large);
+      width: 100%;
       padding: 2px 8px;
+      border-radius: var(--lcc-borderRadius--large);
 
       &.blitz-tournament-10-mins {
         background-color: var(--lcc-color--schedule-blitz10TournamentDot);

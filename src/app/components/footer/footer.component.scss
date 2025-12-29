@@ -3,10 +3,10 @@
 :host {
   display: flex;
   flex-direction: column;
-  text-align: center;
   gap: 4px;
-  white-space: nowrap;
   font-size: 13px;
+  text-align: center;
+  white-space: nowrap;
   background-color: var(--lcc-color--footer-background);
   color: var(--lcc-color--footer-primaryText);
 }
@@ -14,20 +14,20 @@
 .main-section {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
 
   @include respond-to('gt-md') {
     flex-direction: row;
   }
 
   .main-content {
-    width: var(--lcc-width--appContent);
-    margin: 32px 16px;
     display: flex;
     flex-direction: row;
     justify-content: center;
     gap: 16px;
+    width: var(--lcc-width--appContent);
+    margin: 32px 16px;
     font-style: normal;
     text-decoration: none;
 
@@ -83,17 +83,17 @@
       font-size: 12px;
 
       @include respond-to('gt-md') {
+        grid-template-columns: 1fr 1fr;
         grid-template-areas:
           'about-us archives'
           'about-us documents'
           'club-events website';
-        grid-template-columns: 1fr 1fr;
         font-size: 13px;
       }
 
       @include respond-to('gt-lg') {
-        grid-template-areas: 'about-us club-events archives documents website';
         grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+        grid-template-areas: 'about-us club-events archives documents website';
       }
 
       section {
@@ -123,19 +123,19 @@
 
         hr {
           width: 100%;
-          border-top: 1px solid var(--lcc-color--footer-dividerLine);
           margin: 4px 0 8px;
+          border-top: 1px solid var(--lcc-color--footer-dividerLine);
         }
 
         a {
-          line-height: 18px;
           margin: 4px 0;
+          line-height: 18px;
 
           mat-icon {
             @include icon-size(14px);
 
-            margin-left: 4px;
             vertical-align: text-bottom;
+            margin-left: 4px;
           }
         }
       }

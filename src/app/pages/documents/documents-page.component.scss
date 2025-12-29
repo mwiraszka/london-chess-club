@@ -28,46 +28,46 @@ $icon-height: 18px;
 
         .file-icon {
           width: $icon-height;
-          height: $icon-height;
           min-width: $icon-height;
+          height: $icon-height;
         }
 
         &:hover {
           .file-icon,
           .document-title {
-            cursor: pointer;
             color: var(--lcc-color--documentsPage-documentLabelOnHover);
+            cursor: pointer;
           }
         }
       }
 
       .download-link {
         &:hover {
-          cursor: pointer;
           color: var(--lcc-color--documentsPage-downloadLinkOnHover);
+          cursor: pointer;
         }
 
         .download-icon {
           width: $icon-height;
-          height: $icon-height;
           min-width: $icon-height;
+          height: $icon-height;
         }
       }
 
       .document-date-published-container,
       .document-date-last-modified-container {
         display: flex;
-        align-items: center;
         justify-self: center;
-        text-align: center;
+        align-items: center;
         height: 100%;
+        text-align: center;
       }
     }
 
     &.published,
     &.last-modified {
-      width: 180px;
       vertical-align: middle;
+      width: 180px;
       text-align: end;
     }
   }

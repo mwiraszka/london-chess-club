@@ -10,16 +10,16 @@
 }
 
 .toast {
-  cursor: pointer;
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 8px;
+  width: 320px;
   padding: 0 16px;
   margin-top: 4px;
-  width: 320px;
   border-radius: var(--lcc-borderRadius--small);
   box-shadow: 1px 1px 5px 2px var(--lcc-color--toast-boxShadow);
+  cursor: pointer;
   animation: fade-in-and-out var(--animation-duration) linear;
 
   &.toast-success {
@@ -42,11 +42,11 @@
   }
 
   .text-container {
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     gap: 8px;
     padding: 8px;
-    overflow: hidden;
 
     .title {
       font-size: 14px;

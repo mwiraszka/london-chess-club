@@ -2,8 +2,8 @@
 
 :host {
   display: grid;
-  grid-template-columns: 1fr;
   gap: 8px;
+  grid-template-columns: 1fr;
 
   @include respond-to('gt-md') {
     grid-template-columns: 1fr 1fr;
@@ -12,13 +12,13 @@
 
 section {
   padding: 16px;
-  background-color: var(--lcc-color--general-cardBackground);
   border-radius: var(--lcc-borderRadius--large);
   box-shadow: 3px 3px 5px var(--lcc-color--clubLinks-boxShadow);
+  background-color: var(--lcc-color--general-cardBackground);
 
   &:hover {
-    animation: raise 0.2s ease forwards;
     box-shadow: 4px 4px 8px var(--lcc-color--clubLinks-boxShadow);
+    animation: raise 0.2s ease forwards;
   }
 
   > span {
@@ -28,19 +28,19 @@ section {
 
 a {
   display: inline-flex;
-  align-items: center;
   vertical-align: middle;
+  align-items: center;
   gap: 4px;
 
   .image-container {
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
 
     &.chesscom {
-      margin-left: -2px;
       margin-right: -2px;
+      margin-left: -2px;
     }
   }
 

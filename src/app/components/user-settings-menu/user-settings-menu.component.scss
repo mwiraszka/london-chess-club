@@ -3,17 +3,17 @@
 }
 
 .menu-items {
-  cursor: default;
   display: flex;
   flex-direction: column;
   width: 180px;
-  background-color: var(--lcc-color--userSettingsMenu-background);
   border-bottom-left-radius: var(--lcc-borderRadius--small);
   border-bottom-right-radius: var(--lcc-borderRadius--small);
+  background-color: var(--lcc-color--userSettingsMenu-background);
+  cursor: default;
 
   hr {
-    border-top: 1px solid var(--lcc-color--general-dividerLine);
     margin: 4px;
+    border-top: 1px solid var(--lcc-color--general-dividerLine);
   }
 
   .menu-item {
@@ -51,8 +51,8 @@
     }
 
     span {
-      font-size: 14px;
       padding: 8px 16px;
+      font-size: 14px;
     }
 
     a,
@@ -60,9 +60,9 @@
       flex: 1;
 
       &:hover > * {
-        cursor: pointer;
         background-color: var(--lcc-color--userSettingsMenu-itemBackgroundOnHover);
         color: var(--lcc-color--userSettingsMenu-itemTextOnHover);
+        cursor: pointer;
       }
 
       span {
@@ -71,40 +71,40 @@
     }
 
     button {
-      background: inherit;
-      color: inherit;
-      border: none;
       padding: unset;
       text-align: start;
+      border: none;
+      background: inherit;
+      color: inherit;
     }
   }
 }
 
 .safe-mode-warning-tooltip {
   header {
-    color: var(--lcc-color--userSettingsMenu-warning);
     margin-bottom: 8px;
+    color: var(--lcc-color--userSettingsMenu-warning);
   }
 }
 
 .refresh-data-tooltip {
   header {
     display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
-    flex-direction: row;
     gap: 4px;
     margin-bottom: 8px;
-    font-weight: bold;
     margin-bottom: 8px;
+    font-weight: bold;
   }
 
   .message-content {
-    font-size: 14px;
-    line-height: 1.4;
     display: flex;
     flex-direction: column;
     gap: 16px;
+    font-size: 14px;
+    line-height: 1.4;
     text-align: start;
   }
 }

@@ -6,8 +6,8 @@
 .loading-progress-indicator {
   width: 100%;
   height: 4px;
-  background-color: var(--lcc-color--documentViewer-loaderBackground);
   box-shadow: 0 0 5px 0 var(--lcc-color--documentViewer-loaderBoxShadow);
+  background-color: var(--lcc-color--documentViewer-loaderBackground);
 }
 
 pdf-viewer {

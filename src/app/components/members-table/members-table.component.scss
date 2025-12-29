@@ -1,11 +1,11 @@
 @use '../../../styles/abstracts/mixins' as *;
 
 :host {
-  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
+  width: 100%;
 }
 
 .members-table {
@@ -28,8 +28,8 @@
     .sortable-header {
       .sort-icon-container {
         display: inline-flex;
-        height: 14px;
         width: 14px;
+        height: 14px;
         margin-left: 4px;
 
         mat-icon {
@@ -39,8 +39,8 @@
       }
 
       &:hover:not(.row-number) {
-        cursor: pointer;
         background-color: var(--lcc-color--membersTable-headerBackgroundOnHover);
+        cursor: pointer;
       }
     }
   }
@@ -49,14 +49,14 @@
     tr {
       &.inactive {
         :not(.row-number) {
-          color: var(--lcc-color--membersTable-inactiveMemberText);
           font-style: italic;
+          color: var(--lcc-color--membersTable-inactiveMemberText);
         }
 
         .first-name::after,
         .name::after {
-          content: ' *';
           color: var(--lcc-color--membersTable-inactiveMemberAsterisk);
+          content: ' *';
         }
       }
 
@@ -122,9 +122,9 @@
               display: inline-block;
               vertical-align: middle;
               color: var(--lcc-color--membersTable-cityChampionIcon);
+              transition: color 1s ease;
               // Fine-tune vertical alignment
               transform: translateY(-2px);
-              transition: color 1s ease;
             }
 
             &:hover {

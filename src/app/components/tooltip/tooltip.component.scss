@@ -1,16 +1,16 @@
 :host {
   max-width: 200px;
-  background-color: var(--lcc-color--tooltip-background);
-  color: var(--lcc-color--tooltip-text);
-  outline: 1px solid var(--lcc-color--tooltip-border);
-  border-radius: var(--lcc-borderRadius--large);
   padding: 8px;
-  pointer-events: none;
   font-size: 14px;
   text-align: center;
   text-transform: none;
   white-space: wrap;
   word-wrap: break-word;
+  border-radius: var(--lcc-borderRadius--large);
+  outline: 1px solid var(--lcc-color--tooltip-border);
+  background-color: var(--lcc-color--tooltip-background);
+  color: var(--lcc-color--tooltip-text);
+  pointer-events: none;
   animation: slide-down 0.5s;
 }
 

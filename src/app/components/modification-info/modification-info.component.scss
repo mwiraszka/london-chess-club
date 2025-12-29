@@ -2,9 +2,9 @@
 
 :host {
   padding: 4px 16px;
-  background-color: var(--lcc-color--modificationInfo-background);
   border: 1px solid var(--lcc-color--modificationInfo-border);
   border-radius: var(--lcc-borderRadius--large);
+  background-color: var(--lcc-color--modificationInfo-background);
 }
 
 .modification-info-container {
@@ -21,8 +21,8 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    text-align: left;
     gap: 8px;
+    text-align: left;
 
     mat-icon {
       @include icon-size(15px);
@@ -33,13 +33,13 @@
     .create-text,
     .edit-text {
       & > * {
-        white-space: nowrap;
         line-height: 1.3em;
+        white-space: nowrap;
       }
 
       .name {
-        color: var(--lcc-color--modificationInfo-primaryText);
         padding: 0 1em 0 0.5em;
+        color: var(--lcc-color--modificationInfo-primaryText);
       }
 
       .vertical-spacer {

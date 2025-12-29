@@ -20,6 +20,7 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 - 🚀 Revamp About and Regional Clubs pages
 - 🔧 Upgrade Angular to v21.0.x and various other third-party packages to their latest versions
 - 🔧 Create a simple `generate-uuid()` utility to replace `uuid` package
+- 🔧 Fix the ordering of CSS property style rules for all components
 - 🔧 Security updates
 
 </details>

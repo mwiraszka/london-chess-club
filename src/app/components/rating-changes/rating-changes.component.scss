@@ -1,10 +1,10 @@
 :host {
-  max-height: 80vh;
-  width: min-content !important;
   overflow: auto;
   display: flex;
   flex-direction: column;
   gap: 16px;
+  width: min-content !important;
+  max-height: 80vh;
   padding: 16px 24px;
 }
 
@@ -15,8 +15,8 @@
 
 .rating-changes-table {
   td.changed {
-    background: var(--lcc-color--ratingChanges-changedCellBackground);
     font-weight: 600;
+    background: var(--lcc-color--ratingChanges-changedCellBackground);
   }
 }
 
@@ -25,8 +25,8 @@
   margin-top: 8px;
 
   .unmatched-member-list {
-    margin: 16px 0;
     padding-left: 24px;
+    margin: 16px 0;
   }
 }
 

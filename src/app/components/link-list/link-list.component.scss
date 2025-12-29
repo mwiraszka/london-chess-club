@@ -3,8 +3,8 @@
 :host {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   gap: 16px;
   padding: 8px;
 
@@ -27,9 +27,9 @@
       a {
         display: inline-flex;
         align-items: center;
-        text-align: center;
         gap: 4px;
         margin: 4px;
+        text-align: center;
         white-space: nowrap;
       }
     }
