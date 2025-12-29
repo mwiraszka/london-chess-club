@@ -8,7 +8,7 @@ export const LCC_CLUB: Club = {
   addressLine1: "Kiwanis Seniors' Community Centre",
   addressLine2: '78 Riverside Drive',
   addressLine3: 'London, ON N6H 1B4',
-  scheduleText: 'Thursdays, 6:00pm – 9:00pm',
+  scheduleText: 'Thursdays, 6:00pm–9:00pm',
   email: 'welcome@londonchess.ca',
 };
 
@@ -22,7 +22,7 @@ export const REGIONAL_CLUBS: Club[] = [
     addressLine2: '135 Wellington Street',
     addressLine3: 'St. Thomas, ON N5R 2R7',
     scheduleText:
-      'Wednesdays, 6:30pm – 8:30pm\n\n(basement entry through parking lot back door)',
+      'Wednesdays, 6:30pm–8:30pm\n\n(basement entry through parking lot back door)',
   },
   {
     id: 'new-hamburg-chess-club',
@@ -33,7 +33,7 @@ export const REGIONAL_CLUBS: Club[] = [
     addressLine2: '145 Huron Street',
     addressLine3: 'New Hamburg, ON N3A 1K1',
     scheduleText:
-      'September – December 2025\nTuesdays, 6:00pm – 7:45pm\nSaturdays, 12:00pm – 1:45pm',
+      'September–December 2025\nTuesdays, 6:00pm–7:45pm\nSaturdays, 12:00pm–1:45pm',
     email: 'nhchessclub@proton.me',
   },
   {
@@ -44,7 +44,7 @@ export const REGIONAL_CLUBS: Club[] = [
     addressLine1: 'Glencoe Arena',
     addressLine2: '138 Mill Street',
     addressLine3: 'Glencoe, ON N0L 1M0',
-    scheduleText: 'Mondays, 6:00pm – 8:00pm',
+    scheduleText: 'Mondays, 6:00pm–8:00pm',
   },
   {
     id: 'baden-chess-club',
@@ -54,7 +54,7 @@ export const REGIONAL_CLUBS: Club[] = [
     addressLine1: 'Baden Branch Library',
     addressLine2: "115 Snyder's Road East",
     addressLine3: 'Baden, ON N3A 2V4',
-    scheduleText: 'Wednesdays, 6:00pm – 7:45pm',
+    scheduleText: 'Wednesdays, 6:00pm–7:45pm',
     email: 'badenchessclub@proton.me',
   },
   {
@@ -65,7 +65,7 @@ export const REGIONAL_CLUBS: Club[] = [
     addressLine1: 'Stratford Public Library',
     addressLine2: '19 St. Andrew Street',
     addressLine3: 'Stratford, ON N5A 1A2',
-    scheduleText: 'Mondays, 6:30pm – 8:30pm',
+    scheduleText: 'Mondays, 6:30pm–8:30pm',
     email: 'idemeester@splibrary.ca',
   },
 ];

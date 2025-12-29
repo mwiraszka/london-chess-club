@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 
 import { MetaAndTitleService } from '@app/services';
-import { query } from '@app/utils';
+import { query, queryAll } from '@app/utils';
 
 import { AboutPageComponent } from './about-page.component';
 
@@ -62,29 +62,30 @@ describe('AboutPageComponent', () => {
       expect(query(fixture.debugElement, 'lcc-page-header')).toBeTruthy();
     });
 
-    it('should render all grid sections as expansion panels', () => {
-      const sections = [
-        '.where-and-when-section',
-        '.first-visit-section',
-        '.parking-section',
-        '.club-regulations-section',
-        '.membership-fee-section',
-        '.ratings-section',
-        '.supplies-section',
-        '.rules-section',
-        '.tournaments-section',
-        '.leadership-section',
+    it('should render all sections as expansion panels', () => {
+      const expectedHeadings = [
+        '📍 Location and schedule',
+        '👋 First visit',
+        '🚗 Parking',
+        '📜 Club regulations',
+        '💵 Membership fee',
+        '🔢 Chess ratings',
+        '♟ Chess supplies',
+        '📖 Rules of the game',
+        '🏆 Tournaments',
+        '🗳 AGM and leadership team',
       ];
 
-      sections.forEach(selector => {
-        const element = query(fixture.debugElement, selector);
-        expect(element).toBeTruthy();
-        expect(element.name).toBe('lcc-expansion-panel');
+      const panels = queryAll(fixture.debugElement, 'lcc-expansion-panel');
+      expect(panels.length).toBe(expectedHeadings.length);
+
+      expectedHeadings.forEach((heading, index) => {
+        expect(panels[index].componentInstance.heading).toBe(heading);
       });
     });
 
     it('should toggle expansion panel content when clicked', () => {
-      const firstSection = query(fixture.debugElement, '.where-and-when-section');
+      const firstSection = query(fixture.debugElement, 'lcc-expansion-panel');
       const header = query(firstSection, '.expansion-header');
 
       expect(query(firstSection, '.expansion-content')).toBeFalsy();
