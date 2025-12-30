@@ -14,6 +14,13 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 | 🔧  | Behind-the-scenes changes         |
 
 <details>
+<summary>v5.11.2 - December 31st, 2025</summary>
+
+- 🐛 Fix an image upload bug
+
+</details>
+
+<details>
 <summary>v5.11.1 - December 29th, 2025</summary>
 
 - 🚀 A few minor style and wording improvements
