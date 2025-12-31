@@ -16,6 +16,7 @@ import { MarkdownRendererComponent } from './markdown-renderer.component';
 })
 class MockMarkdownComponent {
   @Input() data = '';
+  @Input() disableSanitizer = false;
 }
 
 describe('MarkdownRendererComponent', () => {

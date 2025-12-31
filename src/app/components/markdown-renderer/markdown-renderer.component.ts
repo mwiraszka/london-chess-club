@@ -8,6 +8,7 @@ import {
   ChangeDetectorRef,
   Component,
   DOCUMENT,
+  ElementRef,
   Inject,
   Input,
   OnChanges,
@@ -16,8 +17,10 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
+import { Image } from '@app/models';
 import { KebabCasePipe } from '@app/pipes';
 import { RoutingService } from '@app/services';
+import { isCollectionId } from '@app/utils';
 
 @UntilDestroy()
 @Component({
@@ -33,7 +36,10 @@ import { RoutingService } from '@app/services';
         </a>
       }
     </div>
-    <markdown [data]="processedData"></markdown>
+    <markdown
+      [data]="processedData"
+      [disableSanitizer]="true">
+    </markdown>
   `,
   styleUrl: './markdown-renderer.component.scss',
   imports: [KebabCasePipe, MarkdownComponent, RouterLink],
@@ -41,6 +47,7 @@ import { RoutingService } from '@app/services';
 })
 export class MarkdownRendererComponent implements AfterViewInit, OnChanges {
   @Input() public data?: string;
+  @Input() public images: Image[] = [];
 
   public currentPath: string;
   public headings: string[] = [];
@@ -48,6 +55,7 @@ export class MarkdownRendererComponent implements AfterViewInit, OnChanges {
 
   constructor(
     @Inject(DOCUMENT) private _document: Document,
+    private readonly elementRef: ElementRef,
     private readonly renderer: Renderer2,
     private readonly routingService: RoutingService,
     private readonly changeDetectorRef: ChangeDetectorRef,
@@ -56,11 +64,11 @@ export class MarkdownRendererComponent implements AfterViewInit, OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges<MarkdownRendererComponent>): void {
-    if (changes.data) {
+    if (changes.data || changes.images) {
       // Preprocess images BEFORE markdown rendering
       this.processedData = this.preprocessImages(this.data || '');
 
-      const markdownElement = this._document.querySelector('markdown');
+      const markdownElement = this.elementRef.nativeElement.querySelector('markdown');
       if (markdownElement) {
         this.renderer.setStyle(markdownElement, 'visibility', 'hidden');
       }
@@ -88,39 +96,34 @@ export class MarkdownRendererComponent implements AfterViewInit, OnChanges {
 
   private preprocessImages(text: string): string {
     // Regular expression to match {{{src}}}(((width)))<<<caption>>> (width and caption optional)
-    const imagePattern = /{{{([^}]+)}}}(?:\(\(\(([^)]+)\)\)\))?(?:<<<(.+?)>>>)?/g;
+    const imagePattern = /{{{([^}]+)}}}(?:\(\(\(([^)]*)\)\)\))?(?:<<<([\s\S]*?)>>>)?/g;
 
     return text.replace(imagePattern, (match, src, width, caption) => {
-      const parsedWidth = width ? parseInt(width.trim(), 10) : 300;
+      const imageId = isCollectionId(src) ? src : src.match(/[a-f\d]{24}/)?.[0];
+      const image = imageId ? this.images.find(img => img.id === imageId) : null;
+
+      const imageUrl =
+        image?.mainUrl || (isCollectionId(src) ? 'assets/fallback-image.png' : src);
+
+      const defaultWidth = image?.mainWidth || 300;
+      const parsedWidth = width ? parseInt(width.trim(), 10) : defaultWidth;
       const widthValue = Math.min(parsedWidth, 1200).toString();
       const captionValue = caption ? caption.trim() : '';
 
-      let imageHtml = `<div class="markdown-image-container">
-        <img 
-          src="${src || 'assets/fallback-image.png'}" 
-          alt="${captionValue}" 
-          width="${widthValue}"
-          onerror="this.src='assets/fallback-image.png'"
-        />`;
+      const captionHtml = captionValue
+        ? `<div class="markdown-image-caption">${captionValue}</div>`
+        : '';
 
-      if (captionValue) {
-        imageHtml += `
-          <div class="markdown-image-caption">
-            ${captionValue}
-          </div>`;
-      }
-
-      imageHtml += `</div>`;
-
-      return imageHtml;
+      return `\n\n<div class="markdown-image-container" style="max-width: ${widthValue}px;"><img src="${imageUrl}" alt="${captionValue}" onerror="this.src='assets/fallback-image.png'">${captionHtml}</div>\n\n`;
     });
   }
 
   private wrapMarkdownTables(): void {
-    const tableElements = this._document.querySelectorAll('markdown table');
+    const tableElements =
+      this.elementRef.nativeElement.querySelectorAll('markdown table');
 
     if (tableElements) {
-      tableElements.forEach(tableElement => {
+      tableElements.forEach((tableElement: HTMLElement) => {
         if (!Array.from(tableElement?.classList ?? []).includes('lcc-table')) {
           tableElement.classList.add('lcc-table');
 
@@ -134,10 +137,11 @@ export class MarkdownRendererComponent implements AfterViewInit, OnChanges {
   }
 
   private addBlockquoteIcons(): void {
-    const blockquoteElements = this._document.querySelectorAll('blockquote');
+    const blockquoteElements =
+      this.elementRef.nativeElement.querySelectorAll('blockquote');
 
     if (blockquoteElements) {
-      blockquoteElements.forEach(blockquoteElement => {
+      blockquoteElements.forEach((blockquoteElement: HTMLElement) => {
         if (!blockquoteElement.classList.contains('lcc-blockquote')) {
           blockquoteElement.classList.add('lcc-blockquote');
 
@@ -161,12 +165,12 @@ export class MarkdownRendererComponent implements AfterViewInit, OnChanges {
   }
 
   private addAnchorIdsToHeadings(): void {
-    const headingElements = this._document.querySelectorAll('markdown h2');
+    const headingElements = this.elementRef.nativeElement.querySelectorAll('markdown h2');
 
     const newHeadings: string[] = [];
 
     if (headingElements) {
-      headingElements.forEach(element => {
+      headingElements.forEach((element: HTMLElement) => {
         const heading = (element.textContent || element.innerHTML).replace(
           /(<([^>]+)>)/gi,
           '',

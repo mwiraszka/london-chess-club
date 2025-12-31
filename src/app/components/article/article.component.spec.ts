@@ -4,17 +4,20 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MarkdownRendererComponent } from '@app/components/markdown-renderer/markdown-renderer.component';
 import { MOCK_ARTICLES } from '@app/mocks/articles.mock';
 import { MOCK_IMAGES } from '@app/mocks/images.mock';
+import { Image } from '@app/models';
 import { query, queryTextContent } from '@app/utils';
 
 import { ArticleComponent } from './article.component';
 
 @Component({
-  selector: 'app-markdown-renderer',
+  selector: 'lcc-markdown-renderer',
   template: '',
   standalone: true,
 })
 class MockMarkdownRendererComponent {
-  @Input() markdown = '';
+  @Input() data = '';
+  @Input() images: Image[] = [];
+  @Input() disableSanitizer = false;
 }
 
 describe('ArticleComponent', () => {

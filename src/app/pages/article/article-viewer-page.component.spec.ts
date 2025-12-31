@@ -33,6 +33,7 @@ import { ArticleViewerPageComponent } from './article-viewer-page.component';
 class MockArticleComponent {
   @Input({ required: true }) article!: Article;
   @Input({ required: true }) bannerImage!: Image | null;
+  @Input() bodyImages: Image[] = [];
 }
 
 describe('ArticleViewerPageComponent', () => {
@@ -155,6 +156,7 @@ describe('ArticleViewerPageComponent', () => {
         article: mockArticle,
         isAdmin: true,
         bannerImage: mockBannerImage,
+        bodyImages: [],
       });
     });
 
