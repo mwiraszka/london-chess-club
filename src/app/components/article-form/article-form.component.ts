@@ -112,21 +112,23 @@ export class ArticleFormComponent implements OnInit, OnChanges {
     if (changes.bodyImages && this.form) {
       let body = this.form.controls.body.value;
 
-      // Find all {{{ ... }}} patterns in the body
-      const imagePattern = /{{{([^}]+)}}}/g;
+      // Match all image patterns in the body
+      const imagePattern = /{{{([^}]+)}}}(?:\(\(\(([^)]*)\)\)\))?(?:<<<([\s\S]*?)>>>)?/g;
       let match: RegExpExecArray | null;
       const replacements: Array<{ oldString: string; newString: string }> = [];
 
       while ((match = imagePattern.exec(body)) !== null) {
         const content = match[1];
+        const width = match[2];
+        const caption = match[3];
 
-        // Check if the content is a valid image id
-        if (isCollectionId(content)) {
-          // Find the corresponding image in bodyImages
-          const image = this.bodyImages.find(img => img.id === content);
+        const imageId = content.match(/[a-f\d]{24}/)?.[0];
 
-          if (image?.mainUrl) {
-            const newString = `{{{${image.mainUrl}}}}(((${image.mainWidth || 300})))<<<${image.caption || ''}>>>`;
+        if (imageId) {
+          const image = this.bodyImages.find(img => img.id === imageId);
+
+          if (image && !isCollectionId(content)) {
+            const newString = `{{{${imageId}}}}(((${width || image.mainWidth})))<<<${caption || image.caption}>>>`;
 
             replacements.push({
               oldString: match[0],
@@ -201,7 +203,7 @@ export class ArticleFormComponent implements OnInit, OnChanges {
       const imageId = dialogResponse.split('-')[0];
 
       const body = this.form.controls.body.value;
-      const imageString = `{{{${imageId}}}}`;
+      const imageString = `{{{${imageId}}}}(((500)))<<<Image caption goes here>>>`;
       const insertIndex = this.lastCursorPosition || body.length;
 
       this.form.patchValue({

@@ -29,6 +29,8 @@ const IGNORED_ERROR_PATTERNS: RegExp[] = [
   /"name":"LCCError"/, // LCCError test cases without prefix
   /NG0304:.*'lcc-markdown-renderer' is not a known element/, // Markdown renderer in test mocks
   /NG0303:.*Can't bind to 'data' since it isn't a known property of 'lcc-markdown-renderer'/, // Markdown renderer binding in test mocks
+  /NG0303:.*Can't bind to 'images' since it isn't a known property of 'lcc-markdown-renderer'/, // Markdown renderer binding in test mocks
+  /NG0303:.*Can't bind to 'disableSanitizer' since it isn't a known property of 'markdown'/, // Markdown renderer binding in test mocks
 ];
 
 const IGNORED_WARN_PATTERNS: RegExp[] = [

@@ -91,7 +91,10 @@
       <h3>Article preview:</h3>
       <hr />
       <div class="markdown-container">
-        <lcc-markdown-renderer [data]="form.controls.body.value"> </lcc-markdown-renderer>
+        <lcc-markdown-renderer
+          [data]="form.controls.body.value"
+          [images]="bodyImages">
+        </lcc-markdown-renderer>
       </div>
     }
   </div>

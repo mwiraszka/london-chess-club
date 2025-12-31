@@ -223,9 +223,9 @@ export const selectBodyImagesByArticleId = (articleId: Id | null) =>
 
       while ((match = imagePattern.exec(body)) !== null) {
         const content = match[1];
-        // Only add if it looks like an ID (not a URL)
-        if (!content.includes('/') && !content.startsWith('http')) {
-          imageIds.push(content);
+        const idMatch = content.match(/[a-f\d]{24}/);
+        if (idMatch) {
+          imageIds.push(idMatch[0]);
         }
       }
 

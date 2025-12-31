@@ -35,7 +35,8 @@ import { isDefined } from '@app/utils';
       <lcc-article
         [adminControls]="vm.isAdmin ? getAdminControlsConfig(vm.article) : null"
         [article]="vm.article"
-        [bannerImage]="vm.bannerImage">
+        [bannerImage]="vm.bannerImage"
+        [bodyImages]="vm.bodyImages">
       </lcc-article>
       <lcc-link-list [links]="[newsPageLink]"></lcc-link-list>
     }
@@ -52,6 +53,7 @@ export class ArticleViewerPageComponent implements OnInit {
   public viewModel$?: Observable<{
     article: Article;
     bannerImage: Image | null;
+    bodyImages: Image[];
     isAdmin: boolean;
   }>;
 
@@ -72,6 +74,7 @@ export class ArticleViewerPageComponent implements OnInit {
             .select(ArticlesSelectors.selectArticleById(articleId))
             .pipe(filter(isDefined)),
           this.store.select(ImagesSelectors.selectBannerImageByArticleId(articleId)),
+          this.store.select(ImagesSelectors.selectBodyImagesByArticleId(articleId)),
           this.store.select(AuthSelectors.selectIsAdmin),
         ]),
       ),
@@ -82,9 +85,10 @@ export class ArticleViewerPageComponent implements OnInit {
         this.metaAndTitleService.updateTitle(article.title);
         this.metaAndTitleService.updateDescription(articlePreview);
       }),
-      map(([article, bannerImage, isAdmin]) => ({
+      map(([article, bannerImage, bodyImages, isAdmin]) => ({
         article,
         bannerImage,
+        bodyImages,
         isAdmin,
       })),
     );

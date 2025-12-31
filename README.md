@@ -14,6 +14,14 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 | 🔧  | Behind-the-scenes changes         |
 
 <details>
+<summary>v5.11.3 - December 31st, 2025</summary>
+
+- 🚀 Improve handling of multiple embedded images in articles
+- 🔧 Some more security updates
+
+</details>
+
+<details>
 <summary>v5.11.2 - December 31st, 2025</summary>
 
 - 🐛 Fix an image upload bug

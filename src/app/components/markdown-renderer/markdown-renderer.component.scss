@@ -69,13 +69,19 @@
 
     // For new images with caption and width
     .markdown-image-container {
+      width: 100%;
+      margin: 16px 0;
+
       img {
+        display: block;
         min-width: unset;
-        max-width: unset;
+        max-width: 100%;
+        height: auto;
       }
 
       .markdown-image-caption {
-        font-size: 14px;
+        margin-top: 4px;
+        font-size: 16px;
         text-align: left;
         color: var(--lcc-color--markdownRenderer-secondaryText);
       }

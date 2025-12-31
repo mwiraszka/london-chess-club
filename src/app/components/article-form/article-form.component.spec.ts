@@ -321,7 +321,9 @@ describe('ArticleFormComponent', () => {
         componentType: ImageExplorerComponent,
         isModal: true,
       });
-      expect(component.form.controls.body.value).toBe('Som\n\n{{{abc123}}}\n\ne text');
+      expect(component.form.controls.body.value).toBe(
+        'Som\n\n{{{abc123}}}(((500)))<<<Image caption goes here>>>\n\ne text',
+      );
     });
 
     it('should not alter body text if dialog is closed', async () => {
@@ -531,12 +533,12 @@ describe('ArticleFormComponent', () => {
     });
 
     describe('ngOnChanges', () => {
-      it('should replace image ID placeholders with full syntax when images are available', () => {
+      it('should replace image URLs with IDs but leave existing IDs alone', () => {
         const imageId1 = '507f1f77bcf86cd799439011';
         const imageId2 = '507f191e810c19729de860ea';
 
         component.form.patchValue({
-          body: `Text {{{${imageId1}}}} more {{{${imageId2}}}}`,
+          body: `Text {{{https://s3.amazonaws.com/bucket/${imageId1}}}} more {{{${imageId2}}}}`,
         });
         const mockImages = [
           {
@@ -555,7 +557,6 @@ describe('ArticleFormComponent', () => {
           },
         ];
 
-        // Set the bodyImages input directly on the component
         component.bodyImages = mockImages;
 
         component.ngOnChanges({
@@ -568,28 +569,11 @@ describe('ArticleFormComponent', () => {
         });
 
         const body = component.form.controls.body.value;
-        expect(body).toContain(
-          '{{{http://example.com/img1.jpg}}}(((500)))<<<Test caption 1>>>',
-        );
-        expect(body).toContain(
-          '{{{http://example.com/img2.jpg}}}(((600)))<<<Test caption 2>>>',
-        );
-      });
-
-      it('should not replace placeholders if no matching images', () => {
-        component.form.patchValue({ body: 'Text {{{unknown-id}}}' });
-        fixture.componentRef.setInput('bodyImages', []);
-
-        component.ngOnChanges({
-          bodyImages: {
-            previousValue: [],
-            currentValue: [],
-            firstChange: false,
-            isFirstChange: () => false,
-          },
-        });
-
-        expect(component.form.controls.body.value).toBe('Text {{{unknown-id}}}');
+        // URL should be expanded
+        expect(body).toContain(`{{{${imageId1}}}}(((500)))<<<Test caption 1>>>`);
+        // Existing ID should be left as is (bare)
+        expect(body).toContain(`{{{${imageId2}}}}`);
+        expect(body).not.toContain(`{{{${imageId2}}}}(((600)))<<<Test caption 2>>>`);
       });
     });
   });
