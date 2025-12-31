@@ -100,6 +100,7 @@
       "@humanwhocodes/object-schema": "2.0.3",
       "tar-fs": ">=2.1.4",
       "vite": ">=7.1.11",
+      "qs": ">=6.14.1",
       "ngrx-store-localstorage>@angular/common": "21.0.6",
       "ngrx-store-localstorage>@angular/core": "21.0.6",
       "ngrx-store-localstorage>@ngrx/store": "21.0.1",
