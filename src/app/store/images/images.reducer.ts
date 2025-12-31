@@ -15,8 +15,10 @@ import { customSort } from '@app/utils';
 
 import * as ImagesActions from './images.actions';
 
-export interface ImagesState
-  extends EntityState<{ image: Image; formData: ImageFormData }> {
+export interface ImagesState extends EntityState<{
+  image: Image;
+  formData: ImageFormData;
+}> {
   callState: CallState;
   newImagesFormData: Record<string, ImageFormData>;
   lastMetadataFetch: IsoDate | null;
@@ -340,7 +342,7 @@ export const imagesReducer = createReducer(
   ),
 
   on(ImagesActions.formDataChanged, (state, { multipleFormData }): ImagesState => {
-    if (!multipleFormData.length) {
+    if (!multipleFormData?.length) {
       return state;
     }
 
