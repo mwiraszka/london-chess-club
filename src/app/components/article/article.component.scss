@@ -89,14 +89,6 @@ hr {
 
 .markdown-container {
   overflow-x: hidden;
-  padding: 4px;
+  padding: 0;
   background-color: var(--lcc-color--article-markdownContainerBackground);
-
-  @include respond-to('gt-sm') {
-    padding: 4px 8px;
-  }
-
-  @include respond-to('gt-md') {
-    padding: 4px 16px;
-  }
 }
