@@ -322,18 +322,18 @@ describe('ImageFormComponent', () => {
         expect(component.form.controls.album.hasError('invalidText')).toBe(false);
       });
 
-      it('should mark field with emoji as invalid', () => {
+      it('should mark field with emoji as valid', () => {
         component.form.patchValue({ album: '🔥' });
         fixture.detectChanges();
 
-        expect(component.form.controls.album.hasError('invalidText')).toBe(true);
+        expect(component.form.controls.album.hasError('invalidText')).toBe(false);
       });
 
-      it('should mark caption field with emoji as invalid', () => {
+      it('should mark caption field with emoji as valid', () => {
         component.form.patchValue({ caption: 'Żubrówka 🔥' });
         fixture.detectChanges();
 
-        expect(component.form.controls.caption.hasError('invalidText')).toBe(true);
+        expect(component.form.controls.caption.hasError('invalidText')).toBe(false);
       });
 
       it('should mark caption field with foreign characters as valid', () => {

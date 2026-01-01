@@ -157,7 +157,7 @@ describe('ArticleFormComponent', () => {
         expect(component.form.controls.body.hasError('invalidText')).toBe(false);
       });
 
-      it('should mark field with emoji as invalid', () => {
+      it('should mark field with emoji as valid', () => {
         component.form.patchValue({
           bannerImageId: '🔥',
           title: 'abc',
@@ -165,7 +165,7 @@ describe('ArticleFormComponent', () => {
         });
         fixture.detectChanges();
 
-        expect(component.form.controls.bannerImageId.hasError('invalidText')).toBe(true);
+        expect(component.form.controls.bannerImageId.hasError('invalidText')).toBe(false);
         expect(component.form.controls.title.hasError('invalidText')).toBe(false);
         expect(component.form.controls.body.hasError('invalidText')).toBe(false);
       });
@@ -466,7 +466,9 @@ describe('ArticleFormComponent', () => {
       });
 
       it('should return false when body has MAX_ARTICLE_BODY_IMAGES or more', () => {
-        component.form.patchValue({ body: '{{{img1}}} {{{img2}}} {{{img3}}}' });
+        component.form.patchValue({
+          body: '{{{img1}}} {{{img2}}} {{{img3}}} {{{img4}}} {{{img5}}}',
+        });
 
         expect(component.canInsertImage).toBe(false);
       });
@@ -654,10 +656,12 @@ describe('ArticleFormComponent', () => {
       });
 
       it('should be disabled when MAX_ARTICLE_BODY_IMAGES limit is reached', () => {
-        component.form.patchValue({ body: '{{{img1}}} {{{img2}}} {{{img3}}}' });
+        component.form.patchValue({
+          body: '{{{img1}}} {{{img2}}} {{{img3}}} {{{img4}}} {{{img5}}}',
+        });
 
         expect(component.canInsertImage).toBe(false);
-        expect(component.bodyImageCount).toBe(3);
+        expect(component.bodyImageCount).toBe(5);
       });
 
       it('should be enabled when below MAX_ARTICLE_BODY_IMAGES limit', () => {

@@ -40,6 +40,7 @@ body[data-theme='dark'] {
   --lcc-color--article-bannerImageHeaderText: #{clr(grayscale, black-2)};
   --lcc-color--article-dateCreatedText: #{clr(grayscale, gray-65)};
   --lcc-color--article-editorText: #{clr(grayscale, gray-65)};
+  --lcc-color--article-markdownContainerBackground: #{clr(grayscale, black-15)};
 
   --lcc-color--articleForm-buttonsDivider: #{clr(grayscale, gray-50, 0.5)};
   --lcc-color--articleForm-markdownPreviewBoxShadow: #{clr(grayscale, gray-25, 0.5)};
@@ -240,6 +241,7 @@ body[data-theme='dark'] {
 
   --lcc-color--loader: #{clr(grayscale, black-15)};
 
+  --lcc-color--markdownRenderer-background: #{clr(grayscale, black-20)};
   --lcc-color--markdownRenderer-blockquoteBackground: #{clr(grayscale, gray-35, 0.4)};
   --lcc-color--markdownRenderer-blockquoteBorder: #{clr(grayscale, gray-25, 0.5)};
   --lcc-color--markdownRenderer-primaryText: #{clr(grayscale, white-95)};

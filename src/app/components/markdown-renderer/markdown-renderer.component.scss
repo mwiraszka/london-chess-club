@@ -1,6 +1,12 @@
 @use '../../../styles/components/link';
 
 :host {
+  display: block;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 16px;
+  background-color: var(--lcc-color--markdownRenderer-background);
+
   .table-of-contents {
     text-align: center;
 

@@ -14,12 +14,13 @@ describe('textValidator', () => {
     ).toBeFalsy();
     expect(getErrorForValue('Unicode letters: café naïve résumé')).toBeFalsy();
     expect(getErrorForValue('Numbers and symbols: 123 @#$%')).toBeFalsy();
+    expect(getErrorForValue('Text with emoji 😢')).toBeFalsy();
+    expect(getErrorForValue('Text with complex emoji 👨‍👩‍👧‍👦')).toBeFalsy();
   });
 
   it('returns `invalidText` error if invalid', () => {
     const error = { invalidText: true };
 
-    expect(getErrorForValue('Text with emoji 😢')).toEqual(error);
     expect(getErrorForValue('Control chars: \u0000')).toEqual(error);
   });
 });
