@@ -3,7 +3,15 @@ import { concatLatestFrom } from '@ngrx/operators';
 import { Store } from '@ngrx/store';
 import moment from 'moment-timezone';
 import { merge, of, timer } from 'rxjs';
-import { catchError, filter, map, switchMap, take } from 'rxjs/operators';
+import {
+  catchError,
+  concatMap,
+  filter,
+  map,
+  mergeMap,
+  switchMap,
+  take,
+} from 'rxjs/operators';
 
 import { Injectable } from '@angular/core';
 
@@ -162,7 +170,7 @@ export class EventsEffects {
         this.store.select(EventsSelectors.selectEventFormDataById(null)),
         this.store.select(AuthSelectors.selectUser).pipe(filter(isDefined)),
       ]),
-      switchMap(([, formData, user]) => {
+      concatMap(([, formData, user]) => {
         const event: Event = {
           ...formData,
           id: '',
@@ -198,7 +206,7 @@ export class EventsEffects {
         this.store.select(EventsSelectors.selectEventFormDataById(eventId)),
         this.store.select(AuthSelectors.selectUser).pipe(filter(isDefined)),
       ]),
-      switchMap(([, event, formData, user]) => {
+      concatMap(([, event, formData, user]) => {
         const updatedEvent = {
           ...event,
           ...formData,
@@ -228,7 +236,7 @@ export class EventsEffects {
   deleteEvent$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(EventsActions.deleteEventRequested),
-      switchMap(({ event }) =>
+      mergeMap(({ event }) =>
         this.eventsApiService.deleteEvent(event.id).pipe(
           filter(response => response.data === event.id),
           map(() =>
