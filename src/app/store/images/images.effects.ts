@@ -17,7 +17,7 @@ import {
 
 import { Injectable } from '@angular/core';
 
-import { BaseImage, IndexedDbImageData, LccError } from '@app/models';
+import { Article, BaseImage, IndexedDbImageData, LccError } from '@app/models';
 import { ImageFileService, ImagesApiService } from '@app/services';
 import { AppActions } from '@app/store/app';
 import { ArticlesActions, ArticlesSelectors } from '@app/store/articles';
@@ -192,25 +192,43 @@ export class ImagesEffects {
 
   fetchArticleBodyImages$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(ArticlesActions.fetchArticleSucceeded, ArticlesActions.formDataChanged),
-      concatLatestFrom(action =>
-        action.type === ArticlesActions.fetchArticleSucceeded.type
-          ? this.store.select(
-              ImagesSelectors.selectBodyImagesByArticleId(action.article.id),
-            )
-          : this.store.select(
-              ImagesSelectors.selectBodyImagesByArticleId(action.articleId),
-            ),
+      ofType(
+        ArticlesActions.fetchArticleSucceeded,
+        ArticlesActions.formDataChanged,
+        ImagesActions.fetchAllImagesMetadataSucceeded,
       ),
-      switchMap(([, bodyImages]) => {
-        // Find images that need their main URLs fetched
+      concatLatestFrom(() => this.store.select(ArticlesSelectors.selectAllArticles)),
+      mergeMap(([action, allArticles]) => {
+        let articlesToProcess: Article[] = [];
+
+        if (action.type === ArticlesActions.fetchArticleSucceeded.type) {
+          articlesToProcess = [action.article];
+        } else if (action.type === ArticlesActions.formDataChanged.type) {
+          articlesToProcess = allArticles.filter(
+            a => a?.id === action.articleId,
+          ) as Article[];
+        } else {
+          articlesToProcess = allArticles.filter(isDefined);
+        }
+
+        return from(articlesToProcess).pipe(
+          mergeMap(article =>
+            this.store
+              .select(ImagesSelectors.selectBodyImagesByArticleId(article.id))
+              .pipe(
+                take(1),
+                map(bodyImages => ({ article, bodyImages })),
+              ),
+          ),
+        );
+      }),
+      mergeMap(({ bodyImages }) => {
         const imagesToFetch = bodyImages.filter(
           image =>
             !image.mainUrl ||
             (image.urlExpirationDate && isExpired(image.urlExpirationDate)),
         );
 
-        // Fetch each image's main URL in the background
         return from(
           imagesToFetch.map(image =>
             ImagesActions.fetchMainImageInBackgroundRequested({ imageId: image.id }),
@@ -223,7 +241,7 @@ export class ImagesEffects {
   fetchMainImage$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(ImagesActions.fetchMainImageRequested),
-      switchMap(({ imageId }) =>
+      mergeMap(({ imageId }) =>
         this.imagesApiService.getMainImage(imageId).pipe(
           map(response =>
             ImagesActions.fetchMainImageSucceeded({ image: response.data }),
@@ -243,7 +261,7 @@ export class ImagesEffects {
   fetchMainImageInBackground$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(ImagesActions.fetchMainImageInBackgroundRequested),
-      switchMap(({ imageId }) =>
+      mergeMap(({ imageId }) =>
         this.imagesApiService.getMainImage(imageId, true).pipe(
           map(response =>
             ImagesActions.fetchMainImageSucceeded({ image: response.data }),
@@ -390,13 +408,13 @@ export class ImagesEffects {
   addImage$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(ImagesActions.addImageRequested),
-      switchMap(({ imageId }) => from(this.imageFileService.getImage(imageId))),
+      mergeMap(({ imageId }) => from(this.imageFileService.getImage(imageId))),
       concatLatestFrom(() => [
         this.store.select(AuthSelectors.selectUser).pipe(filter(isDefined)),
         this.store.select(ImagesSelectors.selectNewImageFormData).pipe(filter(isDefined)),
         this.store.select(ImagesSelectors.selectAllExistingAlbums),
       ]),
-      switchMap(([imageFileResult, user, formData, existingAlbums]) => {
+      mergeMap(([imageFileResult, user, formData, existingAlbums]) => {
         if (isLccError(imageFileResult)) {
           return of(ImagesActions.addImageFailed({ error: imageFileResult }));
         }
@@ -445,12 +463,12 @@ export class ImagesEffects {
   addImages$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(ImagesActions.addImagesRequested),
-      switchMap(() => from(this.imageFileService.getAllImages())),
+      mergeMap(() => from(this.imageFileService.getAllImages())),
       concatLatestFrom(() => [
         this.store.select(AuthSelectors.selectUser).pipe(filter(isDefined)),
         this.store.select(ImagesSelectors.selectNewImagesFormData),
       ]),
-      switchMap(([imageFilesResult, user, newImagesFormData]) => {
+      mergeMap(([imageFilesResult, user, newImagesFormData]) => {
         if (isLccError(imageFilesResult)) {
           return of(ImagesActions.addImageFailed({ error: imageFilesResult }));
         }
@@ -518,7 +536,7 @@ export class ImagesEffects {
           .pipe(filter(isDefined)),
         this.store.select(AuthSelectors.selectUser).pipe(filter(isDefined)),
       ]),
-      switchMap(([, { image, formData }, user]) => {
+      mergeMap(([, { image, formData }, user]) => {
         const updatedImage: BaseImage = {
           id: image.id,
           filename: image.filename,
@@ -574,7 +592,7 @@ export class ImagesEffects {
   updateAlbum$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(ImagesActions.updateAlbumRequested),
-      switchMap(({ album }) =>
+      mergeMap(({ album }) =>
         from(this.imageFileService.getAllImages()).pipe(
           map(indexedDbImageDataResult => ({ album, indexedDbImageDataResult })),
         ),
@@ -584,7 +602,7 @@ export class ImagesEffects {
         this.store.select(ImagesSelectors.selectNewImagesFormData),
         this.store.select(AuthSelectors.selectUser).pipe(filter(isDefined)),
       ]),
-      switchMap(
+      mergeMap(
         ([{ album, indexedDbImageDataResult }, entities, newImagesFormData, user]) => {
           const existingImages: BaseImage[] = entities.map(({ image, formData }) => ({
             id: image.id,
@@ -678,7 +696,7 @@ export class ImagesEffects {
   deleteImage$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(ImagesActions.deleteImageRequested),
-      switchMap(({ image }) => {
+      mergeMap(({ image }) => {
         return this.imagesApiService.deleteImage(image.id).pipe(
           filter(response => response.data === image.id),
           map(() => ImagesActions.deleteImageSucceeded({ image })),
@@ -693,7 +711,7 @@ export class ImagesEffects {
   deleteAlbum$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(ImagesActions.deleteAlbumRequested),
-      switchMap(({ album }) => {
+      mergeMap(({ album }) => {
         return this.imagesApiService.deleteAlbum(album).pipe(
           map(response =>
             ImagesActions.deleteAlbumSucceeded({ album, imageIds: response.data }),
@@ -727,7 +745,7 @@ export class ImagesEffects {
         };
         return updatedImage;
       }),
-      switchMap(updatedImage => {
+      mergeMap(updatedImage => {
         const imagesFormData = buildImagesFormData([], [], [updatedImage]);
 
         if (isLccError(imagesFormData)) {

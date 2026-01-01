@@ -6,7 +6,7 @@ import { ReplaySubject, of, throwError } from 'rxjs';
 
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 
-import { INITIAL_ARTICLE_FORM_DATA } from '@app/constants';
+import { INITIAL_ARTICLE_FORM_DATA, MAX_ARTICLE_BODY_IMAGES } from '@app/constants';
 import { MOCK_ARTICLES } from '@app/mocks/articles.mock';
 import { ApiResponse, Article, LccError, PaginatedItems, User } from '@app/models';
 import { ArticlesApiService } from '@app/services';
@@ -51,6 +51,33 @@ describe('ArticlesEffects', () => {
     },
   };
 
+  const mockArticlesState = {
+    ids: MOCK_ARTICLES.map(a => a.id),
+    entities: MOCK_ARTICLES.reduce(
+      (acc, article) => ({
+        ...acc,
+        [article.id]: { article, formData: INITIAL_ARTICLE_FORM_DATA },
+      }),
+      {},
+    ),
+    callState: { status: 'idle' as const, loadStart: null, error: null },
+    newArticleFormData: INITIAL_ARTICLE_FORM_DATA,
+    lastHomePageFetch: null,
+    lastFilteredFetch: null,
+    homePageArticles: [],
+    filteredArticles: [],
+    options: {
+      page: 1,
+      pageSize: 10,
+      sortBy: 'bookmarkDate',
+      sortOrder: 'desc',
+      filters: null,
+      search: '',
+    },
+    filteredCount: null,
+    totalCount: 0,
+  };
+
   beforeEach(() => {
     const articlesApiServiceMock = {
       getFilteredArticles: jest.fn(),
@@ -58,33 +85,6 @@ describe('ArticlesEffects', () => {
       addArticle: jest.fn(),
       updateArticle: jest.fn(),
       deleteArticle: jest.fn(),
-    };
-
-    const mockArticlesState = {
-      ids: MOCK_ARTICLES.map(a => a.id),
-      entities: MOCK_ARTICLES.reduce(
-        (acc, article) => ({
-          ...acc,
-          [article.id]: { article, formData: INITIAL_ARTICLE_FORM_DATA },
-        }),
-        {},
-      ),
-      callState: { status: 'idle' as const, loadStart: null, error: null },
-      newArticleFormData: INITIAL_ARTICLE_FORM_DATA,
-      lastHomePageFetch: null,
-      lastFilteredFetch: null,
-      homePageArticles: [],
-      filteredArticles: [],
-      options: {
-        page: 1,
-        pageSize: 10,
-        sortBy: 'bookmarkDate',
-        sortOrder: 'desc',
-        filters: null,
-        search: '',
-      },
-      filteredCount: null,
-      totalCount: 0,
     };
 
     TestBed.configureTestingModule({
@@ -493,6 +493,34 @@ describe('ArticlesEffects', () => {
         done();
       });
     });
+
+    it('should fail if article has too many body images', done => {
+      const bodyWithTooManyImages = Array(MAX_ARTICLE_BODY_IMAGES + 1)
+        .fill('{{{image-id}}}')
+        .join(' ');
+
+      store.setState({
+        articlesState: {
+          ...mockArticlesState,
+          newArticleFormData: {
+            ...INITIAL_ARTICLE_FORM_DATA,
+            body: bodyWithTooManyImages,
+          },
+        },
+        authState: { user: mockUser },
+      });
+
+      actions$.next(ArticlesActions.publishArticleRequested());
+
+      effects.publishArticle$.subscribe(action => {
+        expect(action.type).toBe(ArticlesActions.publishArticleFailed.type);
+        const payload = action as ReturnType<typeof ArticlesActions.publishArticleFailed>;
+        expect(payload.error.message).toContain(
+          `maximum of ${MAX_ARTICLE_BODY_IMAGES} body images`,
+        );
+        done();
+      });
+    });
   });
 
   describe('updateArticle$', () => {
@@ -532,6 +560,41 @@ describe('ArticlesEffects', () => {
 
       effects.updateArticle$.subscribe(action => {
         expect(action).toEqual(ArticlesActions.updateArticleFailed({ error: mockError }));
+        done();
+      });
+    });
+
+    it('should fail if updated article has too many body images', done => {
+      const articleId = MOCK_ARTICLES[0].id;
+      const bodyWithTooManyImages = Array(MAX_ARTICLE_BODY_IMAGES + 1)
+        .fill('{{{image-id}}}')
+        .join(' ');
+
+      store.setState({
+        articlesState: {
+          ...mockArticlesState,
+          entities: {
+            ...mockArticlesState.entities,
+            [articleId]: {
+              article: MOCK_ARTICLES[0],
+              formData: {
+                ...INITIAL_ARTICLE_FORM_DATA,
+                body: bodyWithTooManyImages,
+              },
+            },
+          },
+        },
+        authState: { user: mockUser },
+      });
+
+      actions$.next(ArticlesActions.updateArticleRequested({ articleId }));
+
+      effects.updateArticle$.subscribe(action => {
+        expect(action.type).toBe(ArticlesActions.updateArticleFailed.type);
+        const payload = action as ReturnType<typeof ArticlesActions.updateArticleFailed>;
+        expect(payload.error.message).toContain(
+          `maximum of ${MAX_ARTICLE_BODY_IMAGES} body images`,
+        );
         done();
       });
     });

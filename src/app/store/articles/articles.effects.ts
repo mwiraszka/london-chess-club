@@ -3,10 +3,19 @@ import { concatLatestFrom } from '@ngrx/operators';
 import { Store } from '@ngrx/store';
 import moment from 'moment-timezone';
 import { merge, of, timer } from 'rxjs';
-import { catchError, filter, map, switchMap, take } from 'rxjs/operators';
+import {
+  catchError,
+  concatMap,
+  filter,
+  map,
+  mergeMap,
+  switchMap,
+  take,
+} from 'rxjs/operators';
 
 import { Injectable } from '@angular/core';
 
+import { MAX_ARTICLE_BODY_IMAGES } from '@app/constants';
 import { Article, DataPaginationOptions, LccError } from '@app/models';
 import { ArticlesApiService } from '@app/services';
 import { AppActions } from '@app/store/app';
@@ -140,16 +149,16 @@ export class ArticlesEffects {
         this.store.select(ArticlesSelectors.selectArticleFormDataById(null)),
         this.store.select(AuthSelectors.selectUser).pipe(filter(isDefined)),
       ]),
-      switchMap(([, formData, user]) => {
+      concatMap(([, formData, user]) => {
         // Validate body image count
         const imagePattern = /{{{([^}]+)}}}/g;
         const matches = formData.body?.match(imagePattern);
         const imageCount = matches ? matches.length : 0;
 
-        if (imageCount > 3) {
+        if (imageCount > MAX_ARTICLE_BODY_IMAGES) {
           const error: LccError = {
             name: 'LCCError',
-            message: `Articles can contain a maximum of 3 body images. Please remove ${imageCount - 3} image(s).`,
+            message: `Articles can contain a maximum of ${MAX_ARTICLE_BODY_IMAGES} body images. Please remove ${imageCount - MAX_ARTICLE_BODY_IMAGES} image(s).`,
           };
           return of(ArticlesActions.publishArticleFailed({ error }));
         }
@@ -190,16 +199,16 @@ export class ArticlesEffects {
         this.store.select(ArticlesSelectors.selectArticleFormDataById(articleId)),
         this.store.select(AuthSelectors.selectUser).pipe(filter(isDefined)),
       ]),
-      switchMap(([, article, formData, user]) => {
+      concatMap(([, article, formData, user]) => {
         // Validate body image count
         const imagePattern = /{{{([^}]+)}}}/g;
         const matches = formData.body?.match(imagePattern);
         const imageCount = matches ? matches.length : 0;
 
-        if (imageCount > 3) {
+        if (imageCount > MAX_ARTICLE_BODY_IMAGES) {
           const error: LccError = {
             name: 'LCCError',
-            message: `Articles can contain a maximum of 3 body images. Please remove ${imageCount - 3} image(s).`,
+            message: `Articles can contain a maximum of ${MAX_ARTICLE_BODY_IMAGES} body images. Please remove ${imageCount - MAX_ARTICLE_BODY_IMAGES} image(s).`,
           };
           return of(ArticlesActions.updateArticleFailed({ error }));
         }
@@ -238,7 +247,7 @@ export class ArticlesEffects {
           .select(ArticlesSelectors.selectArticleById(articleId))
           .pipe(filter(isDefined)),
       ),
-      switchMap(([{ bookmark }, article]) => {
+      mergeMap(([{ bookmark }, article]) => {
         const updatedArticle: Article = {
           ...article,
           bookmarkDate: bookmark ? moment().toISOString() : null,
@@ -261,7 +270,7 @@ export class ArticlesEffects {
   deleteArticle$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(ArticlesActions.deleteArticleRequested),
-      switchMap(({ article }) =>
+      mergeMap(({ article }) =>
         this.articlesApiService.deleteArticle(article.id).pipe(
           filter(response => response.data === article.id),
           map(() =>

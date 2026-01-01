@@ -3,7 +3,15 @@ import { concatLatestFrom } from '@ngrx/operators';
 import { Store } from '@ngrx/store';
 import moment from 'moment-timezone';
 import { merge, of, timer } from 'rxjs';
-import { catchError, filter, map, switchMap, take } from 'rxjs/operators';
+import {
+  catchError,
+  concatMap,
+  filter,
+  map,
+  mergeMap,
+  switchMap,
+  take,
+} from 'rxjs/operators';
 
 import { Injectable } from '@angular/core';
 
@@ -114,7 +122,7 @@ export class MembersEffects {
         this.store.select(MembersSelectors.selectMemberFormDataById(null)),
         this.store.select(AuthSelectors.selectUser).pipe(filter(isDefined)),
       ]),
-      switchMap(([, formData, user]) => {
+      concatMap(([, formData, user]) => {
         const member: Member = {
           ...formData,
           id: '',
@@ -151,7 +159,7 @@ export class MembersEffects {
         this.store.select(MembersSelectors.selectMemberFormDataById(memberId)),
         this.store.select(AuthSelectors.selectUser).pipe(filter(isDefined)),
       ]),
-      switchMap(([, member, formData, user]) => {
+      concatMap(([, member, formData, user]) => {
         const updatedMember: Member = {
           ...member,
           ...formData,
@@ -182,7 +190,7 @@ export class MembersEffects {
   deleteMember$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(MembersActions.deleteMemberRequested),
-      switchMap(({ member }) =>
+      mergeMap(({ member }) =>
         this.membersApiService.deleteMember(member.id).pipe(
           filter(response => response.data === member.id),
           map(() =>
@@ -203,7 +211,7 @@ export class MembersEffects {
     return this.actions$.pipe(
       ofType(MembersActions.exportMembersToCsvRequested),
       concatLatestFrom(() => this.store.select(AuthSelectors.selectIsAdmin)),
-      switchMap(([, isAdmin]) => {
+      mergeMap(([, isAdmin]) => {
         return this.membersApiService.getAllMembers(isAdmin).pipe(
           map(response => {
             const filename = `members_export_${new Date().toISOString().split('T')[0]}.csv`;
@@ -229,7 +237,7 @@ export class MembersEffects {
       concatLatestFrom(() =>
         this.store.select(AuthSelectors.selectUser).pipe(filter(isDefined)),
       ),
-      switchMap(([{ membersWithNewRatings }, user]) => {
+      concatMap(([{ membersWithNewRatings }, user]) => {
         const updatedMembers: Member[] = membersWithNewRatings.map(
           memberWithNewRatings => {
             const { newRating, newPeakRating, ...member } = memberWithNewRatings;
