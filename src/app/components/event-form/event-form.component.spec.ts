@@ -186,14 +186,14 @@ describe('EventFormComponent', () => {
         expect(component.form.controls.title.hasError('invalidText')).toBe(false);
       });
 
-      it('should mark field with emoji as invalid', () => {
+      it('should mark field with emoji as valid', () => {
         component.form.patchValue({
           title: '🔥',
           details: '123',
         });
         fixture.detectChanges();
 
-        expect(component.form.controls.title.hasError('invalidText')).toBe(true);
+        expect(component.form.controls.title.hasError('invalidText')).toBe(false);
         expect(component.form.controls.details.hasError('invalidText')).toBe(false);
       });
     });

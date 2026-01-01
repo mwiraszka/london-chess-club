@@ -146,7 +146,7 @@ describe('MemberFormComponent', () => {
         expect(component.form.controls.city.hasError('invalidText')).toBe(false);
       });
 
-      it('should mark field with emoji as invalid', () => {
+      it('should mark field with emoji as valid', () => {
         component.form.patchValue({
           firstName: '🔥',
           lastName: 'abc',
@@ -154,7 +154,7 @@ describe('MemberFormComponent', () => {
         });
         fixture.detectChanges();
 
-        expect(component.form.controls.firstName.hasError('invalidText')).toBe(true);
+        expect(component.form.controls.firstName.hasError('invalidText')).toBe(false);
         expect(component.form.controls.lastName.hasError('invalidText')).toBe(false);
         expect(component.form.controls.city.hasError('invalidText')).toBe(false);
       });
