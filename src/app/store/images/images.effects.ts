@@ -7,12 +7,15 @@ import { from, merge, of, timer } from 'rxjs';
 import {
   catchError,
   distinctUntilChanged,
+  exhaustMap,
   filter,
+  groupBy,
   map,
   mergeMap,
   switchMap,
   take,
   tap,
+  timeout,
 } from 'rxjs/operators';
 
 import { Injectable } from '@angular/core';
@@ -28,6 +31,7 @@ import {
   isDefined,
   isExpired,
   isLccError,
+  isPresignedUrlExpired,
   parseError,
 } from '@app/utils';
 
@@ -87,6 +91,7 @@ export class ImagesEffects {
       ofType(ImagesActions.fetchBatchThumbnailsRequested),
       mergeMap(({ imageIds, context }) =>
         this.imagesApiService.getBatchThumbnailImages(imageIds).pipe(
+          timeout(30000),
           map(response =>
             ImagesActions.fetchBatchThumbnailsSucceeded({
               images: response.data,
@@ -190,7 +195,7 @@ export class ImagesEffects {
     ),
   );
 
-  fetchArticleBodyImages$ = createEffect(() => {
+  fetchArticleImages$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(
         ArticlesActions.fetchArticleSucceeded,
@@ -213,25 +218,31 @@ export class ImagesEffects {
 
         return from(articlesToProcess).pipe(
           mergeMap(article =>
-            this.store
-              .select(ImagesSelectors.selectBodyImagesByArticleId(article.id))
-              .pipe(
-                take(1),
-                map(bodyImages => ({ article, bodyImages })),
-              ),
+            this.store.select(ImagesSelectors.selectImageIdsByArticleId(article.id)).pipe(
+              take(1),
+              map(imageIds => ({ article, imageIds })),
+            ),
           ),
         );
       }),
-      mergeMap(({ bodyImages }) => {
-        const imagesToFetch = bodyImages.filter(
-          image =>
-            !image.mainUrl ||
-            (image.urlExpirationDate && isExpired(image.urlExpirationDate)),
-        );
-
-        return from(
-          imagesToFetch.map(image =>
-            ImagesActions.fetchMainImageInBackgroundRequested({ imageId: image.id }),
+      mergeMap(({ imageIds }) => {
+        return from(imageIds).pipe(
+          mergeMap(imageId =>
+            this.store.select(ImagesSelectors.selectImageById(imageId)).pipe(
+              take(1),
+              map(image => ({ imageId, image })),
+            ),
+          ),
+          filter(({ image }) => {
+            return !!(
+              !image ||
+              !image.mainUrl ||
+              isPresignedUrlExpired(image.mainUrl) ||
+              (image.urlExpirationDate && isExpired(image.urlExpirationDate))
+            );
+          }),
+          map(({ imageId }) =>
+            ImagesActions.fetchMainImageInBackgroundRequested({ imageId }),
           ),
         );
       }),
@@ -241,16 +252,22 @@ export class ImagesEffects {
   fetchMainImage$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(ImagesActions.fetchMainImageRequested),
-      mergeMap(({ imageId }) =>
-        this.imagesApiService.getMainImage(imageId).pipe(
-          map(response =>
-            ImagesActions.fetchMainImageSucceeded({ image: response.data }),
-          ),
-          catchError(error =>
-            of(
-              ImagesActions.fetchMainImageFailed({
-                error: parseError(error),
-              }),
+      groupBy(({ imageId }) => imageId),
+      mergeMap(group$ =>
+        group$.pipe(
+          exhaustMap(({ imageId }) =>
+            this.imagesApiService.getMainImage(imageId).pipe(
+              timeout(30000),
+              map(response =>
+                ImagesActions.fetchMainImageSucceeded({ image: response.data }),
+              ),
+              catchError(error =>
+                of(
+                  ImagesActions.fetchMainImageFailed({
+                    error: parseError(error),
+                  }),
+                ),
+              ),
             ),
           ),
         ),
@@ -261,16 +278,22 @@ export class ImagesEffects {
   fetchMainImageInBackground$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(ImagesActions.fetchMainImageInBackgroundRequested),
-      mergeMap(({ imageId }) =>
-        this.imagesApiService.getMainImage(imageId, true).pipe(
-          map(response =>
-            ImagesActions.fetchMainImageSucceeded({ image: response.data }),
-          ),
-          catchError(error =>
-            of(
-              ImagesActions.fetchMainImageFailed({
-                error: parseError(error),
-              }),
+      groupBy(({ imageId }) => imageId),
+      mergeMap(group$ =>
+        group$.pipe(
+          exhaustMap(({ imageId }) =>
+            this.imagesApiService.getMainImage(imageId, true).pipe(
+              timeout(30000),
+              map(response =>
+                ImagesActions.fetchMainImageSucceeded({ image: response.data }),
+              ),
+              catchError(error =>
+                of(
+                  ImagesActions.fetchMainImageFailed({
+                    error: parseError(error),
+                  }),
+                ),
+              ),
             ),
           ),
         ),
