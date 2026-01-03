@@ -130,6 +130,7 @@ export const imagesReducer = createReducer(
               ...image,
               mainUrl: originalEntity?.image.mainUrl,
               thumbnailUrl: originalEntity?.image.thumbnailUrl,
+              urlExpirationDate: originalEntity?.image.urlExpirationDate,
             },
             formData: pick(image, IMAGE_FORM_DATA_PROPERTIES),
           };
@@ -153,6 +154,8 @@ export const imagesReducer = createReducer(
             image: {
               ...image,
               mainUrl: originalEntity?.image.mainUrl,
+              urlExpirationDate:
+                image.urlExpirationDate ?? originalEntity?.image.urlExpirationDate,
             },
             formData: pick(image, IMAGE_FORM_DATA_PROPERTIES),
           };
@@ -180,6 +183,8 @@ export const imagesReducer = createReducer(
             image: {
               ...image,
               mainUrl: originalEntity?.image.mainUrl,
+              urlExpirationDate:
+                image.urlExpirationDate ?? originalEntity?.image.urlExpirationDate,
             },
             formData: pick(image, IMAGE_FORM_DATA_PROPERTIES),
           };
@@ -212,6 +217,8 @@ export const imagesReducer = createReducer(
         image: {
           ...image,
           mainUrl: image.mainUrl ?? originalEntity?.image.mainUrl,
+          urlExpirationDate:
+            image.urlExpirationDate ?? originalEntity?.image.urlExpirationDate,
         },
         formData: originalEntity?.formData ?? pick(image, IMAGE_FORM_DATA_PROPERTIES),
       },
@@ -246,6 +253,8 @@ export const imagesReducer = createReducer(
             ...image,
             mainUrl: image.mainUrl ?? originalEntity?.image.mainUrl,
             thumbnailUrl: image.thumbnailUrl ?? originalEntity?.image.thumbnailUrl,
+            urlExpirationDate:
+              image.urlExpirationDate ?? originalEntity?.image.urlExpirationDate,
           },
           formData: pick(image, IMAGE_FORM_DATA_PROPERTIES),
         };
@@ -264,10 +273,15 @@ export const imagesReducer = createReducer(
   on(
     ImagesActions.updateImageSucceeded,
     ImagesActions.automaticAlbumCoverSwitchSucceeded,
-    (state, { baseImage }): ImagesState =>
-      imagesAdapter.upsertOne(
+    (state, { baseImage }): ImagesState => {
+      const originalEntity = baseImage ? state.entities[baseImage.id] : null;
+
+      return imagesAdapter.upsertOne(
         {
-          image: baseImage,
+          image: {
+            ...originalEntity?.image,
+            ...baseImage,
+          } as Image,
           formData: pick(baseImage, IMAGE_FORM_DATA_PROPERTIES),
         },
         {
@@ -277,7 +291,8 @@ export const imagesReducer = createReducer(
           lastAlbumCoversFetch: null,
           lastMetadataFetch: null,
         },
-      ),
+      );
+    },
   ),
 
   on(

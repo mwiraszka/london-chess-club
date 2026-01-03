@@ -2,17 +2,17 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';
 import { routerNavigatedAction } from '@ngrx/router-store';
 import { Store } from '@ngrx/store';
-import { filter, map, switchMap, tap } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 
 import { Injectable } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 
 import { DialogService } from '@app/services';
 import { AppActions } from '@app/store/app';
-import { ArticlesActions, ArticlesSelectors } from '@app/store/articles';
+import { ArticlesActions } from '@app/store/articles';
 import { AuthActions } from '@app/store/auth';
 import { EventsActions } from '@app/store/events';
-import { ImagesActions, ImagesSelectors } from '@app/store/images';
+import { ImagesActions } from '@app/store/images';
 import { MembersActions } from '@app/store/members';
 import { isCollectionId, isDefined, isEntity, isString } from '@app/utils';
 
@@ -244,25 +244,6 @@ export class NavEffects {
             });
         }
       }),
-    ),
-  );
-
-  fetchImageForArticleViewRoute$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(routerNavigatedAction),
-      map(({ payload }) => payload.event.url),
-      filter(currentPath => currentPath.startsWith('/article/view/')),
-      map(currentPath => currentPath.split('/article/view/')[1]),
-      filter(isDefined),
-      switchMap(articleId =>
-        this.store.select(ArticlesSelectors.selectArticleById(articleId)).pipe(
-          filter(isDefined),
-          map(article => article.bannerImageId),
-          concatLatestFrom(id => this.store.select(ImagesSelectors.selectImageById(id))),
-          filter(([, image]) => !image?.mainUrl),
-          map(([imageId]) => ImagesActions.fetchMainImageRequested({ imageId })),
-        ),
-      ),
     ),
   );
 

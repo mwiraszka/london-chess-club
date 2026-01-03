@@ -234,3 +234,31 @@ export const selectBodyImagesByArticleId = (articleId: Id | null) =>
       return allImages.filter(image => uniqueIds.includes(image.id));
     },
   );
+
+export const selectImageIdsByArticleId = (articleId: Id | null) =>
+  createSelector(
+    ArticlesSelectors.selectArticleById(articleId),
+    ArticlesSelectors.selectArticleFormDataById(articleId),
+    (article, articleFormData) => {
+      const body = articleFormData.body || article?.body || '';
+      const bannerImageId = articleFormData.bannerImageId || article?.bannerImageId;
+
+      const imagePattern = /{{{([^}]+)}}}/g;
+      const imageIds: Id[] = [];
+
+      if (bannerImageId) {
+        imageIds.push(bannerImageId);
+      }
+
+      let match: RegExpExecArray | null;
+      while ((match = imagePattern.exec(body)) !== null) {
+        const content = match[1];
+        const idMatch = content.match(/[a-f\d]{24}/);
+        if (idMatch) {
+          imageIds.push(idMatch[0]);
+        }
+      }
+
+      return uniq(imageIds);
+    },
+  );

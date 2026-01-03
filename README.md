@@ -14,6 +14,13 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 | 🔧  | Behind-the-scenes changes         |
 
 <details>
+<summary>v5.11.6 - January 3rd, 2026</summary>
+
+- 🐛 Fix some more issues with article images
+
+</details>
+
+<details>
 <summary>v5.11.5 - January 1st, 2026</summary>
 
 - 🐛 Fix a few more issues with embedded images in articles
