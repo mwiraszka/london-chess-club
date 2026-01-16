@@ -56,11 +56,12 @@ $breakpoints: (
   $raw-query: map.get($breakpoints, $breakpoint);
 
   @if $raw-query {
-    $query: if(
-      meta.type-of($raw-query) == 'string',
-      meta.unquote($raw-query),
-      meta.inspect($raw-query)
-    );
+    $query: null;
+    @if meta.type-of($raw-query) == 'string' {
+      $query: meta.unquote($raw-query);
+    } @else {
+      $query: meta.inspect($raw-query);
+    }
 
     @media #{$query} {
       @content;

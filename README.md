@@ -17,6 +17,7 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 <summary>v5.11.7 - January TBD, 2026</summary>
 
 - 🔧 Update all Angular packages and build tools from 21.0.x to 21.1.0
+- 🔧 Replace deprecated Sass ternary `if()` expression with `@if/@else` blocks
 - 🔧 Security updates
 
 </details>
