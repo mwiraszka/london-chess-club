@@ -14,6 +14,17 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 | 🔧  | Behind-the-scenes changes         |
 
 <details>
+<summary>v5.11.7 - January 17th, 2026</summary>
+
+- 🚀 Add PGNs for 2025 LCC Championship
+- 🚀 Improve table layout in articles
+- 🔧 Update all Angular packages and build tools from 21.0.x to 21.1.0
+- 🔧 Replace deprecated Sass ternary `if()` expression with `@if/@else` blocks
+- 🔧 Security updates
+
+</details>
+
+<details>
 <summary>v5.11.6 - January 3rd, 2026</summary>
 
 - 🐛 Fix some more issues with article images

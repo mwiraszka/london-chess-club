@@ -98,7 +98,7 @@ export class MarkdownRendererComponent implements AfterViewInit, OnChanges {
     // Regular expression to match {{{src}}}(((width)))<<<caption>>> (width and caption optional)
     const imagePattern = /{{{([^}]+)}}}(?:\(\(\(([^)]*)\)\)\))?(?:<<<([\s\S]*?)>>>)?/g;
 
-    return text.replace(imagePattern, (match, src, width, caption) => {
+    return text.replace(imagePattern, (_, src, width, caption) => {
       const imageId = isCollectionId(src) ? src : src.match(/[a-f\d]{24}/)?.[0];
       const image = imageId ? this.images.find(img => img.id === imageId) : null;
 
@@ -129,8 +129,37 @@ export class MarkdownRendererComponent implements AfterViewInit, OnChanges {
 
           const wrapperElement = this._document.createElement('div');
           wrapperElement.classList.add('lcc-table-wrapper');
+
           tableElement?.parentNode?.insertBefore(wrapperElement, tableElement);
           wrapperElement.appendChild(tableElement);
+
+          // Check if first header cell is '#'
+          const firstHeaderCell = tableElement.querySelector('thead th:first-child');
+          const shouldApplyStickyColumns = firstHeaderCell?.textContent?.trim() === '#';
+
+          if (shouldApplyStickyColumns) {
+            wrapperElement.classList.add('lcc-has-sticky-columns');
+            const updateColumnWidths = () => {
+              const wrapperWidth = wrapperElement.offsetWidth || 0;
+              const col2Width = Math.max(140, wrapperWidth - 570);
+              wrapperElement.style.setProperty('--lcc-sticky-col-1-width', '52px');
+              wrapperElement.style.setProperty(
+                '--lcc-sticky-col-2-width',
+                `${col2Width}px`,
+              );
+            };
+
+            // Initial calculation after insertion
+            requestAnimationFrame(() => {
+              updateColumnWidths();
+            });
+
+            // Watch for size changes
+            const resizeObserver = new ResizeObserver(() => {
+              updateColumnWidths();
+            });
+            resizeObserver.observe(wrapperElement);
+          }
         }
       });
     }
