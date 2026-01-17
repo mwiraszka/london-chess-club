@@ -3595,7 +3595,7 @@ Qa5+ Ke8 15. Qa4+ Kd8 16. Qa5+ Rc7 17. Qd5+ Rd7 18. Qxd4 Rxd4 19. Be2 Bg6
 [Site "?"]
 [Date "2025.12.04"]
 [Round "1"]
-[White "Narirov, Martin"]
+[White "Nazirov, Martin"]
 [Black "Tongarlak, Tarik"]
 [Result "1-0"]
 [WhiteElo "1857"]
@@ -3612,6 +3612,27 @@ Nf6 9. Qb3 Qd7 10. Ng5 Bh5 11. Be3 Bxe3 12. fxe3 h6 13. Nh3 O-O 14. Nd2 Bg4
 33. Rgg1 bxa4 34. Bxf7 d5 35. Qg2 Ng5 36. Rf3 Ra7 37. Qxg5 Rfxf7 38. Rh3
 Rf6 39. dxe5 Re6 40. Qf5 Rae7 41. Qf8+ Kh7 42. Rxh6+ Rxh6 43. Qxe7 Rg6 44.
 Qh4+ Rh6 45. Qg5 g6 46. Qe7+ Kg8 47. Rf1 Rxh2+ 48. Kxh2 Qb2+ 49. Kg3 1-0
+
+`,`[Event "2025 London Ch B MATCH"]
+[Site "?"]
+[Date "2025.12.11"]
+[Round "2"]
+[White "Tongarlak, Tarik"]
+[Black "Nazirov, Martin"]
+[Result "1/2-1/2"]
+[WhiteElo "1817"]
+[BlackElo "1857"]
+[ECO "D30"]
+[EventDate "2025.??.??"]
+[PlyCount "80"]
+
+1. d4 d5 2. c4 e6 3. Nf3 Nf6 4. e3 c6 5. Be2 Bd6 6. O-O O-O 7. Nc3 Nbd7 8.
+b3 Bc7 9. Bb2 e5 10. dxe5 Nxe5 11. Na4 Nxf3+ 12. Bxf3 Qd6 13. g3 Bh3 14.
+Bg2 Bxg2 15. Kxg2 Ne4 16. Qd4 Qg6 17. Nc3 Rfe8 18. cxd5 Bb6 19. Qc4 Nd2 20.
+Qb4 Nxf1 21. Rxf1 Qc2 22. Bc1 Bxe3 23. Bxe3 Rxe3 24. Qxb7 Rae8 25. Qxc6 Rf8
+26. Nb5 Qe4+ 27. Kg1 Rd3 28. Nxa7 Rxd5 29. Nc8 Rfd8 30. Nb6 Re5 31. Qxe4
+Rxe4 32. Rc1 Kf8 33. Rc6 Re2 34. a4 Rb2 35. a5 Rxb3 36. a6 Ke7 37. a7 Ra3
+38. a8=Q Rdxa8 39. Nxa8 Rxa8 40. Rc7+ Kf6 1/2-1/2
 
 `,`[Event "2025 London Ch C MATCH"]
 [Site "?"]
@@ -3636,6 +3657,64 @@ Ra6 27. f3 Nd6 28. Re2 Rb8 29. Rb1 Nb5 30. Nxb5 Rxb5 31. Kg2 Ra3 32. Rc1 a5
 Kc2 e4 46. Kb2 e3 47. Ra1 f3 48. Kc2 d3+ 49. Kc3 f2 50. g5 fxg5 51. h6 gxh6
 52. Kb2 e2 0-1
 
+`,`[Event "2025 London Ch C MATCH"]
+[Site "?"]
+[Date "2025.12.11"]
+[Round "2"]
+[White "Ortiz, Hugo"]
+[Black "Collrin, Jack"]
+[Result "0-1"]
+[WhiteElo "1654"]
+[BlackElo "1626"]
+[ECO "D02"]
+[EventDate "2025.??.??"]
+[PlyCount "98"]
+
+1. d4 d5 2. Nf3 e6 3. Bf4 Bd6 4. e3 Bxf4 5. exf4 Nf6 6. Bd3 Qd6 7. Ne5 Qb4+
+8. Nc3 Qxb2 9. Nb5 Qb4+ 10. c3 Qe7 11. a4 c6 12. Na3 Nbd7 13. Nc2 c5 14.
+Ne3 cxd4 15. cxd4 Qb4+ 16. Qd2 Qxd4 17. O-O Qxf4 18. Nf3 d4 19. Qb4 a5 20.
+Qxd4 Qxd4 21. Nxd4 O-O 22. Rfc1 Nb6 23. Nb5 Bd7 24. g3 Bxb5 25. Bxb5 Rac8
+26. Rcb1 Nbd5 27. Nd1 Nc3 28. Nxc3 Rxc3 29. Bf1 Rc7 30. Rb5 Ra8 31. Rab1
+Nd7 32. R5b2 b6 33. Bb5 Nc5 34. Kg2 Rd8 35. Rc2 Na6 36. Re2 Nb4 37. h3 g6
+38. h4 Rc2 39. Kf3 Rxe2 40. Kxe2 Kg7 41. Rc1 Rd6 42. Rc7 Nd5 43. Rc8 Nf6
+44. Kf3 h5 45. Rc7 Rd2 46. Rc6 Nd5 47. Rc8 Kf6 48. Rd8 Rb2 49. Rd7 Nc3 0-1
+
+`,`[Event "2025 London Ch C MATCH playoff"]
+[Site "?"]
+[Date "2026.01.15"]
+[Round "1"]
+[White "Ortiz, Hugo"]
+[Black "Collrin, Jack"]
+[Result "0-1"]
+[WhiteElo "1653"]
+[BlackElo "1627"]
+[ECO "D02"]
+[EventDate "2026.??.??"]
+[PlyCount "58"]
+
+1. d4 d5 2. Nf3 Nf6 3. Bf4 e6 4. e3 Bd6 5. Bg3 Nbd7 6. Nbd2 Qe7 7. Bd3 e5
+8. dxe5 Bxe5 9. Nxe5 Nxe5 10. Be2 Bf5 11. a3 O-O 12. O-O Rad8 13. Nf3 Nxf3+
+14. Bxf3 Be4 15. c3 c6 16. h3 Nd7 17. Be2 Qc5 18. Qb3 Nb6 19. Rfd1 Qa5 20.
+Bd3 Bxd3 21. Rxd3 c5 22. Qc2 Qb5 23. Bc7 Rd7 24. Bxb6 Qxb6 25. Rad1 Rfd8
+26. Qe2 h6 27. Qc2 Qg6 28. Qa4 a6 29. Qb3 c4 0-1
+
+`,`[Event "2025 London Ch C MATCH playoff"]
+[Site "?"]
+[Date "2026.01.15"]
+[Round "2"]
+[White "Collrin, Jack"]
+[Black "Ortiz, Hugo"]
+[Result "1-0"]
+[WhiteElo "1627"]
+[BlackElo "1653"]
+[ECO "B13"]
+[EventDate "2026.??.??"]
+[PlyCount "37"]
+
+1. e4 c6 2. d4 d5 3. exd5 cxd5 4. Nc3 Nf6 5. Nf3 Nc6 6. Bb5 a6 7. Bxc6+
+bxc6 8. O-O Bg4 9. h3 Bh5 10. Bf4 e6 11. Qd3 Be7 12. Ne5 Rc8 13. Qxa6 c5
+14. Nc6 Qd7 15. Nxe7 Kxe7 16. Nb5 Rc6 17. Qa3 Ne8 18. Na7 Rb6 19. Qxc5+ 1-0
+
 `,`[Event "2025 London Ch D MATCH"]
 [Site "?"]
 [Date "2025.12.04"]
@@ -3659,5 +3738,24 @@ Kc2 e4 46. Kb2 e3 47. Ra1 f3 48. Kc2 d3+ 49. Kc3 f2 50. g5 fxg5 51. h6 gxh6
 44. Kf3 Kf6 45. Ng4+ Kf5 46. c4 Ke6 47. cxd5+ Kxd5 48. h6 Kxd4 49. h7 Kd3
 50. h8=Q Kc2 51. Qh7+ Kb2 52. Qxc7 Kxa2 53. Qxb6 a4 54. bxa4 Ka3 55. a5 Ka2
 56. a6 Ka3 57. a7 Ka4 58. a8=Q# 1-0
+
+`,`[Event "2025 London Ch D MATCH"]
+[Site "?"]
+[Date "2025.12.11"]
+[Round "2"]
+[White "Kittur, Dhruv"]
+[Black "Prabhu, Mithun"]
+[Result "0-1"]
+[WhiteElo "1563"]
+[BlackElo "1535"]
+[ECO "C50"]
+[EventDate "2025.??.??"]
+[PlyCount "52"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bc4 Nd4 4. Nxd4 exd4 5. O-O Nf6 6. Qf3 Bd6 7. Re1
+O-O 8. e5 Re8 9. Kf1 Bxe5 10. c3 d5 11. cxd4 Ne4 12. Qd3 Bxd4 13. Bxd5 Qxd5
+14. f3 Qf5 15. Rxe4 Rxe4 16. Qxe4 Qb5+ 17. d3 Bxb2 18. Na3 Bxa3 19. Bxa3
+Bf5 20. Qe3 Bxd3+ 21. Kf2 Re8 22. Qxa7 Qe5 23. Qxb7 Qe3+ 24. Kg3 Qg5+ 25.
+Kf2 Re2+ 26. Kg1 Qxg2# 0-1
 
 `];
