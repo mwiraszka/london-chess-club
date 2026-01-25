@@ -50,12 +50,6 @@ bootstrapApplication(AppComponent, {
       MarkdownModule.forRoot(),
       MembersStoreModule,
       NavStoreModule,
-      StoreDevtoolsModule.instrument({
-        name: 'London Chess Club - NgRx Store DevTools',
-        logOnly: environment.production,
-        maxAge: 100,
-        actionSanitizer,
-      }),
       StoreModule.forRoot<MetaState, Action<string>>(
         { routerState: routerReducer },
         {
@@ -66,6 +60,12 @@ bootstrapApplication(AppComponent, {
           },
         },
       ),
+      StoreDevtoolsModule.instrument({
+        name: 'London Chess Club - NgRx Store DevTools',
+        logOnly: environment.production,
+        maxAge: 100,
+        actionSanitizer,
+      }),
       StoreRouterConnectingModule.forRoot(),
     ),
     provideHttpClient(withInterceptorsFromDi(), withJsonpSupport()),

@@ -43,6 +43,7 @@ describe('UserSettingsMenuComponent', () => {
     store.overrideSelector(AuthSelectors.selectUser, null);
     store.overrideSelector(AppSelectors.selectIsDarkMode, false);
     store.overrideSelector(AppSelectors.selectIsSafeMode, true);
+    store.overrideSelector(AppSelectors.selectIsDesktopView, false);
 
     closeSpy = jest.spyOn(component.close, 'emit');
     dispatchSpy = jest.spyOn(store, 'dispatch');

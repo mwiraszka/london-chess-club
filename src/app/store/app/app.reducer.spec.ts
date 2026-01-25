@@ -18,6 +18,7 @@ describe('App Reducer', () => {
       expect(initialState).toEqual({
         isDarkMode: expect.any(Boolean),
         isSafeMode: false,
+        isDesktopView: false,
         bannerLastCleared: null,
         showUpcomingEventBanner: true,
       });
@@ -69,6 +70,48 @@ describe('App Reducer', () => {
 
       expect(state.isSafeMode).toBe(true);
       expect(state.showUpcomingEventBanner).toBe(false);
+    });
+  });
+
+  describe('desktopViewToggled', () => {
+    it('should toggle isDesktopView from false to true', () => {
+      const previousState: AppState = {
+        ...initialState,
+        isDesktopView: false,
+      };
+
+      const action = AppActions.desktopViewToggled();
+      const state = appReducer(previousState, action);
+
+      expect(state.isDesktopView).toBe(true);
+      expect(state).not.toBe(previousState);
+    });
+
+    it('should toggle isDesktopView from true to false', () => {
+      const previousState: AppState = {
+        ...initialState,
+        isDesktopView: true,
+      };
+
+      const action = AppActions.desktopViewToggled();
+      const state = appReducer(previousState, action);
+
+      expect(state.isDesktopView).toBe(false);
+    });
+
+    it('should preserve other state properties', () => {
+      const previousState: AppState = {
+        ...initialState,
+        isDesktopView: false,
+        isDarkMode: true,
+        isSafeMode: true,
+      };
+
+      const action = AppActions.desktopViewToggled();
+      const state = appReducer(previousState, action);
+
+      expect(state.isDarkMode).toBe(true);
+      expect(state.isSafeMode).toBe(true);
     });
   });
 

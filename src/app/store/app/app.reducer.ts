@@ -8,6 +8,7 @@ import * as AppActions from './app.actions';
 export interface AppState {
   isDarkMode: boolean;
   isSafeMode: boolean;
+  isDesktopView: boolean;
   bannerLastCleared: IsoDate | null;
   showUpcomingEventBanner: boolean;
 }
@@ -15,6 +16,7 @@ export interface AppState {
 export const initialState: AppState = {
   isDarkMode: window.matchMedia('(prefers-color-scheme: dark)').matches,
   isSafeMode: false,
+  isDesktopView: false,
   bannerLastCleared: null,
   showUpcomingEventBanner: true,
 };
@@ -35,6 +37,14 @@ export const appReducer = createReducer(
     (state): AppState => ({
       ...state,
       isSafeMode: !state.isSafeMode,
+    }),
+  ),
+
+  on(
+    AppActions.desktopViewToggled,
+    (state): AppState => ({
+      ...state,
+      isDesktopView: !state.isDesktopView,
     }),
   ),
 

@@ -84,6 +84,7 @@ export class UpcomingEventBannerComponent implements AfterViewInit, OnDestroy {
 
   protected shouldAnimate = false;
   protected animationDuration = 20;
+  protected isOnSchedulePage = computed(() => this.currentUrl() === '/schedule');
 
   private readonly currentUrl = toSignal(
     this.router.events.pipe(
@@ -92,7 +93,6 @@ export class UpcomingEventBannerComponent implements AfterViewInit, OnDestroy {
     ),
     { initialValue: this.router.url },
   );
-  protected readonly isOnSchedulePage = computed(() => this.currentUrl() === '/schedule');
 
   private resizeObserver?: ResizeObserver;
 

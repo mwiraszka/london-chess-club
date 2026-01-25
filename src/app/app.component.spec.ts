@@ -71,6 +71,7 @@ describe('AppComponent', () => {
 
     store.overrideSelector(AppSelectors.selectBannerLastCleared, null);
     store.overrideSelector(AppSelectors.selectIsDarkMode, false);
+    store.overrideSelector(AppSelectors.selectIsDesktopView, false);
     store.overrideSelector(AppSelectors.selectIsLoading, false);
     store.overrideSelector(EventsSelectors.selectNextEvent, MOCK_EVENTS[0]);
     store.overrideSelector(AppSelectors.selectShowUpcomingEventBanner, false);
@@ -129,6 +130,7 @@ describe('AppComponent', () => {
         bannerLastCleared: null,
         isDarkMode: false,
         isLoading: false,
+        isDesktopView: false,
         nextEvent: MOCK_EVENTS[0],
         showUpcomingEventBanner: false,
       });

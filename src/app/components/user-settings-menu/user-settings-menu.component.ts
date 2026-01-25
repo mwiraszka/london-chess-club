@@ -19,6 +19,7 @@ import { TooltipDirective } from '@app/directives/tooltip.directive';
 import { User } from '@app/models';
 import { AppActions, AppSelectors } from '@app/store/app';
 import { AuthActions, AuthSelectors } from '@app/store/auth';
+import { isTouchDevice } from '@app/utils';
 
 @UntilDestroy()
 @Component({
@@ -29,13 +30,15 @@ import { AuthActions, AuthSelectors } from '@app/store/auth';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserSettingsMenuComponent implements OnInit {
+  @Output() public readonly close = new EventEmitter<void>();
+
+  public isTouchDevice = isTouchDevice();
   public viewModel$?: Observable<{
     user: User | null;
     isDarkMode: boolean;
     isSafeMode: boolean;
+    isDesktopView: boolean;
   }>;
-
-  @Output() public readonly close = new EventEmitter<void>();
 
   constructor(
     private readonly router: Router,
@@ -47,12 +50,14 @@ export class UserSettingsMenuComponent implements OnInit {
       this.store.select(AuthSelectors.selectUser),
       this.store.select(AppSelectors.selectIsDarkMode),
       this.store.select(AppSelectors.selectIsSafeMode),
+      this.store.select(AppSelectors.selectIsDesktopView),
     ]).pipe(
       untilDestroyed(this),
-      map(([user, isDarkMode, isSafeMode]) => ({
+      map(([user, isDarkMode, isSafeMode, isDesktopView]) => ({
         user,
         isDarkMode,
         isSafeMode,
+        isDesktopView,
       })),
     );
   }
@@ -63,6 +68,10 @@ export class UserSettingsMenuComponent implements OnInit {
 
   public onToggleSafeMode(): void {
     this.store.dispatch(AppActions.safeModeToggled());
+  }
+
+  public onToggleDesktopView(): void {
+    this.store.dispatch(AppActions.desktopViewToggled());
   }
 
   public onRefreshData(): void {

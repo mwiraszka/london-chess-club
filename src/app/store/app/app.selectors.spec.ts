@@ -7,6 +7,7 @@ describe('App Selectors', () => {
   const mockAppState: AppState = {
     isDarkMode: true,
     isSafeMode: false,
+    isDesktopView: false,
     bannerLastCleared: '2025-01-15T10:30:00.000Z',
     showUpcomingEventBanner: false,
   };
@@ -272,6 +273,25 @@ describe('App Selectors', () => {
       const result = AppSelectors.selectBannerLastCleared.projector(state);
 
       expect(result).toBeNull();
+    });
+  });
+
+  describe('selectIsDesktopView', () => {
+    it('should select isDesktopView when false', () => {
+      const result = AppSelectors.selectIsDesktopView.projector(mockAppState);
+
+      expect(result).toBe(false);
+    });
+
+    it('should select isDesktopView when true', () => {
+      const state: AppState = {
+        ...mockAppState,
+        isDesktopView: true,
+      };
+
+      const result = AppSelectors.selectIsDesktopView.projector(state);
+
+      expect(result).toBe(true);
     });
   });
 });
