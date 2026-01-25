@@ -20,6 +20,20 @@
       </lcc-toggle-switch>
     </li>
 
+    @if (isTouchDevice) {
+      <li class="menu-item desktop-view-toggle">
+        <span>Desktop view</span>
+        <lcc-toggle-switch
+          iconWhenOff="phone_iphone"
+          iconWhenOn="desktop_windows"
+          [switchedOn]="vm.isDesktopView"
+          tooltipWhenOff="Enable desktop view"
+          tooltipWhenOn="Disable desktop view"
+          (toggle)="onToggleDesktopView()">
+        </lcc-toggle-switch>
+      </li>
+    }
+
     <li
       class="menu-item refresh-data"
       [tooltip]="refreshDataTooltipContent">

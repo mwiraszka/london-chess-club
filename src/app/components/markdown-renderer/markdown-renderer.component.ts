@@ -12,6 +12,7 @@ import {
   Inject,
   Input,
   OnChanges,
+  OnDestroy,
   Renderer2,
   SimpleChanges,
 } from '@angular/core';
@@ -45,13 +46,15 @@ import { isCollectionId } from '@app/utils';
   imports: [KebabCasePipe, MarkdownComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MarkdownRendererComponent implements AfterViewInit, OnChanges {
+export class MarkdownRendererComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() public data?: string;
   @Input() public images: Image[] = [];
 
   public currentPath: string;
   public headings: string[] = [];
   public processedData?: string;
+
+  private resizeObservers: ResizeObserver[] = [];
 
   constructor(
     @Inject(DOCUMENT) private _document: Document,
@@ -92,6 +95,10 @@ export class MarkdownRendererComponent implements AfterViewInit, OnChanges {
         .pipe(untilDestroyed(this))
         .subscribe(fragment => this.scrollToAnchor(fragment));
     });
+  }
+
+  public ngOnDestroy(): void {
+    this.resizeObservers.forEach(observer => observer.disconnect());
   }
 
   private preprocessImages(text: string): string {
@@ -159,6 +166,7 @@ export class MarkdownRendererComponent implements AfterViewInit, OnChanges {
               updateColumnWidths();
             });
             resizeObserver.observe(wrapperElement);
+            this.resizeObservers.push(resizeObserver);
           }
         }
       });

@@ -1,6 +1,6 @@
 import { provideMockActions } from '@ngrx/effects/testing';
 import { routerNavigatedAction } from '@ngrx/router-store';
-import { Action, createSelector } from '@ngrx/store';
+import { Action } from '@ngrx/store';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { ReplaySubject } from 'rxjs';
 

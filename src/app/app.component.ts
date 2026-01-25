@@ -79,6 +79,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   public viewModel$?: Observable<{
     bannerLastCleared: IsoDate | null;
     isDarkMode: boolean;
+    isDesktopView: boolean;
     isLoading: boolean;
     nextEvent: Event | null;
     showUpcomingEventBanner: boolean;
@@ -103,6 +104,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.viewModel$ = combineLatest([
       this.store.select(AppSelectors.selectBannerLastCleared),
       this.store.select(AppSelectors.selectIsDarkMode),
+      this.store.select(AppSelectors.selectIsDesktopView),
       this.store.select(AppSelectors.selectIsLoading),
       this.store.select(EventsSelectors.selectNextEvent),
       this.store.select(AppSelectors.selectShowUpcomingEventBanner),
@@ -112,21 +114,30 @@ export class AppComponent implements OnInit, AfterViewInit {
         ([
           bannerLastCleared,
           isDarkMode,
+          isDesktopView,
           isLoading,
           nextEvent,
           showUpcomingEventBanner,
         ]) => ({
           bannerLastCleared,
           isDarkMode,
+          isDesktopView,
           isLoading,
           nextEvent,
           showUpcomingEventBanner,
         }),
       ),
-      tap(({ isDarkMode }) =>
-        this._document.body.setAttribute('data-theme', isDarkMode ? 'dark' : 'light'),
-      ),
+      tap(({ isDarkMode }) => {
+        this._document.body.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
+      }),
     );
+
+    this.store
+      .select(AppSelectors.selectIsDesktopView)
+      .pipe(untilDestroyed(this))
+      .subscribe(isDesktopView => {
+        this.updateViewportForDesktopView(isDesktopView);
+      });
   }
 
   public ngAfterViewInit(): void {
@@ -166,5 +177,23 @@ export class AppComponent implements OnInit, AfterViewInit {
         filter(fragment => !fragment),
       )
       .subscribe(() => this.mainElement.nativeElement.scrollTo({ top: 0 }));
+  }
+
+  private updateViewportForDesktopView(isDesktopView: boolean): void {
+    const viewport = this._document.querySelector('meta[name="viewport"]');
+    if (!viewport) {
+      return;
+    }
+
+    if (isDesktopView) {
+      const targetWidth = 1200;
+      const scale = window.innerWidth / targetWidth;
+      viewport.setAttribute(
+        'content',
+        `width=${targetWidth}, initial-scale=${scale}, minimum-scale=${scale}, maximum-scale=3.0, user-scalable=yes`,
+      );
+    } else {
+      viewport.setAttribute('content', 'width=device-width, initial-scale=1.0');
+    }
   }
 }
