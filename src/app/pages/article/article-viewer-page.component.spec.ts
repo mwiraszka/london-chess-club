@@ -14,6 +14,7 @@ import { MOCK_ARTICLES } from '@app/mocks/articles.mock';
 import { MOCK_IMAGES } from '@app/mocks/images.mock';
 import { Article, Image } from '@app/models';
 import { DialogService, MetaAndTitleService } from '@app/services';
+import { AppState, initialState as appInitialState } from '@app/store/app';
 import {
   ArticlesActions,
   ArticlesState,
@@ -34,6 +35,7 @@ class MockArticleComponent {
   @Input({ required: true }) article!: Article;
   @Input({ required: true }) bannerImage!: Image | null;
   @Input() bodyImages: Image[] = [];
+  @Input() isWideView = false;
 }
 
 describe('ArticleViewerPageComponent', () => {
@@ -55,6 +57,10 @@ describe('ArticleViewerPageComponent', () => {
   )!;
 
   beforeEach(async () => {
+    const mockAppState: AppState = {
+      ...appInitialState,
+    };
+
     const mockArticlesState: ArticlesState = {
       ...articlesInitialState,
       ids: [mockArticle.id],
@@ -110,6 +116,7 @@ describe('ArticleViewerPageComponent', () => {
         },
         provideMockStore({
           initialState: {
+            appState: mockAppState,
             articlesState: mockArticlesState,
             authState: mockAuthState,
             imagesState: mockImagesState,
@@ -157,6 +164,7 @@ describe('ArticleViewerPageComponent', () => {
         isAdmin: true,
         bannerImage: mockBannerImage,
         bodyImages: [],
+        isWideView: false,
       });
     });
 

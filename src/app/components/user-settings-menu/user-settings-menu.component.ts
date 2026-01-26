@@ -38,6 +38,7 @@ export class UserSettingsMenuComponent implements OnInit {
     isDarkMode: boolean;
     isSafeMode: boolean;
     isDesktopView: boolean;
+    isWideView: boolean;
   }>;
 
   constructor(
@@ -51,13 +52,15 @@ export class UserSettingsMenuComponent implements OnInit {
       this.store.select(AppSelectors.selectIsDarkMode),
       this.store.select(AppSelectors.selectIsSafeMode),
       this.store.select(AppSelectors.selectIsDesktopView),
+      this.store.select(AppSelectors.selectIsWideView),
     ]).pipe(
       untilDestroyed(this),
-      map(([user, isDarkMode, isSafeMode, isDesktopView]) => ({
+      map(([user, isDarkMode, isSafeMode, isDesktopView, isWideView]) => ({
         user,
         isDarkMode,
         isSafeMode,
         isDesktopView,
+        isWideView,
       })),
     );
   }
@@ -72,6 +75,10 @@ export class UserSettingsMenuComponent implements OnInit {
 
   public onToggleDesktopView(): void {
     this.store.dispatch(AppActions.desktopViewToggled());
+  }
+
+  public onToggleWideView(): void {
+    this.store.dispatch(AppActions.wideViewToggled());
   }
 
   public onRefreshData(): void {

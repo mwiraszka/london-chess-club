@@ -9,6 +9,7 @@ export interface AppState {
   isDarkMode: boolean;
   isSafeMode: boolean;
   isDesktopView: boolean;
+  isWideView: boolean;
   bannerLastCleared: IsoDate | null;
   showUpcomingEventBanner: boolean;
 }
@@ -17,6 +18,7 @@ export const initialState: AppState = {
   isDarkMode: window.matchMedia('(prefers-color-scheme: dark)').matches,
   isSafeMode: false,
   isDesktopView: false,
+  isWideView: false,
   bannerLastCleared: null,
   showUpcomingEventBanner: true,
 };
@@ -45,6 +47,14 @@ export const appReducer = createReducer(
     (state): AppState => ({
       ...state,
       isDesktopView: !state.isDesktopView,
+    }),
+  ),
+
+  on(
+    AppActions.wideViewToggled,
+    (state): AppState => ({
+      ...state,
+      isWideView: !state.isWideView,
     }),
   ),
 

@@ -8,6 +8,10 @@
   padding: 16px;
   background-color: var(--lcc-color--markdownRenderer-background);
 
+  body[data-wide-view='true'] & {
+    max-width: none;
+  }
+
   .table-of-contents {
     text-align: center;
 
@@ -38,7 +42,7 @@
       }
     }
 
-    .lcc-has-sticky-columns table {
+    body[data-wide-view='false'] & .lcc-has-sticky-columns table {
       th:nth-child(1),
       td:nth-child(1) {
         min-width: var(--lcc-sticky-col-1-width);

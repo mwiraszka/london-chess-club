@@ -42,6 +42,8 @@ export const selectIsDesktopView = createSelector(
   state => state.isDesktopView,
 );
 
+export const selectIsWideView = createSelector(selectAppState, state => state.isWideView);
+
 export const selectShowUpcomingEventBanner = createSelector(
   selectAppState,
   state => state.showUpcomingEventBanner,

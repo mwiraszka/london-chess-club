@@ -19,6 +19,7 @@ describe('App Reducer', () => {
         isDarkMode: expect.any(Boolean),
         isSafeMode: false,
         isDesktopView: false,
+        isWideView: false,
         bannerLastCleared: null,
         showUpcomingEventBanner: true,
       });
@@ -154,6 +155,48 @@ describe('App Reducer', () => {
 
       expect(state.isDarkMode).toBe(true);
       expect(state.showUpcomingEventBanner).toBe(false);
+    });
+  });
+
+  describe('wideViewToggled', () => {
+    it('should toggle isWideView from false to true', () => {
+      const previousState: AppState = {
+        ...initialState,
+        isWideView: false,
+      };
+
+      const action = AppActions.wideViewToggled();
+      const state = appReducer(previousState, action);
+
+      expect(state.isWideView).toBe(true);
+      expect(state).not.toBe(previousState);
+    });
+
+    it('should toggle isWideView from true to false', () => {
+      const previousState: AppState = {
+        ...initialState,
+        isWideView: true,
+      };
+
+      const action = AppActions.wideViewToggled();
+      const state = appReducer(previousState, action);
+
+      expect(state.isWideView).toBe(false);
+    });
+
+    it('should preserve other state properties', () => {
+      const previousState: AppState = {
+        ...initialState,
+        isWideView: false,
+        isDarkMode: true,
+        isSafeMode: true,
+      };
+
+      const action = AppActions.wideViewToggled();
+      const state = appReducer(previousState, action);
+
+      expect(state.isDarkMode).toBe(true);
+      expect(state.isSafeMode).toBe(true);
     });
   });
 

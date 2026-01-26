@@ -8,6 +8,7 @@ describe('App Selectors', () => {
     isDarkMode: true,
     isSafeMode: false,
     isDesktopView: false,
+    isWideView: false,
     bannerLastCleared: '2025-01-15T10:30:00.000Z',
     showUpcomingEventBanner: false,
   };
@@ -290,6 +291,24 @@ describe('App Selectors', () => {
       };
 
       const result = AppSelectors.selectIsDesktopView.projector(state);
+
+      expect(result).toBe(true);
+    });
+  });
+  describe('selectIsWideView', () => {
+    it('should return the isWideView state', () => {
+      const result = AppSelectors.selectIsWideView.projector(mockAppState);
+
+      expect(result).toBe(false);
+    });
+
+    it('should return true when isWideView is true', () => {
+      const state: AppState = {
+        ...mockAppState,
+        isWideView: true,
+      };
+
+      const result = AppSelectors.selectIsWideView.projector(state);
 
       expect(result).toBe(true);
     });

@@ -35,6 +35,10 @@
       // Margin needed to prevent scrollbar-gutter style
       // from cutting off page content
       margin: 0 4px;
+
+      body[data-wide-view='true'] & {
+        max-width: none;
+      }
     }
 
     &::ng-deep lcc-footer {

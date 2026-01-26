@@ -80,6 +80,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     bannerLastCleared: IsoDate | null;
     isDarkMode: boolean;
     isDesktopView: boolean;
+    isWideView: boolean;
     isLoading: boolean;
     nextEvent: Event | null;
     showUpcomingEventBanner: boolean;
@@ -105,6 +106,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.store.select(AppSelectors.selectBannerLastCleared),
       this.store.select(AppSelectors.selectIsDarkMode),
       this.store.select(AppSelectors.selectIsDesktopView),
+      this.store.select(AppSelectors.selectIsWideView),
       this.store.select(AppSelectors.selectIsLoading),
       this.store.select(EventsSelectors.selectNextEvent),
       this.store.select(AppSelectors.selectShowUpcomingEventBanner),
@@ -115,6 +117,7 @@ export class AppComponent implements OnInit, AfterViewInit {
           bannerLastCleared,
           isDarkMode,
           isDesktopView,
+          isWideView,
           isLoading,
           nextEvent,
           showUpcomingEventBanner,
@@ -122,6 +125,7 @@ export class AppComponent implements OnInit, AfterViewInit {
           bannerLastCleared,
           isDarkMode,
           isDesktopView,
+          isWideView,
           isLoading,
           nextEvent,
           showUpcomingEventBanner,
@@ -137,6 +141,13 @@ export class AppComponent implements OnInit, AfterViewInit {
       .pipe(untilDestroyed(this))
       .subscribe(isDesktopView => {
         this.updateViewportForDesktopView(isDesktopView);
+      });
+
+    this.store
+      .select(AppSelectors.selectIsWideView)
+      .pipe(untilDestroyed(this))
+      .subscribe(isWideView => {
+        this._document.body.setAttribute('data-wide-view', isWideView ? 'true' : 'false');
       });
   }
 

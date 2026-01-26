@@ -30,7 +30,14 @@ const IGNORED_ERROR_PATTERNS: RegExp[] = [
   /NG0304:.*'lcc-markdown-renderer' is not a known element/, // Markdown renderer in test mocks
   /NG0303:.*Can't bind to 'data' since it isn't a known property of 'lcc-markdown-renderer'/, // Markdown renderer binding in test mocks
   /NG0303:.*Can't bind to 'images' since it isn't a known property of 'lcc-markdown-renderer'/, // Markdown renderer binding in test mocks
+  /NG0303:.*Can't bind to 'isWideView' since it isn't a known property of 'lcc-markdown-renderer'/, // Markdown renderer binding in test mocks
   /NG0303:.*Can't bind to 'disableSanitizer' since it isn't a known property of 'markdown'/, // Markdown renderer binding in test mocks
+  /Cannot read properties of undefined \(reading 'isDarkMode'\)/, // App state selector in tests without mock app state
+  /Cannot read properties of undefined \(reading 'isSafeMode'\)/, // App state selector in tests without mock app state
+  /Cannot read properties of undefined \(reading 'isDesktopView'\)/, // App state selector in tests without mock app state
+  /Cannot read properties of undefined \(reading 'isWideView'\)/, // App state selector in tests without mock app state
+  /Cannot read properties of undefined \(reading 'bannerLastCleared'\)/, // App state selector in tests without mock app state
+  /Cannot read properties of undefined \(reading 'showUpcomingEventBanner'\)/, // App state selector in tests without mock app state
 ];
 
 const IGNORED_WARN_PATTERNS: RegExp[] = [

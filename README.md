@@ -14,6 +14,13 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 | 🔧  | Behind-the-scenes changes         |
 
 <details>
+<summary>v5.11.9 - January 26th, 2026</summary>
+
+- 🚀 Add 'Wide view' toggle option under User Settings to extend content area of pages beyond default limit
+
+</details>
+
+<details>
 <summary>v5.11.8 - January 25th, 2026</summary>
 
 - 🚀 Add 'Desktop view' toggle option under User Settings, which simulates a 1200px-wide screen as if on desktop
