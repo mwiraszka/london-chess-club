@@ -49,6 +49,7 @@ import { isCollectionId } from '@app/utils';
 export class MarkdownRendererComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() public data?: string;
   @Input() public images: Image[] = [];
+  @Input() public isWideView = false;
 
   public currentPath: string;
   public headings: string[] = [];
@@ -142,7 +143,8 @@ export class MarkdownRendererComponent implements AfterViewInit, OnChanges, OnDe
 
           // Check if first header cell is '#'
           const firstHeaderCell = tableElement.querySelector('thead th:first-child');
-          const shouldApplyStickyColumns = firstHeaderCell?.textContent?.trim() === '#';
+          const shouldApplyStickyColumns =
+            firstHeaderCell?.textContent?.trim() === '#' && !this.isWideView;
 
           if (shouldApplyStickyColumns) {
             wrapperElement.classList.add('lcc-has-sticky-columns');

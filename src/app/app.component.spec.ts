@@ -72,6 +72,7 @@ describe('AppComponent', () => {
     store.overrideSelector(AppSelectors.selectBannerLastCleared, null);
     store.overrideSelector(AppSelectors.selectIsDarkMode, false);
     store.overrideSelector(AppSelectors.selectIsDesktopView, false);
+    store.overrideSelector(AppSelectors.selectIsWideView, false);
     store.overrideSelector(AppSelectors.selectIsLoading, false);
     store.overrideSelector(EventsSelectors.selectNextEvent, MOCK_EVENTS[0]);
     store.overrideSelector(AppSelectors.selectShowUpcomingEventBanner, false);
@@ -131,6 +132,7 @@ describe('AppComponent', () => {
         isDarkMode: false,
         isLoading: false,
         isDesktopView: false,
+        isWideView: false,
         nextEvent: MOCK_EVENTS[0],
         showUpcomingEventBanner: false,
       });
@@ -148,6 +150,20 @@ describe('AppComponent', () => {
       fixture.detectChanges();
 
       expect(setAttributeSpy).toHaveBeenCalledWith('data-theme', 'dark');
+    });
+
+    it('should set data-wide-view attribute to false by default', () => {
+      expect(setAttributeSpy).toHaveBeenCalledWith('data-wide-view', 'false');
+    });
+
+    it('should set data-wide-view attribute to true when isWideView is true', () => {
+      store.overrideSelector(AppSelectors.selectIsWideView, true);
+      store.refreshState();
+
+      component.ngOnInit();
+      fixture.detectChanges();
+
+      expect(setAttributeSpy).toHaveBeenCalledWith('data-wide-view', 'true');
     });
   });
 

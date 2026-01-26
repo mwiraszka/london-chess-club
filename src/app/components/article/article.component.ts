@@ -21,5 +21,6 @@ import { FormatDatePipe, TruncateByCharsPipe, WasEditedPipe } from '@app/pipes';
 export class ArticleComponent {
   @Input({ required: true }) article!: Article;
   @Input({ required: true }) bannerImage!: Image | null;
+  @Input({ required: true }) isWideView!: boolean;
   @Input() bodyImages: Image[] = [];
 }

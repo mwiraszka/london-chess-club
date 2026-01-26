@@ -44,6 +44,7 @@ describe('UserSettingsMenuComponent', () => {
     store.overrideSelector(AppSelectors.selectIsDarkMode, false);
     store.overrideSelector(AppSelectors.selectIsSafeMode, true);
     store.overrideSelector(AppSelectors.selectIsDesktopView, false);
+    store.overrideSelector(AppSelectors.selectIsWideView, false);
 
     closeSpy = jest.spyOn(component.close, 'emit');
     dispatchSpy = jest.spyOn(store, 'dispatch');
@@ -70,6 +71,14 @@ describe('UserSettingsMenuComponent', () => {
       component.onToggleSafeMode();
 
       expect(dispatchSpy).toHaveBeenCalledWith(AppActions.safeModeToggled());
+    });
+  });
+
+  describe('onToggleWideView', () => {
+    it('should dispatch wideViewToggled action', () => {
+      component.onToggleWideView();
+
+      expect(dispatchSpy).toHaveBeenCalledWith(AppActions.wideViewToggled());
     });
   });
 

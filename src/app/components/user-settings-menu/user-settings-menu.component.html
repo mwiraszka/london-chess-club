@@ -34,6 +34,18 @@
       </li>
     }
 
+    <li class="menu-item wide-view-toggle">
+      <span>Wide view</span>
+      <lcc-toggle-switch
+        iconWhenOff="zoom_in_map"
+        iconWhenOn="zoom_out_map"
+        [switchedOn]="vm.isWideView"
+        tooltipWhenOff="Enable wide view"
+        tooltipWhenOn="Disable wide view"
+        (toggle)="onToggleWideView()">
+      </lcc-toggle-switch>
+    </li>
+
     <li
       class="menu-item refresh-data"
       [tooltip]="refreshDataTooltipContent">

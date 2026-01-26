@@ -22,6 +22,7 @@ import {
   InternalLink,
 } from '@app/models';
 import { DialogService, MetaAndTitleService } from '@app/services';
+import { AppSelectors } from '@app/store/app';
 import { ArticlesActions, ArticlesSelectors } from '@app/store/articles';
 import { AuthSelectors } from '@app/store/auth';
 import { ImagesSelectors } from '@app/store/images';
@@ -36,7 +37,8 @@ import { isDefined } from '@app/utils';
         [adminControls]="vm.isAdmin ? getAdminControlsConfig(vm.article) : null"
         [article]="vm.article"
         [bannerImage]="vm.bannerImage"
-        [bodyImages]="vm.bodyImages">
+        [bodyImages]="vm.bodyImages"
+        [isWideView]="vm.isWideView">
       </lcc-article>
       <lcc-link-list [links]="[newsPageLink]"></lcc-link-list>
     }
@@ -55,6 +57,7 @@ export class ArticleViewerPageComponent implements OnInit {
     bannerImage: Image | null;
     bodyImages: Image[];
     isAdmin: boolean;
+    isWideView: boolean;
   }>;
 
   constructor(
@@ -76,6 +79,7 @@ export class ArticleViewerPageComponent implements OnInit {
           this.store.select(ImagesSelectors.selectBannerImageByArticleId(articleId)),
           this.store.select(ImagesSelectors.selectBodyImagesByArticleId(articleId)),
           this.store.select(AuthSelectors.selectIsAdmin),
+          this.store.select(AppSelectors.selectIsWideView),
         ]),
       ),
       distinctUntilChanged(isEqual),
@@ -85,11 +89,12 @@ export class ArticleViewerPageComponent implements OnInit {
         this.metaAndTitleService.updateTitle(article.title);
         this.metaAndTitleService.updateDescription(articlePreview);
       }),
-      map(([article, bannerImage, bodyImages, isAdmin]) => ({
+      map(([article, bannerImage, bodyImages, isAdmin, isWideView]) => ({
         article,
         bannerImage,
         bodyImages,
         isAdmin,
+        isWideView,
       })),
     );
   }
