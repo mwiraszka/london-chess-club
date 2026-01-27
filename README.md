@@ -16,7 +16,8 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 <details>
 <summary>v5.11.10 - January 27th, 2026</summary>
 
-- 🐛 Fix a 'wide view' bug on mobile
+- 🐛 Fix some issues with 'wide view' and keep the first two columns' widths constant for results tables, regardless of view setting
+- 🔧 Security updates
 
 </details>
 
