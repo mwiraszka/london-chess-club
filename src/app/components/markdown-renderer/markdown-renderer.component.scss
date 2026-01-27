@@ -42,7 +42,7 @@
       }
     }
 
-    body[data-wide-view='false'] & .lcc-has-sticky-columns table {
+    .lcc-results-table-wrapper table {
       th:nth-child(1),
       td:nth-child(1) {
         min-width: var(--lcc-sticky-col-1-width);
