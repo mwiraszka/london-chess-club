@@ -55,7 +55,7 @@ export class MarkdownRendererComponent implements AfterViewInit, OnChanges, OnDe
   public headings: string[] = [];
   public processedData?: string;
 
-  private resizeObservers: ResizeObserver[] = [];
+  private resizeObserverMap = new Map<HTMLElement, ResizeObserver>();
 
   constructor(
     @Inject(DOCUMENT) private _document: Document,
@@ -87,6 +87,13 @@ export class MarkdownRendererComponent implements AfterViewInit, OnChanges, OnDe
         this.changeDetectorRef.markForCheck();
       });
     }
+
+    if (changes.isWideView) {
+      setTimeout(() => {
+        this.updateTableStickyColumns();
+        this.changeDetectorRef.markForCheck();
+      });
+    }
   }
 
   public ngAfterViewInit(): void {
@@ -99,7 +106,8 @@ export class MarkdownRendererComponent implements AfterViewInit, OnChanges, OnDe
   }
 
   public ngOnDestroy(): void {
-    this.resizeObservers.forEach(observer => observer.disconnect());
+    this.resizeObserverMap.forEach(observer => observer.disconnect());
+    this.resizeObserverMap.clear();
   }
 
   private preprocessImages(text: string): string {
@@ -141,37 +149,59 @@ export class MarkdownRendererComponent implements AfterViewInit, OnChanges, OnDe
           tableElement?.parentNode?.insertBefore(wrapperElement, tableElement);
           wrapperElement.appendChild(tableElement);
 
-          // Check if first header cell is '#'
-          const firstHeaderCell = tableElement.querySelector('thead th:first-child');
-          const shouldApplyStickyColumns =
-            firstHeaderCell?.textContent?.trim() === '#' && !this.isWideView;
-
-          if (shouldApplyStickyColumns) {
-            wrapperElement.classList.add('lcc-has-sticky-columns');
-            const updateColumnWidths = () => {
-              const wrapperWidth = wrapperElement.offsetWidth || 0;
-              const col2Width = Math.max(140, wrapperWidth - 570);
-              wrapperElement.style.setProperty('--lcc-sticky-col-1-width', '52px');
-              wrapperElement.style.setProperty(
-                '--lcc-sticky-col-2-width',
-                `${col2Width}px`,
-              );
-            };
-
-            // Initial calculation after insertion
-            requestAnimationFrame(() => {
-              updateColumnWidths();
-            });
-
-            // Watch for size changes
-            const resizeObserver = new ResizeObserver(() => {
-              updateColumnWidths();
-            });
-            resizeObserver.observe(wrapperElement);
-            this.resizeObservers.push(resizeObserver);
-          }
+          this.configureStickyColumns(wrapperElement);
         }
       });
+    }
+  }
+
+  private updateTableStickyColumns(): void {
+    const wrappers = this.elementRef.nativeElement.querySelectorAll('.lcc-table-wrapper');
+
+    wrappers.forEach((wrapperElement: HTMLElement) => {
+      this.configureStickyColumns(wrapperElement);
+    });
+  }
+
+  private configureStickyColumns(wrapperElement: HTMLElement): void {
+    const tableElement = wrapperElement.querySelector('table');
+    const firstHeaderCell = tableElement?.querySelector('thead th:first-child');
+
+    const shouldFixFirstTwoColumnWidths = firstHeaderCell?.textContent?.trim() === '#';
+    const hasFixedFirstTwoColumnWidths = wrapperElement.classList.contains(
+      'lcc-results-table-wrapper',
+    );
+
+    const shouldHaveSticky = shouldFixFirstTwoColumnWidths && !this.isWideView;
+    const hasSticky = wrapperElement.classList.contains('lcc-has-sticky-columns');
+
+    // Handle fixed column widths
+    if (shouldFixFirstTwoColumnWidths && !hasFixedFirstTwoColumnWidths) {
+      wrapperElement.classList.add('lcc-results-table-wrapper');
+
+      const updateColumnWidths = () => {
+        const wrapperWidth = wrapperElement.offsetWidth || 0;
+        const col2Width = Math.min(220, Math.max(140, wrapperWidth - 570));
+        wrapperElement.style.setProperty('--lcc-sticky-col-1-width', '52px');
+        wrapperElement.style.setProperty('--lcc-sticky-col-2-width', `${col2Width}px`);
+      };
+
+      requestAnimationFrame(() => updateColumnWidths());
+
+      const resizeObserver = new ResizeObserver(() => updateColumnWidths());
+      resizeObserver.observe(wrapperElement);
+      this.resizeObserverMap.set(wrapperElement, resizeObserver);
+    }
+
+    // Handle sticky behavior
+    if (shouldHaveSticky === hasSticky) {
+      return;
+    }
+
+    if (shouldHaveSticky) {
+      wrapperElement.classList.add('lcc-has-sticky-columns');
+    } else {
+      wrapperElement.classList.remove('lcc-has-sticky-columns');
     }
   }
 

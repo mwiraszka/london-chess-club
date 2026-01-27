@@ -1,6 +1,6 @@
 {
   "name": "lcc-frontend",
-  "version": "5.11.9",
+  "version": "5.11.10",
   "description": "Frontend for the London Chess Club website, built with Angular",
   "author": "Michal Wiraszka",
   "repository": {
@@ -47,7 +47,7 @@
     "@webcomponents/webcomponentsjs": "2.8.0",
     "chart.js": "4.5.1",
     "lichess-pgn-viewer": "2.4.5",
-    "lodash": "4.17.21",
+    "lodash": "4.17.23",
     "marked": "15.0.12",
     "moment-timezone": "0.6.0",
     "ng2-pdf-viewer": "10.4.0",
@@ -59,9 +59,9 @@
     "zone.js": "0.16.0"
   },
   "devDependencies": {
-    "@angular-devkit/core": "21.1.0",
+    "@angular-devkit/core": "21.1.1",
     "@angular/build": "21.1.0",
-    "@angular/cli": "21.1.0",
+    "@angular/cli": "21.1.1",
     "@angular/compiler-cli": "21.1.0",
     "@eslint/js": "9.39.2",
     "@trivago/prettier-plugin-sort-imports": "6.0.0",
@@ -90,28 +90,31 @@
   },
   "pnpm": {
     "overrides": {
-      "abab": "2.0.6",
-      "domexception": "4.0.0",
-      "glob": "11.1.0",
-      "inflight": "1.0.7",
-      "js-yaml": "4.1.1",
-      "rimraf": "6.0.1",
       "@humanwhocodes/config-array": "0.13.0",
       "@humanwhocodes/object-schema": "2.0.3",
-      "tar": ">=7.5.3",
-      "tar-fs": ">=2.1.4",
-      "vite": ">=7.1.11",
-      "qs": ">=6.14.1",
+      "abab": "2.0.6",
       "diff": ">=8.0.3",
-      "undici": ">=7.18.2",
+      "domexception": "4.0.0",
+      "glob": "11.1.0",
+      "hono": ">=4.11.7",
+      "inflight": "1.0.7",
+      "js-yaml": "4.1.1",
+      "lodash": ">=4.17.23",
+      "lodash-es": ">=4.17.23",
       "ngrx-store-localstorage>@angular/common": "21.1.0",
       "ngrx-store-localstorage>@angular/core": "21.1.0",
       "ngrx-store-localstorage>@ngrx/store": "21.0.1",
       "ngx-markdown>@angular/common": "21.1.0",
       "ngx-markdown>@angular/core": "21.1.0",
       "ngx-markdown>@angular/platform-browser": "21.1.0",
-      "ngx-markdown>zone.js": "0.16.0"
+      "ngx-markdown>zone.js": "0.16.0",
+      "qs": ">=6.14.1",
+      "rimraf": "6.0.1",
+      "tar": ">=7.5.4",
+      "tar-fs": ">=2.1.4",
+      "undici": ">=7.18.2",
+      "vite": ">=7.1.11"
     }
   },
-  "packageManager": "pnpm@9.12.3+sha256.24235772cc4ac82a62627cd47f834c72667a2ce87799a846ec4e8e555e2d4b8b"
+  "packageManager": "pnpm@10.28.2+sha512.41872f037ad22f7348e3b1debbaf7e867cfd448f2726d9cf74c08f19507c31d2c8e7a11525b983febc2df640b5438dee6023ebb1f84ed43cc2d654d2bc326264"
 }

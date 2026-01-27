@@ -14,6 +14,14 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 | 🔧  | Behind-the-scenes changes         |
 
 <details>
+<summary>v5.11.10 - January 27th, 2026</summary>
+
+- 🐛 Fix some issues with 'wide view' and keep the first two columns' widths constant for results tables, regardless of view setting
+- 🔧 Security updates
+
+</details>
+
+<details>
 <summary>v5.11.9 - January 26th, 2026</summary>
 
 - 🚀 Add 'Wide view' toggle option under User Settings to extend content area of pages beyond default limit
