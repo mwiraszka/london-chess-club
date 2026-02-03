@@ -62,6 +62,8 @@ function shouldIgnore(message: unknown, patterns: RegExp[]): boolean {
   let msg: string;
   if (typeof message === 'string') {
     msg = message.trim();
+  } else if (message instanceof Error) {
+    msg = message.toString();
   } else if (typeof message === 'object' && message !== null) {
     // Handle objects (like LCCError) by stringifying them
     msg = JSON.stringify(message);
