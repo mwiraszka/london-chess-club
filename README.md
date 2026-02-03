@@ -14,6 +14,13 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 | 🔧  | Behind-the-scenes changes         |
 
 <details>
+<summary>v5.11.11 - February 4th, 2026</summary>
+
+- 🔧 Security updates
+
+</details>
+
+<details>
 <summary>v5.11.10 - January 27th, 2026</summary>
 
 - 🐛 Fix some issues with 'wide view' and keep the first two columns' widths constant for results tables, regardless of view setting

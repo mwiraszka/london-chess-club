@@ -1,6 +1,6 @@
 {
   "name": "lcc-frontend",
-  "version": "5.11.10",
+  "version": "5.11.11",
   "description": "Frontend for the London Chess Club website, built with Angular",
   "author": "Michal Wiraszka",
   "repository": {
@@ -90,6 +90,7 @@
   },
   "pnpm": {
     "overrides": {
+      "@isaacs/brace-expansion": "5.0.1",
       "@humanwhocodes/config-array": "0.13.0",
       "@humanwhocodes/object-schema": "2.0.3",
       "abab": "2.0.6",
