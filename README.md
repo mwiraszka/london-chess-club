@@ -16,6 +16,7 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 <details>
 <summary>v5.11.11 - February 4th, 2026</summary>
 
+- 🐛 Prevent image file source text from briefly appearing sometimes while image loads
 - 🔧 Security updates
 
 </details>
