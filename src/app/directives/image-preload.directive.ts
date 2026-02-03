@@ -29,6 +29,8 @@ import { calculateAspectRatio } from '@app/utils';
 })
 export class ImagePreloadDirective implements OnInit, OnChanges {
   readonly FALLBACK_SRC = 'assets/fallback-image.png';
+  readonly TRANSPARENT_PIXEL =
+    'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 
   @Input({ required: true }) image?: Partial<Image> | null;
 
@@ -38,7 +40,7 @@ export class ImagePreloadDirective implements OnInit, OnChanges {
   @HostBinding('style.opacity') opacity = '1';
   @HostBinding('style.background') background = 'none';
 
-  public currentSrc?: string | null;
+  public currentSrc = this.TRANSPARENT_PIXEL;
 
   private skeletonElement?: HTMLElement;
 
@@ -131,7 +133,7 @@ export class ImagePreloadDirective implements OnInit, OnChanges {
         return;
       }
 
-      this.currentSrc = mainUrl || thumbnailUrl;
+      this.currentSrc = mainUrl || thumbnailUrl || this.TRANSPARENT_PIXEL;
       this.filter = 'none';
     } else {
       this.displayShimmerEffect();
@@ -144,9 +146,7 @@ export class ImagePreloadDirective implements OnInit, OnChanges {
 
     this.background = 'var(--lcc-color--contentPlaceholder-background)';
 
-    // Use the data URI for a transparent 1x1 pixel image to hide the broken image icon
-    this.currentSrc =
-      'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+    this.currentSrc = this.TRANSPARENT_PIXEL;
 
     const shimmer = this.renderer.createElement('div');
 
