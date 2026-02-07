@@ -17,6 +17,7 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 <summary>v5.11.12 - February 6th, 2026</summary>
 
 - 🐛 Fix a bug where members with provisional and non-provisional ratings (but the same base rating) would sometimes not be sorted correctly in the Members Table
+- 🔧 Security updates
 
 </details>
 
