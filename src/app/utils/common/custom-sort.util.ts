@@ -95,17 +95,37 @@ export function customSort(
       return 0;
     }
 
-    let aCompare;
-    let bCompare;
+    if (key === 'albumOrdinality') {
+      const aNum = Number(aVal);
+      const bNum = Number(bVal);
+      return aNum < bNum ? -1 : aNum === bNum ? 0 : 1;
+    } else if (['rating', 'peakRating'].includes(key)) {
+      const aRating = Number(aVal.split('/')[0]);
+      const bRating = Number(bVal.split('/')[0]);
 
-    if (['rating', 'peakRating', 'albumOrdinality'].includes(key)) {
-      aCompare = Number(aVal.split('/')[0]);
-      bCompare = Number(bVal.split('/')[0]);
-      return aCompare < bCompare ? -1 : aCompare === bCompare ? 0 : 1;
+      if (aRating !== bRating) {
+        return aRating < bRating ? -1 : 1;
+      }
+
+      // If base rating is the same, sort by provisional rating game count
+      const aGameCount = Number(aVal.split('/')[1]);
+      const bGameCount = Number(bVal.split('/')[1]);
+
+      return isNaN(aGameCount) && isNaN(bGameCount)
+        ? 0
+        : isNaN(aGameCount)
+          ? 1
+          : isNaN(bGameCount)
+            ? -1
+            : aGameCount < bGameCount
+              ? -1
+              : aGameCount === bGameCount
+                ? 0
+                : 1;
     } else {
-      aCompare = aVal.toUpperCase();
-      bCompare = bVal.toUpperCase();
-      return aCompare < bCompare ? -1 : aCompare === bCompare ? 0 : 1;
+      const aWord = aVal.toUpperCase();
+      const bWord = bVal.toUpperCase();
+      return aWord < bWord ? -1 : aWord === bWord ? 0 : 1;
     }
   };
 

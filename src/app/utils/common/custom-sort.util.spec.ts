@@ -208,5 +208,53 @@ describe('customSort', () => {
         expect(result).toEqual([a, c, b]);
       });
     });
+
+    describe('with rating fields (provisional vs non-provisional)', () => {
+      it('should sort by base rating when ratings are different', () => {
+        const a = { rating: '1800' };
+        const b = { rating: '1900/5' };
+        const c = { rating: '1700/10' };
+
+        const result = [a, b, c].sort((a, b) => customSort(a, b, 'rating'));
+        expect(result).toEqual([c, a, b]);
+      });
+
+      it('should place provisional before non-provisional when base ratings are equal (ascending)', () => {
+        const a = { rating: '1800' };
+        const b = { rating: '1800/5' };
+        const c = { rating: '1800/12' };
+
+        const result = [b, c, a].sort((a, b) => customSort(a, b, 'rating'));
+        expect(result).toEqual([b, c, a]);
+      });
+
+      it('should place non-provisional before provisional when base ratings are equal (descending)', () => {
+        const a = { rating: '1800' };
+        const b = { rating: '1800/5' };
+        const c = { rating: '1800/12' };
+
+        const result = [b, c, a].sort((a, b) => customSort(a, b, 'rating', true));
+        expect(result).toEqual([a, c, b]);
+      });
+
+      it('should handle multiple members with mixed provisional and non-provisional ratings', () => {
+        const a = { rating: '2000' };
+        const b = { rating: '1800/5' };
+        const c = { rating: '1900' };
+        const d = { rating: '1800' };
+        const e = { rating: '1900/3' };
+
+        const result = [a, b, c, d, e].sort((a, b) => customSort(a, b, 'rating', true));
+        expect(result).toEqual([a, c, e, d, b]);
+      });
+
+      it('should apply same logic to peakRating field', () => {
+        const a = { peakRating: '1800' };
+        const b = { peakRating: '1800/5' };
+
+        const result = [b, a].sort((a, b) => customSort(a, b, 'peakRating'));
+        expect(result).toEqual([b, a]);
+      });
+    });
   });
 });
