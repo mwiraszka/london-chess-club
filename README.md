@@ -17,6 +17,7 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 <summary>v5.11.14 - February 7th, 2026</summary>
 
 - 🚀 Increase size of social link icons in footer
+- 🚀 On the Game Archives page, automatically expand games from the first available year whenever the filter changes and the currently open year no longer has any games to show
 - 🐛 Resolve some more version control and cache-related issues 
 
 </details>

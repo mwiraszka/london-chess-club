@@ -11,6 +11,7 @@ import {
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   HostListener,
@@ -141,6 +142,7 @@ export class GameArchivesPageComponent implements OnInit, OnDestroy {
   private resultChart?: Chart;
 
   constructor(
+    private readonly changeDetectorRef: ChangeDetectorRef,
     private readonly formBuilder: FormBuilder,
     private readonly metaAndTitleService: MetaAndTitleService,
     private readonly store: Store,
@@ -284,7 +286,7 @@ export class GameArchivesPageComponent implements OnInit, OnDestroy {
 
   private initFormValueChangeListeners(): void {
     this.form.valueChanges
-      .pipe(distinctUntilChanged(), debounceTime(250), untilDestroyed(this))
+      .pipe(distinctUntilChanged(), debounceTime(50), untilDestroyed(this))
       .subscribe(() => this.filterGames());
 
     this.form.controls['asBlack'].valueChanges.subscribe(asBlack => {
@@ -539,9 +541,21 @@ export class GameArchivesPageComponent implements OnInit, OnDestroy {
 
     this.updateStats(this.filteredGames);
 
-    this.activeYear = this.filteredGames.size
-      ? (this.filteredGames.keys().next().value ?? null)
-      : null;
+    // Find first year with games
+    const firstAvailableYear = Array.from(this.filteredGames.entries()).find(
+      ([, games]) => games.length > 0,
+    )?.[0];
+
+    if (!firstAvailableYear) {
+      this.activeYear = null;
+    } else if (
+      !this.activeYear ||
+      !this.filteredGames.has(this.activeYear) ||
+      !this.filteredGames.get(this.activeYear)?.length
+    ) {
+      this.activeYear = firstAvailableYear;
+      this.changeDetectorRef.markForCheck();
+    }
   }
 
   private updateStats(games: Map<string, GameDetails[]>): void {
