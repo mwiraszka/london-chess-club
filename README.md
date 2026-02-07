@@ -14,6 +14,13 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 | 🔧  | Behind-the-scenes changes         |
 
 <details>
+<summary>v5.11.13 - February 7th, 2026</summary>
+
+- 🐛 Resolve an issue where Safari users would see a blank page due to cached state from the previous version
+
+</details>
+
+<details>
 <summary>v5.11.12 - February 6th, 2026</summary>
 
 - 🐛 On the Game Archives page, ensure PGNs for the currently open year automatically update whenever a filter is changed
