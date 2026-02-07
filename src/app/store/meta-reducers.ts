@@ -62,9 +62,9 @@ export function updateStateVersionsInLocalStorageMetaReducer(
         const version = key.split('_v')[1];
         const stateValue = localStorage.getItem(key) || '';
 
-        // Skip migrating state from v5.9.x or older to force a reset of stale data
+        // Skip migrating state from v5.11.x or older to force a reset of stale data
         const [major, minor] = (version || '').split('.').map(Number);
-        const isStaleVersion = major < 5 || (major === 5 && minor <= 9);
+        const isStaleVersion = major < 5 || (major === 5 && minor <= 11);
 
         // Keep all state from previous version except imagesState and stale versions
         if (stateName !== 'imagesState' && !isStaleVersion) {
