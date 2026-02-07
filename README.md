@@ -14,6 +14,14 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 | 🔧  | Behind-the-scenes changes         |
 
 <details>
+<summary>v5.11.14 - February 7th, 2026</summary>
+
+- 🚀 Increase size of social link icons in footer
+- 🐛 Resolve some more version control and cache-related issues 
+
+</details>
+
+<details>
 <summary>v5.11.13 - February 7th, 2026</summary>
 
 - 🐛 Resolve an issue where Safari users would see a blank page due to cached state from the previous version
