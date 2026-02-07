@@ -229,7 +229,7 @@ export class GameArchivesPageComponent implements OnInit, OnDestroy {
     return colors;
   }
 
-  public trackByFn = (_index: number, item: GameDetails) => item.pgn;
+  public trackByFn = (index: number) => `${this.activeYear}-${index}`;
 
   public onKeydown(event: Event): void {
     const key = (event as KeyboardEvent)?.key;

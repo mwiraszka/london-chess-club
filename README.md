@@ -16,7 +16,6 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 <details>
 <summary>v5.11.12 - February 6th, 2026</summary>
 
-- 🐛 On the Game Archives page, ensure PGNs for the currently open year automatically update whenever a filter is changed
 - 🐛 Fix a bug where members with provisional and non-provisional ratings (but the same base rating) would sometimes not be sorted correctly in the Members Table
 - 🔧 Security updates
 
