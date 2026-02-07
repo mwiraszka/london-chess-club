@@ -352,15 +352,16 @@ describe('GameArchivesPageComponent', () => {
   });
 
   describe('trackBy function', () => {
-    beforeEach(() => {
-      component.ngOnInit();
-      component.activeYear = '2024';
-    });
+    it('should return PGN string for tracking', () => {
+      const mockGame = {
+        pgn: '[Event "Test Game"]\n1. e4 e5',
+        whiteFirstName: 'John',
+        whiteLastName: 'Doe',
+      };
 
-    it('should return correct tracking string', () => {
-      const result = component.trackByFn(5);
+      const result = component.trackByFn(0, mockGame);
 
-      expect(result).toBe('2024-5');
+      expect(result).toBe('[Event "Test Game"]\n1. e4 e5');
     });
   });
 
