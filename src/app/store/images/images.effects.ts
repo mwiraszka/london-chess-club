@@ -204,7 +204,7 @@ export class ImagesEffects {
       ),
       concatLatestFrom(() => this.store.select(ArticlesSelectors.selectAllArticles)),
       mergeMap(([action, allArticles]) => {
-        let articlesToProcess: Article[] = [];
+        let articlesToProcess: Article[];
 
         if (action.type === ArticlesActions.fetchArticleSucceeded.type) {
           articlesToProcess = [action.article];
