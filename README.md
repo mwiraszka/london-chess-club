@@ -16,6 +16,7 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 <details>
 <summary>v5.11.15 - February 18th, 2026</summary>
 
+- 🔧 Update various third-party packages
 - 🔧 Security updates
 
 </details>
