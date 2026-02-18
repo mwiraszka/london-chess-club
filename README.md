@@ -14,6 +14,13 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 | 🔧  | Behind-the-scenes changes         |
 
 <details>
+<summary>v5.11.15 - February 18th, 2026</summary>
+
+- 🔧 Security updates
+
+</details>
+
+<details>
 <summary>v5.11.14 - February 7th, 2026</summary>
 
 - 🚀 Increase size of social link icons in footer
