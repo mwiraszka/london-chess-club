@@ -167,7 +167,9 @@ export class MarkdownRendererComponent implements AfterViewInit, OnChanges, OnDe
     const tableElement = wrapperElement.querySelector('table');
     const firstHeaderCell = tableElement?.querySelector('thead th:first-child');
 
-    const shouldFixFirstTwoColumnWidths = firstHeaderCell?.textContent?.trim() === '#';
+    const shouldFixFirstTwoColumnWidths =
+      firstHeaderCell?.textContent?.trim() === '#' &&
+      firstHeaderCell?.nextElementSibling?.textContent?.trim() === 'Name';
     const hasFixedFirstTwoColumnWidths = wrapperElement.classList.contains(
       'lcc-results-table-wrapper',
     );
