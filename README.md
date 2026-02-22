@@ -16,7 +16,11 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 <details>
 <summary>v5.12.0 - February TBD, 2026</summary>
 
-- 🚀 Articles: only make first two table columns sticky when the second column is 'Name'; extend allowable characters
+- 🚀 Articles
+    - only make first two table columns sticky when the second column is 'Name'
+    - extend the list of allowable characters in the article body
+- 🚀 Events
+    - link to associated articles by clicking on the event title instead of a separate 'Details' link
 
 </details>
 

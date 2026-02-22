@@ -203,7 +203,7 @@ describe('EventsTableComponent', () => {
         );
       });
 
-      it('should display article link when event has articleId', () => {
+      it('should link to article when event has articleId', () => {
         const eventWithArticle = mockEvents.find(event => event.articleId !== '');
         fixture.componentRef.setInput('events', [eventWithArticle!]);
         fixture.detectChanges();
@@ -212,7 +212,9 @@ describe('EventsTableComponent', () => {
         expect(articleLink.nativeElement.getAttribute('href')).toBe(
           '/article/view/' + eventWithArticle!.articleId,
         );
-        expect(articleLink.nativeElement.textContent.trim()).toBe('More details');
+        expect(articleLink.nativeElement.textContent.trim()).toBe(
+          eventWithArticle!.title,
+        );
       });
 
       it('should not display article link when event has no articleId', () => {

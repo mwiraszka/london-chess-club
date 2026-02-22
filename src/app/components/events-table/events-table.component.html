@@ -31,10 +31,16 @@
 
         <td class="event-details-cell">
           <div class="main-content">
-            <h3
-              class="title"
-              [innerHTML]="event.title | highlight: options?.search">
-              {{ event.title }}
+            <h3 class="title">
+              @if (event?.articleId) {
+                <a
+                  [routerLink]="'/article/view/' + event.articleId"
+                  class="event-article-link lcc-link"
+                  [innerHTML]="event.title | highlight: options?.search">
+                </a>
+              } @else {
+                <span [innerHTML]="event.title | highlight: options?.search"></span>
+              }
             </h3>
             <div
               class="type-container"
@@ -55,14 +61,6 @@
                 event.details.replaceAll('\\n', ' \n ') | highlight: options?.search
               ">
             </p>
-
-            @if (event?.articleId) {
-              <a
-                [routerLink]="'/article/view/' + event.articleId"
-                class="event-article-link lcc-link">
-                More details
-              </a>
-            }
           </div>
 
           @if (showModificationInfo) {
