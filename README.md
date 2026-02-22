@@ -16,7 +16,7 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 <details>
 <summary>v5.12.0 - February TBD, 2026</summary>
 
-- 🚀 Minor improvement to article table layout
+- 🚀 Articles: only make first two table columns sticky when the second column is 'Name'; extend allowable characters
 
 </details>
 
