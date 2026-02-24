@@ -39,12 +39,15 @@
       </lcc-admin-toolbar>
     }
     @if (vm.homePageEvents.length) {
-      <lcc-events-table
-        [events]="vm.homePageEvents"
-        [isAdmin]="vm.isAdmin"
-        [nextEvent]="vm.nextEvent"
-        (requestDeleteEvent)="onRequestDeleteEvent($event)">
-      </lcc-events-table>
+      <div class="events-table-wrapper">
+        <lcc-events-table
+          [dateLimit]="5"
+          [events]="vm.homePageEvents"
+          [isAdmin]="vm.isAdmin"
+          [nextEvent]="vm.nextEvent"
+          (requestDeleteEvent)="onRequestDeleteEvent($event)">
+        </lcc-events-table>
+      </div>
       <lcc-link-list [links]="[schedulePageLink]"></lcc-link-list>
     }
   </section>

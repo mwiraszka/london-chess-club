@@ -69,6 +69,54 @@ describe('EventsTableComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  describe('groupedEvents', () => {
+    it('should return one group per unique date when all events are on different dates', () => {
+      const groups = component.groupedEvents;
+
+      expect(groups.length).toBe(mockEvents.length);
+      groups.forEach((group, i) => {
+        expect(group.events).toEqual([mockEvents[i]]);
+        expect(group.dateKey).toBe(mockEvents[i].eventDate.slice(0, 10));
+      });
+    });
+
+    it('should merge events on the same date into one group', () => {
+      const sharedDate = mockEvents[0].eventDate;
+      const eventsWithSharedDate = [
+        mockEvents[0],
+        { ...mockEvents[1], eventDate: sharedDate },
+        mockEvents[2],
+      ];
+      fixture.componentRef.setInput('events', eventsWithSharedDate);
+
+      const groups = component.groupedEvents;
+
+      expect(groups.length).toBe(2);
+      expect(groups[0].events.length).toBe(2);
+      expect(groups[1].events.length).toBe(1);
+    });
+
+    it('should mark group as hasNextEvent when it contains the next event', () => {
+      const groups = component.groupedEvents;
+      const nextEventGroup = groups.find(g => g.hasNextEvent);
+
+      expect(nextEventGroup).toBeDefined();
+      expect(nextEventGroup!.events.some(e => e.id === mockNextEvent.id)).toBe(true);
+    });
+
+    it('should limit groups to dateLimit when provided', () => {
+      fixture.componentRef.setInput('dateLimit', 2);
+
+      expect(component.groupedEvents.length).toBe(2);
+    });
+
+    it('should return all groups when dateLimit is not provided', () => {
+      fixture.componentRef.setInput('dateLimit', undefined);
+
+      expect(component.groupedEvents.length).toBe(mockEvents.length);
+    });
+  });
+
   describe('getAdminControlsConfig', () => {
     it('should return correct configuration for an event', () => {
       const event = mockEvents[0];
@@ -130,15 +178,20 @@ describe('EventsTableComponent', () => {
         expect(headers[1].nativeElement.textContent.trim()).toBe('');
       });
 
-      it('should render a row for every event and use correct IDs', () => {
+      it('should render a row for every date group and use first event ID', () => {
         const eventRows = queryAll(fixture.debugElement, 'tbody tr[id]');
-        expect(eventRows.length).toBe(mockEvents.length);
-        expect(eventRows[0].nativeElement.id).toBe(mockEvents[0].id);
+
+        expect(eventRows.length).toBe(component.groupedEvents.length);
+        expect(eventRows[0].nativeElement.id).toBe(
+          component.groupedEvents[0].events[0].id,
+        );
       });
 
-      it('should add today-scroll-point class to next event row', () => {
+      it('should add today-scroll-point class to the row containing the next event', () => {
+        const nextEventGroup = component.groupedEvents.find(g => g.hasNextEvent)!;
+
         expect(
-          query(fixture.debugElement, `tr#${mockNextEvent.id}`).classes[
+          query(fixture.debugElement, `tr#${nextEventGroup.events[0].id}`).classes[
             'today-scroll-point'
           ],
         ).toBe(true);
@@ -169,15 +222,16 @@ describe('EventsTableComponent', () => {
       });
 
       it('should display event titles and details for all events', () => {
+        const allEvents = component.groupedEvents.flatMap(g => g.events);
         const titleElements = queryAll(fixture.debugElement, '.title');
         const detailElements = queryAll(fixture.debugElement, '.event-details');
 
         titleElements.forEach((element, i) => {
-          expect(element.nativeElement.textContent.trim()).toBe(mockEvents[i].title);
+          expect(element.nativeElement.textContent.trim()).toBe(allEvents[i].title);
         });
 
         detailElements.forEach((element, i) => {
-          expect(element.nativeElement.textContent.trim()).toBe(mockEvents[i].details);
+          expect(element.nativeElement.textContent.trim()).toBe(allEvents[i].details);
         });
       });
 
@@ -241,15 +295,12 @@ describe('EventsTableComponent', () => {
         expect(query(fixture.debugElement, '.created-and-edited')).toBeFalsy();
       });
 
-      it('should show admin controls on rows when isAdmin is true', () => {
+      it('should show admin controls on event entries when isAdmin is true', () => {
         fixture.componentRef.setInput('isAdmin', true);
         fixture.detectChanges();
 
-        const row = query(fixture.debugElement, 'tbody tr');
-        const adminControlsValue = row.componentInstance?.getAdminControlsConfig(
-          component.events[0],
-        );
-        expect(adminControlsValue).toBeTruthy();
+        expect(component.getAdminControlsConfig(mockEvents[0])).toBeTruthy();
+        expect(query(fixture.debugElement, '.event-entry')).toBeTruthy();
       });
     });
   });

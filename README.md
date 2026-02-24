@@ -17,10 +17,11 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 <summary>v5.12.0 - February TBD, 2026</summary>
 
 - 🚀 Articles
-    - only make first two table columns sticky when the second column is 'Name'
+    - only make the first two table columns sticky for the Results and Ratings Report tables (i.e. allow other tables that begin with a '#' header to behave normally)
     - extend the list of allowable characters in the article body
 - 🚀 Events
-    - link to associated articles by clicking on the event title instead of a separate 'Details' link
+    - simplify the layout of events in the Events Table
+    - improve handling of multiple events that occur on the same day
 
 </details>
 

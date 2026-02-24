@@ -72,6 +72,11 @@
     &.schedule-section {
       grid-area: schedule;
 
+      .events-table-wrapper {
+        overflow-y: auto;
+        max-height: 410px;
+      }
+
       ::ng-deep .events-table {
         width: 100%;
       }
