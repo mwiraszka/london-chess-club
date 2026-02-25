@@ -47,7 +47,7 @@ $grid-gap: 8px;
     transition:
       transform 0.3s ease,
       background-color 0.3s ease;
-    animation: fade-in-up 1.5s ease-out forwards;
+    animation: fade-in-up 1s ease-out forwards;
 
     &:hover {
       background-color: var(--lcc-color--articleGrid-cardBackgroundOnHover);

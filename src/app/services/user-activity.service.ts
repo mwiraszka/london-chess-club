@@ -22,6 +22,7 @@ export class UserActivityService {
   public static readonly SESSION_CHECK_INTERVAL_MS = 60_000; // 1 minute
 
   private isDialogOpen = false;
+  private isInitialized = false;
   private lastActivityTime: number | null = null;
 
   constructor(
@@ -30,6 +31,11 @@ export class UserActivityService {
   ) {}
 
   public monitorSessionExpiry(): void {
+    if (this.isInitialized) {
+      return;
+    }
+    this.isInitialized = true;
+
     // Reset state when user logs out
     this.store
       .select(AuthSelectors.selectSessionStartTime)

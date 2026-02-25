@@ -2,7 +2,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';
 import { Store } from '@ngrx/store';
 import moment from 'moment-timezone';
-import { merge, of, timer } from 'rxjs';
+import { combineLatest, merge, of, race, timer } from 'rxjs';
 import {
   catchError,
   concatMap,
@@ -19,6 +19,7 @@ import { DataPaginationOptions, Event } from '@app/models';
 import { EventsApiService } from '@app/services';
 import { AppActions } from '@app/store/app';
 import { AuthSelectors } from '@app/store/auth';
+import { NavSelectors } from '@app/store/nav';
 import { exportDataToCsv, isDefined, isExpired, parseError } from '@app/utils';
 
 import { EventsActions, EventsSelectors } from '.';
@@ -65,16 +66,19 @@ export class EventsEffects {
           search: '',
         };
 
-        return this.eventsApiService.getFilteredEvents(options).pipe(
-          map(response =>
-            EventsActions.fetchHomePageEventsSucceeded({
-              events: response.data.items,
-              totalCount: response.data.totalCount,
-            }),
+        return race(
+          this.eventsApiService.getFilteredEvents(options).pipe(
+            map(response =>
+              EventsActions.fetchHomePageEventsSucceeded({
+                events: response.data.items,
+                totalCount: response.data.totalCount,
+              }),
+            ),
+            catchError(error =>
+              of(EventsActions.fetchHomePageEventsFailed({ error: parseError(error) })),
+            ),
           ),
-          catchError(error =>
-            of(EventsActions.fetchHomePageEventsFailed({ error: parseError(error) })),
-          ),
+          timer(10_000).pipe(map(() => EventsActions.requestTimedOut())),
         );
       }),
     );
@@ -114,7 +118,7 @@ export class EventsEffects {
       ),
     );
 
-    const periodicCheck$ = timer(3 * 1000, 10 * 60 * 1000).pipe(
+    const periodicCheck$ = timer(3500, 10 * 60 * 1000).pipe(
       switchMap(() =>
         this.store.select(EventsSelectors.selectLastHomePageFetch).pipe(take(1)),
       ),
@@ -137,11 +141,18 @@ export class EventsEffects {
       ),
     );
 
-    const periodicCheck$ = timer(3 * 1000, 10 * 60 * 1000).pipe(
+    const periodicCheck$ = timer(5000, 10 * 60 * 1000).pipe(
       switchMap(() =>
-        this.store.select(EventsSelectors.selectLastFilteredFetch).pipe(take(1)),
+        combineLatest([
+          this.store.select(EventsSelectors.selectLastFilteredFetch),
+          this.store.select(NavSelectors.selectCurrentPath),
+        ]).pipe(take(1)),
       ),
-      filter(lastFetch => isExpired(lastFetch)),
+      filter(
+        ([lastFetch, currentPath]) =>
+          isExpired(lastFetch) &&
+          !!(currentPath?.includes('/schedule') || currentPath?.includes('/event')),
+      ),
     );
 
     return merge(refetchActions$, periodicCheck$).pipe(
