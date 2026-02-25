@@ -11,6 +11,7 @@ import { MOCK_EVENTS } from '@app/mocks/events.mock';
 import { ApiResponse, Event, LccError, PaginatedItems, User } from '@app/models';
 import { EventsApiService } from '@app/services';
 import { AuthSelectors } from '@app/store/auth';
+import { NavSelectors } from '@app/store/nav';
 
 import { EventsActions, EventsSelectors } from '.';
 import { EventsEffects } from './events.effects';
@@ -419,6 +420,7 @@ describe('EventsEffects', () => {
     it('should trigger refetch when last fetch is expired', fakeAsync(() => {
       const expiredTimestamp = moment().subtract(20, 'minutes').toISOString();
       store.overrideSelector(EventsSelectors.selectLastFilteredFetch, expiredTimestamp);
+      store.overrideSelector(NavSelectors.selectCurrentPath, '/schedule');
       store.refreshState();
       mockIsExpired.mockReturnValue(true);
 
@@ -439,6 +441,7 @@ describe('EventsEffects', () => {
     it('should not trigger refetch when last fetch is not expired', fakeAsync(() => {
       const recentTimestamp = moment().subtract(5, 'minutes').toISOString();
       store.overrideSelector(EventsSelectors.selectLastFilteredFetch, recentTimestamp);
+      store.overrideSelector(NavSelectors.selectCurrentPath, '/schedule');
       store.refreshState();
       mockIsExpired.mockReturnValue(false);
 

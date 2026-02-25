@@ -11,6 +11,7 @@ import { MOCK_ARTICLES } from '@app/mocks/articles.mock';
 import { ApiResponse, Article, LccError, PaginatedItems, User } from '@app/models';
 import { ArticlesApiService } from '@app/services';
 import { AuthSelectors } from '@app/store/auth';
+import { NavSelectors } from '@app/store/nav';
 
 import { ArticlesActions, ArticlesSelectors } from '.';
 import { ArticlesEffects } from './articles.effects';
@@ -388,6 +389,7 @@ describe('ArticlesEffects', () => {
     it('should trigger refetch when last fetch is expired', fakeAsync(() => {
       const expiredTimestamp = moment().subtract(20, 'minutes').toISOString();
       store.overrideSelector(ArticlesSelectors.selectLastFilteredFetch, expiredTimestamp);
+      store.overrideSelector(NavSelectors.selectCurrentPath, '/news');
       store.refreshState();
       mockIsExpired.mockReturnValue(true);
 
@@ -408,6 +410,7 @@ describe('ArticlesEffects', () => {
     it('should not trigger refetch when last fetch is not expired', fakeAsync(() => {
       const recentTimestamp = moment().subtract(5, 'minutes').toISOString();
       store.overrideSelector(ArticlesSelectors.selectLastFilteredFetch, recentTimestamp);
+      store.overrideSelector(NavSelectors.selectCurrentPath, '/news');
       store.refreshState();
       mockIsExpired.mockReturnValue(false);
 
