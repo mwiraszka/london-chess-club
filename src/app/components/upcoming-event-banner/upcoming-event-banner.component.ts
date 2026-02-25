@@ -18,73 +18,55 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 
-import { Event } from '@app/models';
-import { FormatDatePipe, KebabCasePipe } from '@app/pipes';
+import { Event, EventType } from '@app/models';
+import { FormatDatePipe } from '@app/pipes';
 
 @Component({
   selector: 'lcc-upcoming-event-banner',
-  template: `
-    <div
-      class="container"
-      [ngClass]="nextEvent.type | kebabCase">
-      <div class="banner-message-container">
-        <a
-          class="banner-message"
-          [class.navigatable]="!isOnSchedulePage()"
-          [routerLink]="!isOnSchedulePage() ? '/schedule' : null"
-          [attr.role]="isOnSchedulePage() ? 'text' : 'link'"
-          #bannerMessage>
-          <div
-            class="marquee-content"
-            #marqueeContent
-            [class.animate]="shouldAnimate"
-            [style.animation-duration.s]="animationDuration">
-            <ng-container *ngTemplateOutlet="bannerContent" />
-            @if (shouldAnimate) {
-              <ng-container *ngTemplateOutlet="bannerContent" />
-            }
-          </div>
-
-          <ng-template #bannerContent>
-            <span class="marquee-item">
-              <span>Next event:</span>
-              <span>
-                <b>{{ nextEvent.title }}</b>
-              </span>
-              <span>on</span>
-              <span>
-                <b>{{ nextEvent.eventDate | formatDate }}</b>
-              </span>
-            </span>
-          </ng-template>
-        </a>
-
-        <button
-          class="close-button lcc-icon-button"
-          (click)="clearBanner.emit()">
-          <mat-icon>close</mat-icon>
-        </button>
-      </div>
-    </div>
-  `,
+  templateUrl: './upcoming-event-banner.component.html',
   styleUrl: './upcoming-event-banner.component.scss',
-  imports: [CommonModule, FormatDatePipe, KebabCasePipe, MatIconModule, RouterLink],
+  imports: [CommonModule, FormatDatePipe, MatIconModule, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UpcomingEventBannerComponent implements AfterViewInit, OnDestroy {
+  private readonly TYPE_COLOR_VARS: Record<EventType, string> = {
+    'blitz tournament (10 mins)': 'blitz10Tournament',
+    'rapid tournament (25 mins)': 'rapid25Tournament',
+    'rapid tournament (40 mins)': 'rapid40Tournament',
+    lecture: 'lecture',
+    simul: 'simul',
+    championship: 'championship',
+    closed: 'closed',
+    other: 'other',
+  };
+
   @ViewChild('bannerMessage', { read: ElementRef })
   bannerMessageRef!: ElementRef<HTMLElement>;
 
   @ViewChild('marqueeContent', { read: ElementRef })
   marqueeContentRef!: ElementRef<HTMLElement>;
 
-  @Input({ required: true }) public nextEvent!: Event;
+  @Input({ required: true }) public nextEvents!: Event[];
 
   @Output() public clearBanner = new EventEmitter<void>();
 
   protected shouldAnimate = false;
   protected animationDuration = 20;
   protected isOnSchedulePage = computed(() => this.currentUrl() === '/schedule');
+
+  protected get backgroundStyling(): string {
+    const colorVar = (type: EventType) =>
+      `var(--lcc-color--upcomingEventBanner-background-${this.TYPE_COLOR_VARS[type]})`;
+
+    if (this.nextEvents.length === 1) {
+      return colorVar(this.nextEvents[0].type);
+    }
+    const stops = this.nextEvents.flatMap((event, i) => {
+      const color = colorVar(event.type);
+      return [`${color} ${i * 20}px`, `${color} ${(i + 1) * 20}px`];
+    });
+    return `repeating-linear-gradient(-45deg, ${stops.join(', ')})`;
+  }
 
   private readonly currentUrl = toSignal(
     this.router.events.pipe(

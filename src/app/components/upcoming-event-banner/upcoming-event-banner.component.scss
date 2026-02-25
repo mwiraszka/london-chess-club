@@ -9,38 +9,6 @@
   justify-content: center;
   padding: 4px 8px;
   border-bottom: 1px solid var(--lcc-color--upcomingEventBanner-borderBottom);
-
-  &.blitz-tournament-10-mins {
-    background-color: var(--lcc-color--upcomingEventBanner-background-blitz10Tournament);
-  }
-
-  &.rapid-tournament-25-mins {
-    background-color: var(--lcc-color--upcomingEventBanner-background-rapid25Tournament);
-  }
-
-  &.rapid-tournament-40-mins {
-    background-color: var(--lcc-color--upcomingEventBanner-background-rapid40Tournament);
-  }
-
-  &.lecture {
-    background-color: var(--lcc-color--upcomingEventBanner-background-lecture);
-  }
-
-  &.simul {
-    background-color: var(--lcc-color--upcomingEventBanner-background-simul);
-  }
-
-  &.championship {
-    background-color: var(--lcc-color--upcomingEventBanner-background-championship);
-  }
-
-  &.other {
-    background-color: var(--lcc-color--upcomingEventBanner-background-other);
-  }
-
-  &.closed {
-    background-color: var(--lcc-color--upcomingEventBanner-background-closed);
-  }
 }
 
 .banner-message-container {
@@ -91,6 +59,13 @@
 .marquee-content {
   display: inline-flex;
   align-items: center;
+
+  .event-divider {
+    display: inline-block;
+    align-self: stretch;
+    width: 2px;
+    background-color: var(--lcc-color--general-dividerLine);
+  }
 
   .marquee-item {
     display: inline-flex;

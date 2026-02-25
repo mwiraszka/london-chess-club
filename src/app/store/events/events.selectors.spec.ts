@@ -223,6 +223,47 @@ describe('Events Selectors', () => {
     });
   });
 
+  describe('selectConcurrentNextEvents', () => {
+    it('should return all upcoming events with the same eventDate as the next event', () => {
+      const now = moment.tz('America/Toronto');
+      const sharedDate = now.clone().add(1, 'day').toISOString();
+      const events = [
+        { ...MOCK_EVENTS[0], eventDate: sharedDate },
+        { ...MOCK_EVENTS[1], eventDate: sharedDate },
+        { ...MOCK_EVENTS[2], eventDate: now.clone().add(2, 'days').toISOString() },
+      ];
+
+      const result = EventsSelectors.selectConcurrentNextEvents.projector(events);
+
+      expect(result.length).toBe(2);
+      expect(result[0].id).toBe(MOCK_EVENTS[0].id);
+      expect(result[1].id).toBe(MOCK_EVENTS[1].id);
+    });
+
+    it('should return a single event when no other events share the same date and time', () => {
+      const now = moment.tz('America/Toronto');
+      const events = [
+        { ...MOCK_EVENTS[0], eventDate: now.clone().add(1, 'day').toISOString() },
+        { ...MOCK_EVENTS[1], eventDate: now.clone().add(2, 'days').toISOString() },
+      ];
+
+      const result = EventsSelectors.selectConcurrentNextEvents.projector(events);
+
+      expect(result.length).toBe(1);
+      expect(result[0].id).toBe(MOCK_EVENTS[0].id);
+    });
+
+    it('should return empty array when there are no upcoming events', () => {
+      const pastEvents = [
+        { ...MOCK_EVENTS[0], eventDate: moment().subtract(1, 'day').toISOString() },
+      ];
+
+      const result = EventsSelectors.selectConcurrentNextEvents.projector(pastEvents);
+
+      expect(result).toEqual([]);
+    });
+  });
+
   describe('selectNextEvent', () => {
     it('should select the next upcoming event', () => {
       const now = moment.tz('America/Toronto');

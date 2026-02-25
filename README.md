@@ -22,7 +22,9 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 - 🚀 Events
     - simplify the layout of events in the Events Table
     - improve handling of multiple events that occur on the same day
-
+- 🚀 Upcoming Event Banner
+    - display multiple next events if they happen to fall on the same day and start time
+    - display a striped background using the colours from each event
 </details>
 
 <details>

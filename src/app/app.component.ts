@@ -41,9 +41,9 @@ import { EventsSelectors } from '@app/store/events';
         <div class="lcc-loader"><div></div></div>
       }
 
-      @if (vm.showUpcomingEventBanner && vm.nextEvent) {
+      @if (vm.showUpcomingEventBanner && vm.nextEvents.length) {
         <lcc-upcoming-event-banner
-          [nextEvent]="vm.nextEvent"
+          [nextEvents]="vm.nextEvents"
           (clearBanner)="onClearBanner()">
         </lcc-upcoming-event-banner>
       }
@@ -82,7 +82,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     isDesktopView: boolean;
     isWideView: boolean;
     isLoading: boolean;
-    nextEvent: Event | null;
+    nextEvents: Event[];
     showUpcomingEventBanner: boolean;
   }>;
 
@@ -108,7 +108,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.store.select(AppSelectors.selectIsDesktopView),
       this.store.select(AppSelectors.selectIsWideView),
       this.store.select(AppSelectors.selectIsLoading),
-      this.store.select(EventsSelectors.selectNextEvent),
+      this.store.select(EventsSelectors.selectConcurrentNextEvents),
       this.store.select(AppSelectors.selectShowUpcomingEventBanner),
     ]).pipe(
       untilDestroyed(this),
@@ -119,7 +119,7 @@ export class AppComponent implements OnInit, AfterViewInit {
           isDesktopView,
           isWideView,
           isLoading,
-          nextEvent,
+          nextEvents,
           showUpcomingEventBanner,
         ]) => ({
           bannerLastCleared,
@@ -127,7 +127,7 @@ export class AppComponent implements OnInit, AfterViewInit {
           isDesktopView,
           isWideView,
           isLoading,
-          nextEvent,
+          nextEvents,
           showUpcomingEventBanner,
         }),
       ),

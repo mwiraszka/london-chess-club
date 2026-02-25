@@ -300,7 +300,7 @@ describe('EventsTableComponent', () => {
         fixture.detectChanges();
 
         expect(component.getAdminControlsConfig(mockEvents[0])).toBeTruthy();
-        expect(query(fixture.debugElement, '.event-entry')).toBeTruthy();
+        expect(query(fixture.debugElement, '.event-entry .main-content')).toBeTruthy();
       });
     });
   });

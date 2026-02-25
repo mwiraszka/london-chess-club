@@ -74,7 +74,7 @@ describe('AppComponent', () => {
     store.overrideSelector(AppSelectors.selectIsDesktopView, false);
     store.overrideSelector(AppSelectors.selectIsWideView, false);
     store.overrideSelector(AppSelectors.selectIsLoading, false);
-    store.overrideSelector(EventsSelectors.selectNextEvent, MOCK_EVENTS[0]);
+    store.overrideSelector(EventsSelectors.selectConcurrentNextEvents, [MOCK_EVENTS[0]]);
     store.overrideSelector(AppSelectors.selectShowUpcomingEventBanner, false);
     store.refreshState();
   });
@@ -133,7 +133,7 @@ describe('AppComponent', () => {
         isLoading: false,
         isDesktopView: false,
         isWideView: false,
-        nextEvent: MOCK_EVENTS[0],
+        nextEvents: [MOCK_EVENTS[0]],
         showUpcomingEventBanner: false,
       });
     });
@@ -214,30 +214,34 @@ describe('AppComponent', () => {
       });
 
       describe('upcoming event banner', () => {
-        it('should render banner when showUpcomingEventBanner is true and nextEvent exists', () => {
+        it('should render banner when showUpcomingEventBanner is true and nextEvents exist', () => {
           store.overrideSelector(AppSelectors.selectShowUpcomingEventBanner, true);
-          store.overrideSelector(EventsSelectors.selectNextEvent, MOCK_EVENTS[0]);
+          store.overrideSelector(EventsSelectors.selectConcurrentNextEvents, [
+            MOCK_EVENTS[0],
+          ]);
           store.refreshState();
           fixture.detectChanges();
 
           expect(
             query(fixture.debugElement, 'lcc-upcoming-event-banner').componentInstance
-              .nextEvent,
-          ).toEqual(MOCK_EVENTS[0]);
+              .nextEvents,
+          ).toEqual([MOCK_EVENTS[0]]);
         });
 
         it('should not render banner when showUpcomingEventBanner is false', () => {
           store.overrideSelector(AppSelectors.selectShowUpcomingEventBanner, false);
-          store.overrideSelector(EventsSelectors.selectNextEvent, MOCK_EVENTS[0]);
+          store.overrideSelector(EventsSelectors.selectConcurrentNextEvents, [
+            MOCK_EVENTS[0],
+          ]);
           store.refreshState();
           fixture.detectChanges();
 
           expect(query(fixture.debugElement, 'lcc-upcoming-event-banner')).toBeFalsy();
         });
 
-        it('should not render banner when nextEvent is null', () => {
+        it('should not render banner when nextEvents is empty', () => {
           store.overrideSelector(AppSelectors.selectShowUpcomingEventBanner, true);
-          store.overrideSelector(EventsSelectors.selectNextEvent, null);
+          store.overrideSelector(EventsSelectors.selectConcurrentNextEvents, []);
           store.refreshState();
           fixture.detectChanges();
 
@@ -246,7 +250,9 @@ describe('AppComponent', () => {
 
         it('should handle clearBanner event from banner component', () => {
           store.overrideSelector(AppSelectors.selectShowUpcomingEventBanner, true);
-          store.overrideSelector(EventsSelectors.selectNextEvent, MOCK_EVENTS[0]);
+          store.overrideSelector(EventsSelectors.selectConcurrentNextEvents, [
+            MOCK_EVENTS[0],
+          ]);
           store.refreshState();
           fixture.detectChanges();
 

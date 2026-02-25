@@ -32,10 +32,10 @@
 
         <td class="event-details-cell">
           @for (event of group.events; track event.id) {
-            <div
-              class="event-entry"
-              [adminControls]="isAdmin ? getAdminControlsConfig(event) : null">
-              <div class="main-content">
+            <div class="event-entry">
+              <div
+                class="main-content"
+                [adminControls]="isAdmin ? getAdminControlsConfig(event) : null">
                 <div class="title-and-type">
                   <h3 class="title">
                     @if (event?.articleId) {
