@@ -97,7 +97,9 @@ export const selectHasUnsavedChanges = (id: Id | null) =>
 export const selectNextEvent = createSelector(selectAllEvents, allEvents => {
   return (
     allEvents
-      .sort((a, b) => customSort(a, b, 'eventDate'))
+      .sort((a, b) =>
+        customSort(a, b, 'eventDate', false, 'modificationInfo.dateLastEdited', true),
+      )
       .find(event =>
         moment(event.eventDate).add(3, 'hours').isAfter(moment.tz('America/Toronto')),
       ) ?? null
@@ -106,7 +108,9 @@ export const selectNextEvent = createSelector(selectAllEvents, allEvents => {
 
 export const selectConcurrentNextEvents = createSelector(selectAllEvents, allEvents => {
   const sortedFutureEvents = allEvents
-    .sort((a, b) => customSort(a, b, 'eventDate'))
+    .sort((a, b) =>
+      customSort(a, b, 'eventDate', false, 'modificationInfo.dateLastEdited', true),
+    )
     .filter(event =>
       moment(event.eventDate).add(3, 'hours').isAfter(moment.tz('America/Toronto')),
     );

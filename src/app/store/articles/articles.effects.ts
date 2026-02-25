@@ -1,5 +1,6 @@
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';
+import { routerNavigatedAction } from '@ngrx/router-store';
 import { Store } from '@ngrx/store';
 import moment from 'moment-timezone';
 import { combineLatest, merge, of, race, timer } from 'rxjs';
@@ -120,7 +121,16 @@ export class ArticlesEffects {
       ),
     );
 
-    const periodicCheck$ = timer(4500, 10 * 60 * 1000).pipe(
+    const periodicCheck$ = merge(
+      timer(4500, 10 * 60 * 1000),
+      this.actions$.pipe(
+        ofType(routerNavigatedAction),
+        filter(({ payload }) => {
+          const url = payload.event.url;
+          return url.includes('/news') || url.includes('/article');
+        }),
+      ),
+    ).pipe(
       switchMap(() =>
         combineLatest([
           this.store.select(ArticlesSelectors.selectLastFilteredFetch),

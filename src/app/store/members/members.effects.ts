@@ -1,5 +1,6 @@
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';
+import { routerNavigatedAction } from '@ngrx/router-store';
 import { Store } from '@ngrx/store';
 import moment from 'moment-timezone';
 import { combineLatest, merge, of, timer } from 'rxjs';
@@ -90,7 +91,13 @@ export class MembersEffects {
       ),
     );
 
-    const periodicCheck$ = timer(6500, 10 * 60 * 1000).pipe(
+    const periodicCheck$ = merge(
+      timer(6500, 10 * 60 * 1000),
+      this.actions$.pipe(
+        ofType(routerNavigatedAction),
+        filter(({ payload }) => payload.event.url.includes('/member')),
+      ),
+    ).pipe(
       switchMap(() =>
         combineLatest([
           this.store.select(MembersSelectors.selectLastFilteredFetch),
