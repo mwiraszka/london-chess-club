@@ -20,6 +20,7 @@ import {
 } from '@app/models';
 import { FormatDatePipe, HighlightPipe, KebabCasePipe } from '@app/pipes';
 import { DialogService } from '@app/services';
+import { customSort } from '@app/utils';
 
 @Component({
   selector: 'lcc-events-table',
@@ -71,6 +72,11 @@ export class EventsTableComponent {
         });
       }
     }
+    groups.forEach(group => {
+      if (group.events.length > 1) {
+        group.events.sort((a, b) => customSort(a, b, 'modificationInfo.dateLastEdited', true));
+      }
+    });
     return this.dateLimit !== undefined ? groups.slice(0, this.dateLimit) : groups;
   }
 
