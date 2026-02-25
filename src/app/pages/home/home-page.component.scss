@@ -75,6 +75,10 @@
       .events-table-wrapper {
         overflow-y: auto;
         max-height: 410px;
+
+        @include respond-to('lt-md') {
+          max-height: 250px;
+        }
       }
 
       ::ng-deep .events-table {
