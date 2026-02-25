@@ -148,7 +148,11 @@ export class EventsCalendarGridComponent implements OnInit, OnChanges {
 
   private updateCalendarMonths(): void {
     const eventsJson = JSON.stringify(
-      this.events.map(event => ({ id: event.id, eventDate: event.eventDate })),
+      this.events.map(event => ({
+        id: event.id,
+        eventDate: event.eventDate,
+        dateLastEdited: event.modificationInfo.dateLastEdited,
+      })),
     );
 
     // Only recalculate if events have actually changed

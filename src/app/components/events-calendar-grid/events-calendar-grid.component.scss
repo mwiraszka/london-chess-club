@@ -120,7 +120,7 @@ $grid-gap: 16px;
 
 .event-indicators {
   display: flex;
-  flex-flow: row-reverse wrap;
+  flex-flow: row wrap;
   min-width: 0;
   justify-content: center;
   gap: 2px;
