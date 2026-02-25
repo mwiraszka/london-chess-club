@@ -18,6 +18,7 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 
 - 🚀 Increase contrast between rapid tournament and championship event colours
 - 🐛 Ensure that initial batch of articles, events and members are loaded on their respective pages
+- 🐛 Keep ordering of same-day events the same in Upcoming Event Banner, Events Calendar and Events Table components
 
 </details>
 
