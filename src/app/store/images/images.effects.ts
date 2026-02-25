@@ -1,12 +1,10 @@
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';
 import { Store } from '@ngrx/store';
-import { isEqual } from 'lodash';
 import moment from 'moment-timezone';
-import { from, merge, of, timer } from 'rxjs';
+import { combineLatest, from, merge, of, race, timer } from 'rxjs';
 import {
   catchError,
-  distinctUntilChanged,
   exhaustMap,
   filter,
   groupBy,
@@ -25,6 +23,7 @@ import { ImageFileService, ImagesApiService } from '@app/services';
 import { AppActions } from '@app/store/app';
 import { ArticlesActions, ArticlesSelectors } from '@app/store/articles';
 import { AuthSelectors } from '@app/store/auth';
+import { NavSelectors } from '@app/store/nav';
 import {
   buildImagesFormData,
   dataUrlToFile,
@@ -43,19 +42,22 @@ export class ImagesEffects {
     return this.actions$.pipe(
       ofType(ImagesActions.fetchAllImagesMetadataRequested),
       switchMap(() =>
-        this.imagesApiService.getAllImagesMetadata().pipe(
-          map(response =>
-            ImagesActions.fetchAllImagesMetadataSucceeded({
-              images: response.data,
-            }),
-          ),
-          catchError(error =>
-            of(
-              ImagesActions.fetchAllImagesMetadataFailed({
-                error: parseError(error),
+        race(
+          this.imagesApiService.getAllImagesMetadata().pipe(
+            map(response =>
+              ImagesActions.fetchAllImagesMetadataSucceeded({
+                images: response.data,
               }),
             ),
+            catchError(error =>
+              of(
+                ImagesActions.fetchAllImagesMetadataFailed({
+                  error: parseError(error),
+                }),
+              ),
+            ),
           ),
+          timer(10_000).pipe(map(() => ImagesActions.requestTimedOut())),
         ),
       ),
     );
@@ -171,7 +173,7 @@ export class ImagesEffects {
           concatLatestFrom(() =>
             this.store.select(ArticlesSelectors.selectFilteredArticles),
           ),
-          map(([home, filtered]) => [...home, ...filtered].sort()),
+          map(([home, filtered]) => [...home, ...filtered]),
           take(1),
         ),
       ),
@@ -184,7 +186,6 @@ export class ImagesEffects {
           )
           .pipe(take(1)),
       ),
-      distinctUntilChanged((prev, curr) => isEqual(prev, curr)),
       filter(ids => ids.length > 0),
       map(imageIds =>
         ImagesActions.fetchBatchThumbnailsRequested({
@@ -315,7 +316,7 @@ export class ImagesEffects {
       ),
     );
 
-    const periodicCheck$ = timer(3 * 1000, 5 * 60 * 1000).pipe(
+    const periodicCheck$ = timer(4000, 5 * 60 * 1000).pipe(
       switchMap(() =>
         this.store.select(ImagesSelectors.selectLastMetadataFetch).pipe(take(1)),
       ),
@@ -342,13 +343,22 @@ export class ImagesEffects {
       ),
     );
 
-    const periodicCheck$ = timer(3 * 1000, 5 * 60 * 1000).pipe(
+    const periodicCheck$ = timer(5500, 5 * 60 * 1000).pipe(
       switchMap(() =>
-        this.store
-          .select(ImagesSelectors.selectLastFilteredThumbnailsFetch)
-          .pipe(take(1)),
+        combineLatest([
+          this.store.select(ImagesSelectors.selectLastFilteredThumbnailsFetch),
+          this.store.select(NavSelectors.selectCurrentPath),
+        ]).pipe(take(1)),
       ),
-      filter(lastFetch => isExpired(lastFetch)),
+      filter(
+        ([lastFetch, currentPath]) =>
+          isExpired(lastFetch) &&
+          !!(
+            currentPath?.includes('/photo-gallery') ||
+            currentPath?.includes('/album') ||
+            currentPath?.includes('/image')
+          ),
+      ),
     );
 
     return merge(refetchActions$, periodicCheck$).pipe(
@@ -370,7 +380,7 @@ export class ImagesEffects {
       ),
     );
 
-    const periodicCheck$ = timer(3 * 1000, 5 * 60 * 1000).pipe(
+    const periodicCheck$ = timer(7000, 5 * 60 * 1000).pipe(
       switchMap(() =>
         this.store.select(ImagesSelectors.selectLastAlbumCoversFetch).pipe(take(1)),
       ),
@@ -399,11 +409,13 @@ export class ImagesEffects {
     // Periodic check to retry failed/expired article banner images
     const periodicCheck$ = timer(5 * 60 * 1000, 10 * 60 * 1000).pipe(
       switchMap(() =>
-        merge(
+        combineLatest([
           this.store.select(ArticlesSelectors.selectHomePageArticles),
           this.store.select(ArticlesSelectors.selectFilteredArticles),
-        ).pipe(
-          map(articles => articles.filter(article => article.bannerImageId)),
+        ]).pipe(
+          map(([home, filtered]) =>
+            [...home, ...filtered].filter(article => article.bannerImageId),
+          ),
           take(1),
         ),
       ),

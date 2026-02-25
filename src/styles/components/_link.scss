@@ -1,30 +1,21 @@
 @mixin lcc-link {
-  position: relative;
-  padding-bottom: 2px;
   font-size: inherit;
   font-weight: 200;
-  white-space: nowrap;
+  line-height: 1.4;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 0.5px;
+  text-underline-offset: 3px;
   color: var(--lcc-color--link);
-
-  &::after {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 0.5px;
-    background-color: var(--lcc-color--linkUnderline);
-    transition: transform 200ms;
-    transform: scale(0);
-    transform-origin: center;
-    content: '';
-  }
+  transition:
+    color 300ms,
+    text-decoration-color 300ms,
+    text-underline-offset 200ms;
 
   &:hover {
     color: var(--lcc-color--linkOnHover);
-
-    &::after {
-      transform: scale(1);
-    }
+    text-decoration-color: var(--lcc-color--linkUnderline);
+    text-underline-offset: 2px;
   }
 
   &[disabled],

@@ -30,7 +30,7 @@ describe('UpcomingEventBannerComponent', () => {
 
     clearBannerSpy = jest.spyOn(component.clearBanner, 'emit');
 
-    component.nextEvent = MOCK_EVENTS[0];
+    component.nextEvents = [MOCK_EVENTS[0]];
     fixture.detectChanges();
   });
 

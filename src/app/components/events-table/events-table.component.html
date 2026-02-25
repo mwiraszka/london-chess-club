@@ -5,8 +5,8 @@
   </thead>
 
   <tbody>
-    @for (event of events; track event.id) {
-      @if (event.id === nextEvent?.id && options?.filters?.showPastEvents?.value) {
+    @for (group of groupedEvents; track group.dateKey) {
+      @if (group.hasNextEvent && options?.filters?.showPastEvents?.value) {
         <tr>
           <td colspan="2">
             <hr class="today-line today-scroll-point" />
@@ -14,68 +14,77 @@
         </tr>
       }
       <tr
-        [class.today-scroll-point]="event.id === nextEvent?.id"
-        [adminControls]="isAdmin ? getAdminControlsConfig(event) : null"
-        [id]="event.id">
+        [class.today-scroll-point]="group.hasNextEvent"
+        [id]="group.events[0].id">
         <td class="event-date-cell">
           <div class="event-date-widget">
             <div class="date-text">
-              {{ event.eventDate | formatDate: 'short day-of-week' }}
+              {{ group.events[0].eventDate | formatDate: 'short day-of-week' }}
             </div>
             <div class="date-text">
-              <b>{{ event.eventDate | formatDate: 'short month-day' }}</b>
+              <b>{{ group.events[0].eventDate | formatDate: 'short month-day' }}</b>
             </div>
-            <div class="date-text">{{ event.eventDate | formatDate: 'year' }}</div>
+            <div class="date-text">{{
+              group.events[0].eventDate | formatDate: 'year'
+            }}</div>
           </div>
         </td>
 
         <td class="event-details-cell">
-          <div class="main-content">
-            <h3
-              class="title"
-              [innerHTML]="event.title | highlight: options?.search">
-              {{ event.title }}
-            </h3>
-            <div
-              class="type-container"
-              [ngClass]="event.type | kebabCase">
-              <span
-                class="type"
-                [innerHTML]="event.type | highlight: options?.search">
-              </span>
+          @for (event of group.events; track event.id) {
+            <div class="event-entry">
+              <div
+                class="main-content"
+                [adminControls]="isAdmin ? getAdminControlsConfig(event) : null">
+                <div class="title-and-type">
+                  <h3 class="title">
+                    @if (event?.articleId) {
+                      <a
+                        [routerLink]="'/article/view/' + event.articleId"
+                        class="event-article-link lcc-link"
+                        [innerHTML]="event.title | highlight: options?.search">
+                      </a>
+                    } @else {
+                      <span [innerHTML]="event.title | highlight: options?.search"></span>
+                    }
+                  </h3>
+                  <div
+                    class="type-container"
+                    [ngClass]="event.type | kebabCase">
+                    <span
+                      class="type"
+                      [innerHTML]="event.type | highlight: options?.search">
+                    </span>
 
-              @if ((event.type | kebabCase) === 'championship') {
-                <mat-icon class="championship-icon">emoji_events</mat-icon>
+                    @if ((event.type | kebabCase) === 'championship') {
+                      <mat-icon class="championship-icon">emoji_events</mat-icon>
+                    }
+                  </div>
+                </div>
+
+                <p
+                  class="event-details"
+                  [innerHTML]="
+                    event.details.replaceAll('\\n', ' \n ') | highlight: options?.search
+                  ">
+                </p>
+              </div>
+
+              @if (showModificationInfo) {
+                <aside class="created-and-edited">
+                  <div>
+                    Event created
+                    {{ event.modificationInfo.dateCreated | formatDate: 'short no-time' }}
+                  </div>
+                  <div>
+                    Last edited
+                    {{
+                      event.modificationInfo.dateLastEdited | formatDate: 'short no-time'
+                    }}
+                  </div>
+                </aside>
               }
             </div>
-
-            <p
-              class="event-details"
-              [innerHTML]="
-                event.details.replaceAll('\\n', ' \n ') | highlight: options?.search
-              ">
-            </p>
-
-            @if (event?.articleId) {
-              <a
-                [routerLink]="'/article/view/' + event.articleId"
-                class="event-article-link lcc-link">
-                More details
-              </a>
-            }
-          </div>
-
-          @if (showModificationInfo) {
-            <aside class="created-and-edited">
-              <div>
-                Event created
-                {{ event.modificationInfo.dateCreated | formatDate: 'short no-time' }}
-              </div>
-              <div>
-                Last edited
-                {{ event.modificationInfo.dateLastEdited | formatDate: 'short no-time' }}
-              </div>
-            </aside>
           }
         </td>
       </tr>

@@ -2,7 +2,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';
 import { Store } from '@ngrx/store';
 import moment from 'moment-timezone';
-import { merge, of, timer } from 'rxjs';
+import { combineLatest, merge, of, race, timer } from 'rxjs';
 import {
   catchError,
   concatMap,
@@ -20,6 +20,7 @@ import { Article, DataPaginationOptions, LccError } from '@app/models';
 import { ArticlesApiService } from '@app/services';
 import { AppActions } from '@app/store/app';
 import { AuthSelectors } from '@app/store/auth';
+import { NavSelectors } from '@app/store/nav';
 import { isDefined, isExpired, parseError } from '@app/utils';
 
 import { ArticlesActions, ArticlesSelectors } from '.';
@@ -42,16 +43,21 @@ export class ArticlesEffects {
           search: '',
         };
 
-        return this.articlesApiService.getFilteredArticles(options).pipe(
-          map(response =>
-            ArticlesActions.fetchHomePageArticlesSucceeded({
-              articles: response.data.items,
-              totalCount: response.data.totalCount,
-            }),
+        return race(
+          this.articlesApiService.getFilteredArticles(options).pipe(
+            map(response =>
+              ArticlesActions.fetchHomePageArticlesSucceeded({
+                articles: response.data.items,
+                totalCount: response.data.totalCount,
+              }),
+            ),
+            catchError(error =>
+              of(
+                ArticlesActions.fetchHomePageArticlesFailed({ error: parseError(error) }),
+              ),
+            ),
           ),
-          catchError(error =>
-            of(ArticlesActions.fetchHomePageArticlesFailed({ error: parseError(error) })),
-          ),
+          timer(10_000).pipe(map(() => ArticlesActions.requestTimedOut())),
         );
       }),
     );
@@ -114,11 +120,18 @@ export class ArticlesEffects {
       ),
     );
 
-    const periodicCheck$ = timer(3 * 1000, 10 * 60 * 1000).pipe(
+    const periodicCheck$ = timer(4500, 10 * 60 * 1000).pipe(
       switchMap(() =>
-        this.store.select(ArticlesSelectors.selectLastFilteredFetch).pipe(take(1)),
+        combineLatest([
+          this.store.select(ArticlesSelectors.selectLastFilteredFetch),
+          this.store.select(NavSelectors.selectCurrentPath),
+        ]).pipe(take(1)),
       ),
-      filter(lastFetch => isExpired(lastFetch)),
+      filter(
+        ([lastFetch, currentPath]) =>
+          isExpired(lastFetch) &&
+          !!(currentPath?.includes('/news') || currentPath?.includes('/article')),
+      ),
     );
 
     return merge(refetchActions$, periodicCheck$).pipe(

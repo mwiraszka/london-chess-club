@@ -20,6 +20,7 @@ import {
 } from '@app/models';
 import { FormatDatePipe, HighlightPipe, KebabCasePipe } from '@app/pipes';
 import { DialogService } from '@app/services';
+import { customSort } from '@app/utils';
 
 @Component({
   selector: 'lcc-events-table',
@@ -41,12 +42,43 @@ export class EventsTableComponent {
   @Input({ required: true }) public isAdmin!: boolean;
   @Input({ required: true }) public nextEvent!: Event | null;
 
+  @Input() public dateLimit?: number;
   @Input() public options?: DataPaginationOptions<Event>;
   @Input() public showModificationInfo?: boolean;
 
   @Output() public requestDeleteEvent = new EventEmitter<Event>();
 
   constructor(private readonly dialogService: DialogService) {}
+
+  public get groupedEvents(): {
+    dateKey: string;
+    events: Event[];
+    hasNextEvent: boolean;
+  }[] {
+    const groups: { dateKey: string; events: Event[]; hasNextEvent: boolean }[] = [];
+    for (const event of this.events) {
+      const dateKey = event.eventDate.slice(0, 10);
+      const lastGroup = groups[groups.length - 1];
+      if (lastGroup && lastGroup.dateKey === dateKey) {
+        lastGroup.events.push(event);
+        if (event.id === this.nextEvent?.id) {
+          lastGroup.hasNextEvent = true;
+        }
+      } else {
+        groups.push({
+          dateKey,
+          events: [event],
+          hasNextEvent: event.id === this.nextEvent?.id,
+        });
+      }
+    }
+    groups.forEach(group => {
+      if (group.events.length > 1) {
+        group.events.sort((a, b) => customSort(a, b, 'modificationInfo.dateLastEdited', true));
+      }
+    });
+    return this.dateLimit !== undefined ? groups.slice(0, this.dateLimit) : groups;
+  }
 
   public getAdminControlsConfig(event: Event): AdminControlsConfig {
     return {

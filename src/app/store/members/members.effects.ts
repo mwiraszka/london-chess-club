@@ -2,7 +2,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';
 import { Store } from '@ngrx/store';
 import moment from 'moment-timezone';
-import { merge, of, timer } from 'rxjs';
+import { combineLatest, merge, of, timer } from 'rxjs';
 import {
   catchError,
   concatMap,
@@ -19,6 +19,7 @@ import { Member } from '@app/models';
 import { MembersApiService } from '@app/services';
 import { AppActions } from '@app/store/app';
 import { AuthSelectors } from '@app/store/auth';
+import { NavSelectors } from '@app/store/nav';
 import {
   exportDataToCsv,
   getNewPeakRating,
@@ -89,11 +90,17 @@ export class MembersEffects {
       ),
     );
 
-    const periodicCheck$ = timer(3 * 1000, 10 * 60 * 1000).pipe(
+    const periodicCheck$ = timer(6500, 10 * 60 * 1000).pipe(
       switchMap(() =>
-        this.store.select(MembersSelectors.selectLastFilteredFetch).pipe(take(1)),
+        combineLatest([
+          this.store.select(MembersSelectors.selectLastFilteredFetch),
+          this.store.select(NavSelectors.selectCurrentPath),
+        ]).pipe(take(1)),
       ),
-      filter(lastFetch => isExpired(lastFetch)),
+      filter(
+        ([lastFetch, currentPath]) =>
+          isExpired(lastFetch) && !!currentPath?.includes('/member'),
+      ),
     );
 
     return merge(refetchActions$, periodicCheck$).pipe(

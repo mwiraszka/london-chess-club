@@ -103,3 +103,15 @@ export const selectNextEvent = createSelector(selectAllEvents, allEvents => {
       ) ?? null
   );
 });
+
+export const selectConcurrentNextEvents = createSelector(selectAllEvents, allEvents => {
+  const sortedFutureEvents = allEvents
+    .sort((a, b) => customSort(a, b, 'eventDate'))
+    .filter(event =>
+      moment(event.eventDate).add(3, 'hours').isAfter(moment.tz('America/Toronto')),
+    );
+
+  return sortedFutureEvents.filter(
+    event => event.eventDate === sortedFutureEvents[0].eventDate,
+  );
+});

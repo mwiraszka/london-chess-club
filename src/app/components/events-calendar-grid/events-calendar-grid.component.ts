@@ -28,7 +28,7 @@ import {
 } from '@app/models';
 import { FormatDatePipe, HighlightPipe, KebabCasePipe } from '@app/pipes';
 import { DialogService } from '@app/services';
-import { isTouchDevice } from '@app/utils';
+import { customSort, isTouchDevice } from '@app/utils';
 
 import { EventInfoDialogComponent } from '../event-info-dialog/event-info-dialog.component';
 
@@ -193,9 +193,9 @@ export class EventsCalendarGridComponent implements OnInit, OnChanges {
           '[]',
         );
         const isToday = currentDate.isSame(today, 'day');
-        const dayEvents = this.events.filter(event =>
-          moment(event.eventDate).isSame(currentDate, 'day'),
-        );
+        const dayEvents = this.events
+          .filter(event => moment(event.eventDate).isSame(currentDate, 'day'))
+          .sort((a, b) => customSort(a, b, 'modificationInfo.dateLastEdited', true));
 
         const dateKey = currentDate.format('YYYY-MM-DD');
 

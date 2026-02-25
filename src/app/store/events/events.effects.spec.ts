@@ -161,7 +161,7 @@ describe('EventsEffects', () => {
         );
         expect(eventsApiService.getFilteredEvents).toHaveBeenCalledWith({
           page: 1,
-          pageSize: 3,
+          pageSize: 10,
           sortBy: 'eventDate',
           sortOrder: 'asc',
           filters: {
