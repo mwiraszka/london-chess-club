@@ -16,6 +16,7 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 <details>
 <summary>v5.12.2 - February 25th, 2026</summary>
 
+- 🚀 Reduce height of schedule section on Home page when on mobile
 - 🐛 Include event modification info in cache key in Events Calendar component to ensure ordering of same-day events is updated whenever any of the events change
 
 </details>
