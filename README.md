@@ -25,6 +25,7 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 - 🚀 Upcoming Event Banner
     - display multiple next events if they happen to fall on the same day and start time
     - display a striped background using the colours from each event
+- 🔧 Security updates
 </details>
 
 <details>
