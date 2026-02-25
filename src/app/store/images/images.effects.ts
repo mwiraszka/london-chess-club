@@ -1,12 +1,10 @@
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';
 import { Store } from '@ngrx/store';
-import { isEqual } from 'lodash';
 import moment from 'moment-timezone';
-import { from, merge, of, timer } from 'rxjs';
+import { combineLatest, from, merge, of, timer } from 'rxjs';
 import {
   catchError,
-  distinctUntilChanged,
   exhaustMap,
   filter,
   groupBy,
@@ -171,7 +169,7 @@ export class ImagesEffects {
           concatLatestFrom(() =>
             this.store.select(ArticlesSelectors.selectFilteredArticles),
           ),
-          map(([home, filtered]) => [...home, ...filtered].sort()),
+          map(([home, filtered]) => [...home, ...filtered]),
           take(1),
         ),
       ),
@@ -184,7 +182,6 @@ export class ImagesEffects {
           )
           .pipe(take(1)),
       ),
-      distinctUntilChanged((prev, curr) => isEqual(prev, curr)),
       filter(ids => ids.length > 0),
       map(imageIds =>
         ImagesActions.fetchBatchThumbnailsRequested({
@@ -399,11 +396,13 @@ export class ImagesEffects {
     // Periodic check to retry failed/expired article banner images
     const periodicCheck$ = timer(5 * 60 * 1000, 10 * 60 * 1000).pipe(
       switchMap(() =>
-        merge(
+        combineLatest([
           this.store.select(ArticlesSelectors.selectHomePageArticles),
           this.store.select(ArticlesSelectors.selectFilteredArticles),
-        ).pipe(
-          map(articles => articles.filter(article => article.bannerImageId)),
+        ]).pipe(
+          map(([home, filtered]) =>
+            [...home, ...filtered].filter(article => article.bannerImageId),
+          ),
           take(1),
         ),
       ),

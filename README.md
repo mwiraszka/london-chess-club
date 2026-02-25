@@ -16,15 +16,16 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 <details>
 <summary>v5.12.0 - February TBD, 2026</summary>
 
-- 🚀 Articles
-    - only make the first two table columns sticky for the Results and Ratings Report tables (i.e. allow other tables that begin with a '#' header to behave normally)
-    - extend the list of allowable characters in the article body
-- 🚀 Events
-    - simplify the layout of events in the Events Table
-    - improve handling of multiple events that occur on the same day
-- 🚀 Upcoming Event Banner
-    - display multiple next events if they happen to fall on the same day and start time
-    - display a striped background using the colours from each event
+- Articles
+    - 🚀 only make the first two table columns sticky for the Results and Ratings Report tables (i.e. allow other tables that begin with a '#' header to behave normally)
+    - 🚀 extend the list of allowable characters in the article body
+    - 🐛 ensure article banner re-fetch mechanism is not dependent on whether Home page or News page have already been loaded
+- Events
+    - 🚀 simplify the layout of events in the Events Table
+    - 🚀 improve handling of multiple events that occur on the same day
+- Upcoming Event Banner
+    - 🚀 display multiple next events if they happen to fall on the same day and start time
+    - 🚀 display a striped background using the colours from each event
 - 🔧 Security updates
 </details>
 
