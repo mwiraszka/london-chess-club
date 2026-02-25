@@ -14,6 +14,13 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 | 🔧  | Behind-the-scenes changes         |
 
 <details>
+<summary>v5.12.1 - February 25th, 2026</summary>
+
+- 🚀 Increase contrast between rapid tournament and championship event colours
+
+</details>
+
+<details>
 <summary>v5.12.0 - February 25th, 2026</summary>
 
 - Articles
