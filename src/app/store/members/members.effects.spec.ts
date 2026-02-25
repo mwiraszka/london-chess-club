@@ -11,6 +11,7 @@ import { MOCK_MEMBERS } from '@app/mocks/members.mock';
 import { ApiResponse, LccError, Member, PaginatedItems, User } from '@app/models';
 import { MembersApiService } from '@app/services';
 import { AuthSelectors } from '@app/store/auth';
+import { NavSelectors } from '@app/store/nav';
 
 import { MembersActions, MembersSelectors } from '.';
 import { MembersEffects } from './members.effects';
@@ -311,6 +312,7 @@ describe('MembersEffects', () => {
     it('should trigger refetch when last fetch is expired', fakeAsync(() => {
       const expiredTimestamp = moment().subtract(20, 'minutes').toISOString();
       store.overrideSelector(MembersSelectors.selectLastFilteredFetch, expiredTimestamp);
+      store.overrideSelector(NavSelectors.selectCurrentPath, '/members');
       store.refreshState();
       mockIsExpired.mockReturnValue(true);
 
@@ -331,6 +333,7 @@ describe('MembersEffects', () => {
     it('should not trigger refetch when last fetch is not expired', fakeAsync(() => {
       const recentTimestamp = moment().subtract(5, 'minutes').toISOString();
       store.overrideSelector(MembersSelectors.selectLastFilteredFetch, recentTimestamp);
+      store.overrideSelector(NavSelectors.selectCurrentPath, '/members');
       store.refreshState();
       mockIsExpired.mockReturnValue(false);
 
