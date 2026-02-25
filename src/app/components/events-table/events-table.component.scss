@@ -12,6 +12,7 @@
 
     .event-date-cell {
       vertical-align: top;
+      padding: 12px;
 
       .event-date-widget {
         display: flex;
@@ -53,7 +54,7 @@
           display: flex;
           flex-direction: column;
           align-items: flex-start;
-          gap: 4px;
+          gap: 8px;
 
           .title {
             display: inline;
@@ -114,7 +115,6 @@
           }
 
           .event-details {
-            padding-top: 16px;
             font-size: 14px;
             font-weight: 200;
             color: var(--lcc-color--schedule-eventDetailsText);
