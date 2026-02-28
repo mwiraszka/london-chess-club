@@ -91,13 +91,7 @@ export class MembersEffects {
       ),
     );
 
-    const periodicCheck$ = merge(
-      timer(6500, 10 * 60 * 1000),
-      this.actions$.pipe(
-        ofType(routerNavigatedAction),
-        filter(({ payload }) => payload.event.url.includes('/member')),
-      ),
-    ).pipe(
+    const timerCheck$ = timer(6500, 10 * 60 * 1000).pipe(
       switchMap(() =>
         combineLatest([
           this.store.select(MembersSelectors.selectLastFilteredFetch),
@@ -109,6 +103,17 @@ export class MembersEffects {
           isExpired(lastFetch) && !!currentPath?.includes('/member'),
       ),
     );
+
+    const routerCheck$ = this.actions$.pipe(
+      ofType(routerNavigatedAction),
+      filter(({ payload }) => payload.event.url.includes('/member')),
+      switchMap(() =>
+        this.store.select(MembersSelectors.selectLastFilteredFetch).pipe(take(1)),
+      ),
+      filter(lastFetch => isExpired(lastFetch)),
+    );
+
+    const periodicCheck$ = merge(timerCheck$, routerCheck$);
 
     return merge(refetchActions$, periodicCheck$).pipe(
       map(() => MembersActions.fetchFilteredMembersInBackgroundRequested()),

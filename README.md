@@ -17,6 +17,7 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 <summary>v5.12.3 - February 28th, 2026</summary>
 
 - 🚀 Improve contrast between event type colours
+- 🐛 Fix race condition preventing items from being fetched when Members, News and Schedule pages are initially loaded
 
 </details>
 
