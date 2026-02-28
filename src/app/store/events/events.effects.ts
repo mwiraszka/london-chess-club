@@ -142,16 +142,7 @@ export class EventsEffects {
       ),
     );
 
-    const periodicCheck$ = merge(
-      timer(5000, 10 * 60 * 1000),
-      this.actions$.pipe(
-        ofType(routerNavigatedAction),
-        filter(({ payload }) => {
-          const url = payload.event.url;
-          return url.includes('/schedule') || url.includes('/event');
-        }),
-      ),
-    ).pipe(
+    const timerCheck$ = timer(5000, 10 * 60 * 1000).pipe(
       switchMap(() =>
         combineLatest([
           this.store.select(EventsSelectors.selectLastFilteredFetch),
@@ -164,6 +155,20 @@ export class EventsEffects {
           !!(currentPath?.includes('/schedule') || currentPath?.includes('/event')),
       ),
     );
+
+    const routerCheck$ = this.actions$.pipe(
+      ofType(routerNavigatedAction),
+      filter(({ payload }) => {
+        const url = payload.event.url;
+        return url.includes('/schedule') || url.includes('/event');
+      }),
+      switchMap(() =>
+        this.store.select(EventsSelectors.selectLastFilteredFetch).pipe(take(1)),
+      ),
+      filter(lastFetch => isExpired(lastFetch)),
+    );
+
+    const periodicCheck$ = merge(timerCheck$, routerCheck$);
 
     return merge(refetchActions$, periodicCheck$).pipe(
       map(() => EventsActions.fetchFilteredEventsInBackgroundRequested()),

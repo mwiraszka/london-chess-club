@@ -121,16 +121,7 @@ export class ArticlesEffects {
       ),
     );
 
-    const periodicCheck$ = merge(
-      timer(4500, 10 * 60 * 1000),
-      this.actions$.pipe(
-        ofType(routerNavigatedAction),
-        filter(({ payload }) => {
-          const url = payload.event.url;
-          return url.includes('/news') || url.includes('/article');
-        }),
-      ),
-    ).pipe(
+    const timerCheck$ = timer(4500, 10 * 60 * 1000).pipe(
       switchMap(() =>
         combineLatest([
           this.store.select(ArticlesSelectors.selectLastFilteredFetch),
@@ -143,6 +134,20 @@ export class ArticlesEffects {
           !!(currentPath?.includes('/news') || currentPath?.includes('/article')),
       ),
     );
+
+    const routerCheck$ = this.actions$.pipe(
+      ofType(routerNavigatedAction),
+      filter(({ payload }) => {
+        const url = payload.event.url;
+        return url.includes('/news') || url.includes('/article');
+      }),
+      switchMap(() =>
+        this.store.select(ArticlesSelectors.selectLastFilteredFetch).pipe(take(1)),
+      ),
+      filter(lastFetch => isExpired(lastFetch)),
+    );
+
+    const periodicCheck$ = merge(timerCheck$, routerCheck$);
 
     return merge(refetchActions$, periodicCheck$).pipe(
       map(() => ArticlesActions.fetchFilteredArticlesInBackgroundRequested()),

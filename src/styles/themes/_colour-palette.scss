@@ -60,24 +60,24 @@ $lcc-color-palette: (
     light: hsl(0, 50%, 80%),
   ),
   event-rapid-25-tournament: (
+    base: hsl(35, 75%, 50%),
+    light: hsl(35, 75%, 70%),
+  ),
+  event-rapid-40-tournament: (
     base: hsl(107, 45%, 50%),
     light: hsl(107, 45%, 70%),
   ),
-  event-rapid-40-tournament: (
-    base: hsl(30, 60%, 60%),
-    light: hsl(30, 60%, 80%),
-  ),
   event-lecture: (
-    base: hsl(170, 35%, 50%),
-    light: hsl(170, 35%, 70%),
+    base: hsl(175, 35%, 30%),
+    light: hsl(175, 35%, 50%),
   ),
   event-simul: (
-    base: hsl(247, 30%, 60%),
-    light: hsl(247, 30%, 80%),
+    base: hsl(247, 60%, 60%),
+    light: hsl(247, 60%, 80%),
   ),
   event-championship: (
-    base: hsl(55, 70%, 60%),
-    light: hsl(55, 70%, 80%),
+    base: hsl(52, 80%, 50%),
+    light: hsl(52, 80%, 70%),
   ),
   event-other: (
     base: hsl(240, 10%, 60%),
