@@ -14,6 +14,13 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 | 🔧  | Behind-the-scenes changes         |
 
 <details>
+<summary>v5.12.4 - March 1st, 2026</summary>
+
+- 🚀 Update some wording on About and City Champion pages
+
+</details>
+
+<details>
 <summary>v5.12.3 - February 28th, 2026</summary>
 
 - 🚀 Improve contrast between event type colours
