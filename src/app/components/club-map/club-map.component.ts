@@ -1,4 +1,4 @@
-import { Loader } from '@googlemaps/js-api-loader';
+import { importLibrary, setOptions } from '@googlemaps/js-api-loader';
 
 import {
   AfterViewInit,
@@ -7,6 +7,7 @@ import {
   ElementRef,
   Input,
   OnInit,
+  ViewChild,
 } from '@angular/core';
 
 import { Club } from '@app/models';
@@ -20,7 +21,10 @@ import { environment } from '@env';
       [href]="club.mapUrl"
       rel="noopener noreferrer"
       target="_blank">
-      <div [id]="club.id + '-location'"></div>
+      <div
+        #mapContainer
+        [id]="club.id + '-location'">
+      </div>
     </a>
   `,
   styles: `
@@ -49,15 +53,14 @@ import { environment } from '@env';
 })
 export class ClubMapComponent implements OnInit, AfterViewInit {
   @Input({ required: true }) club!: Club;
+  @ViewChild('mapContainer') mapContainer!: ElementRef<HTMLDivElement>;
 
-  private loader!: Loader;
-
-  constructor(private elementRef: ElementRef) {}
+  constructor() {}
 
   public ngOnInit(): void {
-    this.loader = new Loader({
-      apiKey: environment.googleMapsApiKey,
-      version: 'weekly',
+    setOptions({
+      key: environment.googleMapsApiKey,
+      v: 'weekly',
     });
   }
 
@@ -77,25 +80,21 @@ export class ClubMapComponent implements OnInit, AfterViewInit {
       zoom: 15,
     };
 
-    const mapElement: HTMLDivElement = this.elementRef.nativeElement.querySelector(
-      `#${this.club.id}-location`,
-    );
-
-    const map = await this.loader
-      .importLibrary('maps')
-      .then(({ Map }) => new Map(mapElement, mapOptions))
-      .catch(error => console.error(`[LCC] Error creating Google Maps map: ${error}`));
+    const map = await importLibrary('maps')
+      .then(({ Map }) => new Map(this.mapContainer.nativeElement, mapOptions))
+      .catch((error: unknown) =>
+        console.error(`[LCC] Error creating Google Maps map: ${error}`),
+      );
 
     if (map) {
-      this.loader
-        .importLibrary('marker')
+      importLibrary('marker')
         .then(({ AdvancedMarkerElement }) => {
           new AdvancedMarkerElement({
             map,
             position: this.club.location,
           });
         })
-        .catch(error =>
+        .catch((error: unknown) =>
           console.error(`[LCC] Error creating Google Maps advanced marker: ${error}`),
         );
     }

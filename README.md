@@ -14,6 +14,14 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 | 🔧  | Behind-the-scenes changes         |
 
 <details>
+<summary>v5.12.5 - March 5th, 2026</summary>
+
+- 🔧 Upgrade Angular to v21.2.x and other packages to their latest versions
+- 🔧 Security updates
+
+</details>
+
+<details>
 <summary>v5.12.4 - March 1st, 2026</summary>
 
 - 🚀 Update some wording on About and City Champion pages
