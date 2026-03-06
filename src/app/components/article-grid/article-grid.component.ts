@@ -28,7 +28,7 @@ import {
   FormatDatePipe,
   HighlightPipe,
   RouterLinkPipe,
-  StripMarkdownPipe,
+  SummarizeArticlePipe,
 } from '@app/pipes';
 import { DialogService } from '@app/services';
 import { isDefined } from '@app/utils';
@@ -45,7 +45,7 @@ import { isDefined } from '@app/utils';
     MatIconModule,
     RouterLink,
     RouterLinkPipe,
-    StripMarkdownPipe,
+    SummarizeArticlePipe,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

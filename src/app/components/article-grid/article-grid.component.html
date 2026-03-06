@@ -25,7 +25,11 @@
         <hr />
         <p
           class="article-preview lcc-truncate-max-5-lines"
-          [innerHTML]="article.body | stripMarkdown | highlight: options?.search">
+          [innerHTML]="
+            article.body
+              | summarizeArticle: article.title.startsWith('Blitz')
+              | highlight: options?.search
+          ">
         </p>
         <div class="article-creation-date">
           {{ article.modificationInfo.dateCreated | formatDate: 'short no-time' }}
