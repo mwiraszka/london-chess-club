@@ -14,6 +14,13 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 | 🔧  | Behind-the-scenes changes         |
 
 <details>
+<summary>v5.12.6 - March 6th, 2026</summary>
+
+- 🐛 Fix a couple article card layout issues
+
+</details>
+
+<details>
 <summary>v5.12.5 - March 5th, 2026</summary>
 
 - Article Grid
