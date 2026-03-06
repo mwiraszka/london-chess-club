@@ -52,10 +52,9 @@ import { environment } from '@env';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClubMapComponent implements OnInit, AfterViewInit {
-  @Input({ required: true }) club!: Club;
   @ViewChild('mapContainer') mapContainer!: ElementRef<HTMLDivElement>;
 
-  constructor() {}
+  @Input({ required: true }) club!: Club;
 
   public ngOnInit(): void {
     setOptions({

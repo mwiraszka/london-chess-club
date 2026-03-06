@@ -1,9 +1,18 @@
+import { setOptions } from '@googlemaps/js-api-loader';
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LCC_CLUB } from '@app/constants/clubs';
 import { query } from '@app/utils';
 
 import { ClubMapComponent } from './club-map.component';
+
+jest.mock('@googlemaps/js-api-loader', () => ({
+  setOptions: jest.fn(),
+  importLibrary: jest
+    .fn()
+    .mockResolvedValue({ Map: jest.fn(), AdvancedMarkerElement: jest.fn() }),
+}));
 
 describe('ClubMapComponent', () => {
   let component: ClubMapComponent;
@@ -29,11 +38,12 @@ describe('ClubMapComponent', () => {
   });
 
   describe('initialization', () => {
-    it('should initialize the loader in ngOnInit', () => {
+    it('should call setOptions with the Google Maps API key in ngOnInit', () => {
       component.ngOnInit();
 
-      // @ts-expect-error Private class member
-      expect(component.loader).toBeDefined();
+      expect(setOptions).toHaveBeenCalledWith(
+        expect.objectContaining({ key: expect.any(String), v: 'weekly' }),
+      );
     });
 
     it('should call initMap on ngAfterViewInit', () => {
