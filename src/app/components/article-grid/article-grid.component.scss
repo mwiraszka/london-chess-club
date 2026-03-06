@@ -95,7 +95,7 @@ $grid-gap: 8px;
       .article-title {
         // Hardcode height to ensure title sections align between cards
         // regardless of whether there is 1 or 2 lines of text
-        height: 2.3em;
+        height: 2.36em;
         font-weight: 400;
         text-align: center;
         color: var(--lcc-color--articleGrid-articleHeaderText);
@@ -109,7 +109,7 @@ $grid-gap: 8px;
 
       .article-preview {
         // Hardcode to keep alignment in case there are fewer than 5 lines of text
-        height: 85px;
+        height: 83px;
         font-size: 13px;
         line-height: 1.3em !important;
         color: var(--lcc-color--articleGrid-articleSummaryText);
