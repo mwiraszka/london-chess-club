@@ -8,6 +8,6 @@ export { IsStringPipe } from './is-string.pipe';
 export { KebabCasePipe } from './kebab-case.pipe';
 export { RangePipe } from './range.pipe';
 export { RouterLinkPipe } from './router-link.pipe';
-export { StripMarkdownPipe } from './strip-markdown.pipe';
+export { SummarizeArticlePipe } from './summarize-article.pipe';
 export { TruncateByCharsPipe } from './truncate-by-chars.pipe';
 export { WasEditedPipe } from './was-edited.pipe';

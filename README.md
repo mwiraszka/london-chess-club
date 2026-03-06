@@ -16,6 +16,9 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 <details>
 <summary>v5.12.5 - March 5th, 2026</summary>
 
+- Article Grid
+  - 🚀 Automatically parse out the top-5 finishers from the results tables (open section) of blitz tournament articles, and use that as the summary for the article
+  - 🚀 Improve the layout and formatting of the summary section for all other types of articles
 - 🔧 Upgrade Angular to v21.2.x and other packages to their latest versions
 - 🔧 Security updates
 

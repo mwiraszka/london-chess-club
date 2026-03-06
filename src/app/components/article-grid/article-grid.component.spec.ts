@@ -327,6 +327,28 @@ describe('ArticleGridComponent', () => {
       expect(bodyPreview).not.toContain('#');
     });
 
+    it('should display formatted player list for blitz result table articles', () => {
+      const resultTableArticle: Article = {
+        ...MOCK_ARTICLES[3],
+        title: 'Blitz Saturday Tournament',
+        body:
+          '## Open\n<br>\n\n| # | Name | Rating | Round 1 | Points |\n|--:|--|--|--|--:|\n' +
+          '|1\t|Fry, Philip\t|2195\t|W6 (w)\t|1.0|\n' +
+          '|2\t|Turanga, Leela\t|1954\t|W20 (w)\t|1.0|\n' +
+          '|3\t|Rodriguez, Bender\t|1835\t|W13 (w)\t|1.0|\n' +
+          '|4\t|Farnsworth, Hubert\t|2056\t|L8 (b)\t|0.0|\n' +
+          '|5\t|Wong, Amy\t|1431\t|W15 (w)\t|1.0|\n' +
+          '|6\t|Kroker, Kif\t|1827\t|L1 (b)\t|0.0|',
+      };
+      fixture.componentRef.setInput('articles', [resultTableArticle]);
+      fixture.detectChanges();
+
+      const bodyPreview = queryTextContent(fixture.debugElement, '.article-preview');
+      expect(bodyPreview).toContain('1. Fry, P.');
+      expect(bodyPreview).toContain('\u2013 1.0');
+      expect(bodyPreview).not.toContain('Round');
+    });
+
     it('should apply search highlighting when search term is present', () => {
       fixture.componentRef.setInput('options', { ...mockOptions, search: 'blitz' });
       fixture.componentRef.setInput('articles', [MOCK_ARTICLES[0]]);
