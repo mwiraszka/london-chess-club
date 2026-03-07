@@ -18,6 +18,7 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 
 - 🚀 Improve article card styling
 - 🚀 Always load up the 10 latest articles on the homepage and display them in a single, scrollable row instead of wrapping
+- 🚀 Link the event titles in the Upcoming Event Banner directly to the event's associated article instead of the Schedule page
 - 🐛 Prevent potential localStorage quota exceeded errors by removing old state keys before setting the corresponding new ones
 
 </details>
