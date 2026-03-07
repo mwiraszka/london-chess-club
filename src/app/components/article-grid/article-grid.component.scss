@@ -1,7 +1,7 @@
 @use '../../../styles/abstracts/mixins' as *;
 
-$card-min-width: 190px;
-$card-max-width: 310px;
+$card-min-width: 205px;
+$card-max-width: 312px; // Large enough to allow smooth transition between 2 and 3 in grid layout
 $grid-gap: 8px;
 
 :host {
@@ -10,6 +10,17 @@ $grid-gap: 8px;
   align-items: center;
   justify-content: center;
   width: 100%;
+
+  &.is-home-page {
+    overflow-x: auto;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding-bottom: 4px;
+
+    @include respond-to('lt-xs') {
+      scroll-snap-type: x mandatory;
+    }
+  }
 }
 
 .article-grid {
@@ -21,9 +32,26 @@ $grid-gap: 8px;
   gap: $grid-gap;
 
   @container (width >= calc(2 * #{$card-min-width} + #{$grid-gap})) {
-    &:not([card-count='1']) {
+    &:not([card-count='1']):not(.is-home-page) {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax($card-min-width, 1fr));
+    }
+  }
+
+  &.is-home-page {
+    flex-flow: row nowrap;
+    justify-content: center;
+
+    .article {
+      min-width: $card-min-width;
+      max-width: $card-min-width;
+      flex-shrink: 0;
+
+      @include respond-to('lt-xs') {
+        min-width: 100cqi;
+        max-width: 100cqi;
+        scroll-snap-align: center;
+      }
     }
   }
 
@@ -43,15 +71,18 @@ $grid-gap: 8px;
     max-width: $card-max-width;
     height: auto;
     border-radius: var(--lcc-borderRadius--large);
+    box-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.25);
     background-color: var(--lcc-color--articleGrid-cardBackground);
     transition:
       transform 0.3s ease,
+      box-shadow 0.3s ease,
       background-color 0.3s ease;
     animation: fade-in-up 1s ease-out forwards;
 
     &:hover {
       background-color: var(--lcc-color--articleGrid-cardBackgroundOnHover);
       cursor: pointer;
+      box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.35);
       transform: scale(1.005);
     }
 
@@ -65,6 +96,16 @@ $grid-gap: 8px;
       border-top-left-radius: var(--lcc-borderRadius--large);
       border-top-right-radius: var(--lcc-borderRadius--large);
       background-color: var(--lcc-color--contentPlaceholder-background);
+      mask-image: radial-gradient(
+        ellipse 90% 90% at 50% 45%,
+        black 50%,
+        transparent 100%
+      );
+      -webkit-mask-image: radial-gradient(
+        ellipse 90% 90% at 50% 45%,
+        black 50%,
+        transparent 100%
+      );
     }
 
     img {
@@ -92,10 +133,20 @@ $grid-gap: 8px;
       height: 100%;
       padding: 8px 12px;
 
-      .article-title {
+      .article-title-wrapper {
         // Hardcode height to ensure title sections align between cards
-        // regardless of whether there is 1 or 2 lines of text
-        height: 2.36em;
+        // regardless of how many lines of text
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 62px;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        background-color: rgba(255, 255, 255, 0.025);
+        padding: 4px 8px;
+      }
+
+      .article-title {
         font-weight: 400;
         text-align: center;
         color: var(--lcc-color--articleGrid-articleHeaderText);
@@ -109,19 +160,19 @@ $grid-gap: 8px;
 
       .article-preview {
         // Hardcode to keep alignment in case there are fewer than 5 lines of text
-        height: 83px;
-        font-size: 13px;
+        height: 94px;
+        font-size: 14px;
         line-height: 1.3em !important;
         color: var(--lcc-color--articleGrid-articleSummaryText);
 
         ::ng-deep .result-preview-rating {
-          font-size: 12px;
+          font-size: 13px;
           color: var(--lcc-color--articleGrid-articleSummarySecondaryText);
         }
       }
 
       .article-creation-date {
-        margin-top: 8px;
+        margin-top: 16px;
         font-size: 11px;
         text-align: center;
         color: var(--lcc-color--articleGrid-articleCreationDateText);

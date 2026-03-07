@@ -47,9 +47,23 @@ describe('UpcomingEventBannerComponent', () => {
         expect(bannerText).toContain(formatDate(MOCK_EVENTS[0].eventDate));
       });
 
-      it('should have navigatable class when not on schedule page', () => {
-        const bannerMessage = query(fixture.debugElement, '.banner-message');
-        expect(bannerMessage.nativeElement.classList.contains('navigatable')).toBe(true);
+      it('should not render a link for an event without an articleId', () => {
+        component.nextEvents = [MOCK_EVENTS[0]]; // articleId: ''
+        fixture.detectChanges();
+
+        expect(query(fixture.debugElement, '.event-title-link')).toBeFalsy();
+      });
+
+      it('should render a link to the article for an event with an articleId', () => {
+        component.nextEvents = [MOCK_EVENTS[1]]; // has articleId
+        component['changeDetectorRef'].markForCheck();
+        fixture.detectChanges();
+
+        const link = query(fixture.debugElement, '.event-title-link');
+        expect(link).toBeTruthy();
+        expect(link.nativeElement.getAttribute('href')).toContain(
+          MOCK_EVENTS[1].articleId,
+        );
       });
     });
 

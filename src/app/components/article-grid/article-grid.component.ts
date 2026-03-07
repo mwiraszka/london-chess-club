@@ -2,10 +2,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  HostListener,
   Input,
   OnChanges,
-  OnInit,
   Output,
   SimpleChanges,
 } from '@angular/core';
@@ -37,6 +35,7 @@ import { isDefined } from '@app/utils';
   selector: 'lcc-article-grid',
   templateUrl: './article-grid.component.html',
   styleUrl: './article-grid.component.scss',
+  host: { '[class.is-home-page]': '!!isHomePage' },
   imports: [
     AdminControlsDirective,
     FormatDatePipe,
@@ -49,7 +48,7 @@ import { isDefined } from '@app/utils';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ArticleGridComponent implements OnInit, OnChanges {
+export class ArticleGridComponent implements OnChanges {
   @Input({ required: true }) articles!: Article[];
   @Input({ required: true }) images!: Image[];
   @Input({ required: true }) isAdmin!: boolean;
@@ -65,22 +64,11 @@ export class ArticleGridComponent implements OnInit, OnChanges {
 
   private animationDelays = new Map<Id, number>();
   private bannerImagesMap = new Map<Id, Image>();
-  private limitToFourArticles = false;
-
-  @HostListener('window:resize')
-  private setHomePageArticleCount = () => {
-    if (this.isHomePage) {
-      this.limitToFourArticles =
-        window.innerWidth < 642 || (window.innerWidth > 839 && window.innerWidth < 1235);
-    }
-  };
 
   get visibleArticles(): Article[] {
     let articles: Article[];
 
-    if (this.limitToFourArticles) {
-      articles = this.articles.slice(0, 4);
-    } else if (!this.options || this.options.pageSize === -1) {
+    if (!this.options || this.options.pageSize === -1) {
       articles = this.articles;
     } else {
       articles = this.articles.slice(0, this.options.pageSize);
@@ -97,10 +85,6 @@ export class ArticleGridComponent implements OnInit, OnChanges {
   }
 
   constructor(private readonly dialogService: DialogService) {}
-
-  public ngOnInit(): void {
-    this.setHomePageArticleCount();
-  }
 
   public ngOnChanges(changes: SimpleChanges<ArticleGridComponent>): void {
     if (changes.images) {

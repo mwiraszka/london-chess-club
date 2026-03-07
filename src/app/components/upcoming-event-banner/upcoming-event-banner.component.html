@@ -2,11 +2,8 @@
   class="container"
   [style.background]="backgroundStyling">
   <div class="banner-message-container">
-    <a
+    <div
       class="banner-message"
-      [class.navigatable]="!isOnSchedulePage()"
-      [routerLink]="!isOnSchedulePage() ? '/schedule' : null"
-      [attr.role]="isOnSchedulePage() ? 'text' : 'link'"
       #bannerMessage>
       <div
         class="marquee-content"
@@ -27,7 +24,15 @@
               <span class="event-divider"></span>
             }
             <span>
-              <b>{{ event.title }}</b>
+              @if (event.articleId) {
+                <a
+                  class="event-title-link lcc-link"
+                  [routerLink]="['/article/view', event.articleId]">
+                  <b>{{ event.title }}</b>
+                </a>
+              } @else {
+                <b>{{ event.title }}</b>
+              }
             </span>
           }
           <span>on</span>
@@ -36,7 +41,7 @@
           </span>
         </span>
       </ng-template>
-    </a>
+    </div>
 
     <button
       class="close-button lcc-icon-button"

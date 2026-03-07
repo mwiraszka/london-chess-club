@@ -1,5 +1,6 @@
 <div
   class="article-grid"
+  [class.is-home-page]="isHomePage"
   [attr.card-count]="visibleArticles.length">
   @for (article of visibleArticles; track article.id) {
     <a
@@ -18,10 +19,12 @@
       </div>
 
       <div class="article-summary-container">
-        <h3
-          class="article-title lcc-truncate-max-2-lines"
-          [innerHTML]="article.title | highlight: options?.search">
-        </h3>
+        <div class="article-title-wrapper">
+          <h3
+            class="article-title lcc-truncate-max-3-lines"
+            [innerHTML]="article.title | highlight: options?.search">
+          </h3>
+        </div>
         <hr />
         <p
           class="article-preview lcc-truncate-max-5-lines"

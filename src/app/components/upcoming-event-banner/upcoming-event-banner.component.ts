@@ -1,5 +1,3 @@
-import { filter, map } from 'rxjs';
-
 import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
@@ -12,11 +10,9 @@ import {
   OnDestroy,
   Output,
   ViewChild,
-  computed,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
-import { NavigationEnd, Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 
 import { Event, EventType } from '@app/models';
 import { FormatDatePipe } from '@app/pipes';
@@ -52,7 +48,6 @@ export class UpcomingEventBannerComponent implements AfterViewInit, OnDestroy {
 
   protected shouldAnimate = false;
   protected animationDuration = 20;
-  protected isOnSchedulePage = computed(() => this.currentUrl() === '/schedule');
 
   protected get backgroundStyling(): string {
     const colorVar = (type: EventType) =>
@@ -68,20 +63,9 @@ export class UpcomingEventBannerComponent implements AfterViewInit, OnDestroy {
     return `repeating-linear-gradient(-45deg, ${stops.join(', ')})`;
   }
 
-  private readonly currentUrl = toSignal(
-    this.router.events.pipe(
-      filter((event): event is NavigationEnd => event instanceof NavigationEnd),
-      map(() => this.router.url),
-    ),
-    { initialValue: this.router.url },
-  );
-
   private resizeObserver?: ResizeObserver;
 
-  constructor(
-    private readonly changeDetectorRef: ChangeDetectorRef,
-    private readonly router: Router,
-  ) {}
+  constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
 
   public ngAfterViewInit(): void {
     // Do not scroll for first 2 seconds to allow user to read the start of the message

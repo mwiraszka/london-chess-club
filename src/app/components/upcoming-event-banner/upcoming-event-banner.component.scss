@@ -33,26 +33,19 @@
   white-space: nowrap;
   color: var(--lcc-color--upcomingEventBanner-text);
 
-  &.navigatable {
-    cursor: pointer;
-
-    &:hover {
-      color: var(--lcc-color--upcomingEventBanner-textOnHover);
-
-      b {
-        color: var(--lcc-color--upcomingEventBanner-boldTextOnHover);
-      }
-    }
-  }
-
-  &:not(.navigatable) {
-    cursor: default;
-    pointer-events: none;
-  }
-
   b {
     font-weight: bold;
     color: var(--lcc-color--upcomingEventBanner-boldText);
+  }
+}
+
+.event-title-link {
+  &:hover {
+    text-decoration-color: transparent;
+
+    b {
+      color: var(--lcc-color--upcomingEventBanner-boldTextOnHover);
+    }
   }
 }
 
@@ -64,7 +57,7 @@
     display: inline-block;
     align-self: stretch;
     width: 2px;
-    background-color: var(--lcc-color--general-dividerLine);
+    background-color: var(--lcc-color--upcomingEventBanner-eventDivider);
   }
 
   .marquee-item {

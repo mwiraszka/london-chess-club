@@ -62,16 +62,23 @@ export function updateStateVersionsInLocalStorageMetaReducer(
         const version = key.split('_v')[1];
         const stateValue = localStorage.getItem(key) || '';
 
-        // Skip migrating state from v5.11.x or older to force a reset of stale data
+        // Skip migrating state from v5.12.x or older to force a reset of stale data
         const [major, minor] = (version || '').split('.').map(Number);
-        const isStaleVersion = major < 5 || (major === 5 && minor <= 11);
+        const isStaleVersion = major < 5 || (major === 5 && minor <= 12);
+
+        // Remove the old key first to free up space before writing the new one
+        localStorage.removeItem(key);
 
         // Keep all state from previous version except imagesState and stale versions
         if (stateName !== 'imagesState' && !isStaleVersion) {
-          localStorage.setItem(`${stateName}_v${currentVersion}`, stateValue);
+          try {
+            localStorage.setItem(`${stateName}_v${currentVersion}`, stateValue);
+          } catch {
+            console.warn(
+              `[LCC] Could not migrate ${stateName} to new version (localStorage quota exceeded)`,
+            );
+          }
         }
-
-        localStorage.removeItem(key);
       });
 
       // Clear browser cache storage when imagesState is removed
@@ -119,7 +126,11 @@ export const versionedStorage = {
     return localStorage.getItem(`${key}_v${currentVersion}`);
   },
   setItem: (key: string, value: string) => {
-    localStorage.setItem(`${key}_v${currentVersion}`, value);
+    try {
+      localStorage.setItem(`${key}_v${currentVersion}`, value);
+    } catch {
+      console.warn(`[LCC] Could not persist ${key} to localStorage (quota exceeded)`);
+    }
   },
   removeItem: (key: string) => {
     localStorage.removeItem(`${key}_v${currentVersion}`);
