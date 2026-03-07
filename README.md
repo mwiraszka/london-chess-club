@@ -14,6 +14,15 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 | 🔧  | Behind-the-scenes changes         |
 
 <details>
+<summary>v5.12.7 - March 6th, 2026</summary>
+
+- 🚀 Improve article card styling
+- 🚀 Always load up the 10 latest articles on the homepage and display them in a single, scrollable row instead of wrapping
+- 🐛 Prevent potential localStorage quota exceeded errors by removing old state keys before setting the corresponding new ones
+
+</details>
+
+<details>
 <summary>v5.12.6 - March 6th, 2026</summary>
 
 - 🐛 Fix a couple article card layout issues
