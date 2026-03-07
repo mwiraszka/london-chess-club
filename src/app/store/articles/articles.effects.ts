@@ -37,7 +37,7 @@ export class ArticlesEffects {
       switchMap(() => {
         const options: DataPaginationOptions<Article> = {
           page: 1,
-          pageSize: 6,
+          pageSize: 10,
           sortBy: 'bookmarkDate',
           sortOrder: 'desc',
           filters: null,

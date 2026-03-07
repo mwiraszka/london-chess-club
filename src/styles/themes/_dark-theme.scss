@@ -53,7 +53,7 @@ body[data-theme='dark'] {
   --lcc-color--articleGrid-bookmarkIcon: #{clr(grayscale, white-90, 0.6)};
   --lcc-color--articleGrid-cardBackground: #{clr(primary, darker, 0.85)};
   --lcc-color--articleGrid-cardBackgroundOnHover: #{clr(primary, darker)};
-  --lcc-color--articleGrid-cardDividerLine: #{clr(grayscale, gray-65, 0.5)};
+  --lcc-color--articleGrid-cardDividerLine: #{clr(grayscale, gray-65, 0.1)};
 
   --lcc-color--basicDialog-dividerLine: #{clr(grayscale, white-80)};
 
@@ -391,6 +391,7 @@ body[data-theme='dark'] {
   --lcc-color--upcomingEventBanner-borderBottom: #{clr(grayscale, gray-50)};
   --lcc-color--upcomingEventBanner-closeIcon: #{clr(grayscale, black-20)};
   --lcc-color--upcomingEventBanner-closeIconOnHover: #{clr(grayscale, black-2)};
+  --lcc-color--upcomingEventBanner-eventDivider: #{clr(grayscale, gray-65)};
   --lcc-color--upcomingEventBanner-text: #{clr(grayscale, black-20)};
   --lcc-color--upcomingEventBanner-textOnHover: #{clr(grayscale, black-2)};
 
