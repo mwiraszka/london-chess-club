@@ -56,6 +56,7 @@ describe('UpcomingEventBannerComponent', () => {
 
       it('should render a link to the article for an event with an articleId', () => {
         component.nextEvents = [MOCK_EVENTS[1]]; // has articleId
+        component['changeDetectorRef'].markForCheck();
         fixture.detectChanges();
 
         const link = query(fixture.debugElement, '.event-title-link');
