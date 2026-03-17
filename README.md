@@ -14,6 +14,14 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 | 🔧  | Behind-the-scenes changes         |
 
 <details>
+<summary>v5.12.8 - March 17th, 2026</summary>
+
+- 🚀 Update Active Championship and Junior Championship past winners tables on City Champion page
+- 🔧 Update publishable API keys for new GCP and Clerk accounts
+- 🔧 Security updates 
+</details>
+
+<details>
 <summary>v5.12.7 - March 6th, 2026</summary>
 
 - 🚀 Improve article card styling
