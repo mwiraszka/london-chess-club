@@ -18,6 +18,7 @@ Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on G
 
 - 🚀 Update Active Championship and Junior Championship past winners tables on City Champion page
 - 🔧 Update publishable API keys for new GCP and Clerk accounts
+- 🔧 Security updates 
 </details>
 
 <details>
