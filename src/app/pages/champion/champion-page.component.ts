@@ -61,11 +61,6 @@ export class ChampionPageComponent implements OnInit {
   ];
 
   public readonly activeChampionships: ChampionshipTableRowData[] = [
-    {
-      year: 2025,
-      winners: [{ name: 'Serhii Ivanchuk', peakRating: '2230' }],
-      textStyle: 'font-weight: bold;',
-    },
     { year: 2024, winners: [{ name: 'Serhii Ivanchuk', peakRating: '2176' }] },
     { year: 2023, winners: [{ name: 'Kevin Gibson', peakRating: '2302' }] },
     { year: 2019, winners: [{ name: 'Kevin Gibson', peakRating: '2217*' }] },
