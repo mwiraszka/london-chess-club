@@ -77,6 +77,8 @@ export class ImageExplorerComponent implements OnInit, DialogOutput<Id> {
   ) {}
 
   public ngOnInit(): void {
+    this.store.dispatch(ImagesActions.fetchFilteredThumbnailsRequested());
+
     this.viewModel$ = combineLatest([
       this.store.select(ImagesSelectors.selectFilteredImages),
       this.store.select(ImagesSelectors.selectFilteredCount),
