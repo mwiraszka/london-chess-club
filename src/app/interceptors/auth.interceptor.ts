@@ -1,5 +1,5 @@
 import { Store } from '@ngrx/store';
-import { EMPTY, Observable, Subject, of, throwError } from 'rxjs';
+import { Observable, Subject, throwError } from 'rxjs';
 import { catchError, switchMap, tap } from 'rxjs/operators';
 
 import {
@@ -48,17 +48,17 @@ export class AuthInterceptor implements HttpInterceptor {
       if (!req.url.includes('refresh-session')) {
         return this.sessionRefresh().pipe(
           switchMap(() => handler.handle(req)),
-          catchError(() => {
+          catchError(retryError => {
             this.sessionRefreshInProgress = false;
             this.store.dispatch(AuthActions.logoutRequested({ sessionExpired: true }));
-            return of(EMPTY as unknown as HttpEvent<unknown>);
+            return throwError(() => retryError);
           }),
         );
       } else {
         // If the refresh endpoint itself returns 401, session is definitely expired
         this.sessionRefreshInProgress = false;
         this.store.dispatch(AuthActions.logoutRequested({ sessionExpired: true }));
-        return of(EMPTY as unknown as HttpEvent<unknown>);
+        return throwError(() => error);
       }
     }
 
@@ -81,7 +81,10 @@ export class AuthInterceptor implements HttpInterceptor {
           this.sessionRefreshInProgress = false;
           this._tokenRefreshed$.next(true);
         }),
-        catchError(() => of(EMPTY)),
+        catchError(refreshError => {
+          this.sessionRefreshInProgress = false;
+          return throwError(() => refreshError);
+        }),
       );
     }
   }
