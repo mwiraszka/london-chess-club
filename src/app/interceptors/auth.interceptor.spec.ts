@@ -105,7 +105,7 @@ describe('AuthInterceptor', () => {
       handleSpy.mockReturnValueOnce(throwError(() => ({ status: 401 })));
 
       interceptor.intercept(mockRequest, mockHandler).subscribe({
-        next: () => {
+        error: () => {
           expect(refreshSessionSpy).not.toHaveBeenCalled();
           expect(dispatchSpy).toHaveBeenCalledWith(
             AuthActions.logoutRequested({ sessionExpired: true }),
@@ -154,7 +154,7 @@ describe('AuthInterceptor', () => {
       refreshSessionSpy.mockReturnValue(throwError(() => new Error('Refresh failed')));
 
       interceptor.intercept(mockRequest, mockHandler).subscribe({
-        next: () => {
+        error: () => {
           expect(dispatchSpy).toHaveBeenCalledWith(
             AuthActions.logoutRequested({ sessionExpired: true }),
           );

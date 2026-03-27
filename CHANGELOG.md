@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v5.12.10] - 2026-03-22
+
+### Fixed
+
+- Fix infinite loading spinner when publishing or updating an article fails due to session expiry
+- Fix Image Explorer showing perpetual "Loading..." when opened from the article editor
+
 ## [v5.12.9] - 2026-03-20
 
 ### Fixed
@@ -1644,6 +1651,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Create a responsive grid layout to house photos from club meetings and club-organized events, including the functionality to enlarge photos in an image overlay 'preview' mode
 - Create a responsive grid layout to showcase only the most pertinent information from other screens (such as only the next 4 events from the schedule, and a more limited amount of photos from the photo gallery)
 
+[v5.12.10]: https://github.com/mwiraszka/london-chess-club/compare/v5.12.9...v5.12.10
 [v5.12.9]: https://github.com/mwiraszka/london-chess-club/compare/v5.12.8...v5.12.9
 [v5.12.8]: https://github.com/mwiraszka/london-chess-club/compare/v5.12.7...v5.12.8
 [v5.12.7]: https://github.com/mwiraszka/london-chess-club/compare/v5.12.6...v5.12.7
