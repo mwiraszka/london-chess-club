@@ -11,11 +11,7 @@
     "^[./]"
   ],
   "importOrderCaseInsensitive": false,
-  "importOrderParserPlugins": [
-    "typescript",
-    "classProperties",
-    "decorators-legacy"
-  ],
+  "importOrderParserPlugins": ["typescript", "classProperties", "decorators-legacy"],
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true,
   "overrides": [

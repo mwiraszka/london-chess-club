@@ -74,7 +74,9 @@ export class EventsTableComponent {
     }
     groups.forEach(group => {
       if (group.events.length > 1) {
-        group.events.sort((a, b) => customSort(a, b, 'modificationInfo.dateLastEdited', true));
+        group.events.sort((a, b) =>
+          customSort(a, b, 'modificationInfo.dateLastEdited', true),
+        );
       }
     });
     return this.dateLimit !== undefined ? groups.slice(0, this.dateLimit) : groups;

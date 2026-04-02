@@ -54,9 +54,7 @@ import { DurationPipe } from '@app/pipes';
   imports: [CommonModule, DurationPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SessionExpiryDialogComponent
-  implements DialogOutput<SessionExpiryDialogResult>
-{
+export class SessionExpiryDialogComponent implements DialogOutput<SessionExpiryDialogResult> {
   @Input({ required: true }) initialTimeRemainingSecs!: number;
 
   @Output() public dialogResult = new EventEmitter<SessionExpiryDialogResult | 'close'>();
