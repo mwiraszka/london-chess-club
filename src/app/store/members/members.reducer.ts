@@ -14,8 +14,10 @@ import { areSame } from '@app/utils';
 
 import * as MembersActions from './members.actions';
 
-export interface MembersState
-  extends EntityState<{ member: Member; formData: MemberFormData }> {
+export interface MembersState extends EntityState<{
+  member: Member;
+  formData: MemberFormData;
+}> {
   callState: CallState;
   newMemberFormData: MemberFormData;
   lastFullFetch: IsoDate | null;

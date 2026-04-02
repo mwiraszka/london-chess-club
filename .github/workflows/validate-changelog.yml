@@ -1,0 +1,21 @@
+name: Validate Changelog
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  Validate-Changelog:
+    if: startsWith(github.head_ref, 'v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check Changelog Entry Exists
+        run: |
+          version="${GITHUB_HEAD_REF}"
+          if ! grep -Fq "## [$version]" CHANGELOG.md; then
+            echo "::error::CHANGELOG.md is missing an entry for [$version]. Add a '## [$version]' section before merging."
+            exit 1
+          fi

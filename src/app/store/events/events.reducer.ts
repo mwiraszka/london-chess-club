@@ -14,8 +14,10 @@ import { areSame } from '@app/utils';
 
 import * as EventsActions from './events.actions';
 
-export interface EventsState
-  extends EntityState<{ event: Event; formData: EventFormData }> {
+export interface EventsState extends EntityState<{
+  event: Event;
+  formData: EventFormData;
+}> {
   callState: CallState;
   newEventFormData: EventFormData;
   lastFullFetch: IsoDate | null;

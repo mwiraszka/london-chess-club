@@ -5,6 +5,6 @@ export default {
     autoprefixer({
       // Autoprefixer will use the browserslist configuration from .browserslistrc
       // No need to duplicate browser list here
-    })
-  ]
+    }),
+  ],
 };

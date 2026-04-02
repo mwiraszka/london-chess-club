@@ -14,8 +14,10 @@ import { areSame } from '@app/utils';
 
 import * as ArticlesActions from './articles.actions';
 
-export interface ArticlesState
-  extends EntityState<{ article: Article; formData: ArticleFormData }> {
+export interface ArticlesState extends EntityState<{
+  article: Article;
+  formData: ArticleFormData;
+}> {
   callState: CallState;
   newArticleFormData: ArticleFormData;
   lastHomePageFetch: IsoDate | null;

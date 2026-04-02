@@ -33,9 +33,10 @@ import { DIALOG_CONFIG_TOKEN } from '@app/services';
   imports: [MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DialogComponent<TComponent extends DialogOutput<TResult>, TResult>
-  implements AfterViewInit
-{
+export class DialogComponent<
+  TComponent extends DialogOutput<TResult>,
+  TResult,
+> implements AfterViewInit {
   @ViewChild('contentContainer', { read: ViewContainerRef })
   private containerRef?: ViewContainerRef;
   private contentComponentRef?: ComponentRef<TComponent>;
