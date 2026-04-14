@@ -20,7 +20,6 @@ const jestConfig: Config = {
       '<rootDir>/node_modules/@angular/router/fesm2022/testing.mjs',
   },
   preset: 'jest-preset-angular',
-  resolver: 'jest-preset-angular/build/resolvers/ng-jest-resolver.js',
   transform: {
     '^.+\\.(ts|js|mjs|html)$': [
       'jest-preset-angular',

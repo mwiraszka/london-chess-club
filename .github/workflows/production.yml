@@ -148,12 +148,17 @@ jobs:
         run: |
           awk '/^## \[/{if(n++)exit}n' CHANGELOG.md | tail -n +2 > release_notes.md
 
-      - name: Create Tag and Release
+      - name: Create Tag
+        if: steps.check_release.outputs.exists == 'false'
+        run: |
+          git tag ${{ steps.version.outputs.tag }} ${{ github.sha }}
+          git push origin ${{ steps.version.outputs.tag }}
+
+      - name: Create Release
         if: steps.check_release.outputs.exists == 'false'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release create ${{ steps.version.outputs.tag }} \
-            --target ${{ github.sha }} \
             --title "${{ steps.version.outputs.tag }}" \
             --notes-file release_notes.md
