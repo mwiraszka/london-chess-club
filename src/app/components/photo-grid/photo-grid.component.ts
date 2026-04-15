@@ -4,7 +4,9 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -39,13 +41,15 @@ import { customSort } from '@app/utils';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PhotoGridComponent {
+export class PhotoGridComponent implements OnChanges {
   @Input({ required: true }) public isAdmin!: boolean;
   @Input({ required: true }) public photoImages!: Image[];
 
   @Input() public maxAlbums?: number;
 
   @Output() public readonly requestDeleteAlbum = new EventEmitter<string>();
+
+  public visibleAlbumCovers: Image[] = [];
 
   public readonly openImageExplorerButton: AdminButton = {
     id: 'open-image-explorer',
@@ -66,11 +70,17 @@ export class PhotoGridComponent {
     icon: 'add_circle_outline',
   };
 
-  constructor(private readonly dialogService: DialogService) {}
-
   private animationDelays: Map<string, number> = new Map();
 
-  public get albumCovers(): Image[] {
+  constructor(private readonly dialogService: DialogService) {}
+
+  public ngOnChanges(changes: SimpleChanges<PhotoGridComponent>): void {
+    if (changes.photoImages || changes.maxAlbums) {
+      this.visibleAlbumCovers = this.buildVisibleAlbumCovers();
+    }
+  }
+
+  private buildVisibleAlbumCovers(): Image[] {
     const covers = this.photoImages
       .filter(image => image.albumCover)
       .map(image => ({
@@ -80,7 +90,6 @@ export class PhotoGridComponent {
         caption: image.caption || 'Loading...',
       }));
 
-    // Generate randomized animation delays (2 items at a time)
     if (this.animationDelays.size === 0 && covers.length > 0) {
       const shuffledIndices = Array.from({ length: covers.length }, (_, i) => i).sort(
         () => Math.random() - 0.5,
@@ -88,12 +97,12 @@ export class PhotoGridComponent {
 
       shuffledIndices.forEach((originalIndex, shuffledPosition) => {
         const pairIndex = Math.floor(shuffledPosition / 2);
-        const delay = pairIndex * 0.15; // 150ms between pairs
+        const delay = pairIndex * 0.15;
         this.animationDelays.set(covers[originalIndex].id, delay);
       });
     }
 
-    return covers;
+    return this.maxAlbums != null ? covers.slice(0, this.maxAlbums) : covers;
   }
 
   public getAnimationDelay(imageId: Id): number {

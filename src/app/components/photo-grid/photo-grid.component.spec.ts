@@ -53,8 +53,8 @@ describe('PhotoGridComponent', () => {
     onClickAlbumCoverSpy = jest.spyOn(component, 'onClickAlbumCover');
     requestDeleteAlbumSpy = jest.spyOn(component.requestDeleteAlbum, 'emit');
 
-    component.isAdmin = true;
-    component.photoImages = MOCK_IMAGES;
+    fixture.componentRef.setInput('isAdmin', true);
+    fixture.componentRef.setInput('photoImages', MOCK_IMAGES);
 
     fixture.detectChanges();
   });

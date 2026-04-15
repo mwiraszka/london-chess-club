@@ -62,14 +62,27 @@ export class ImageComponent {
   private mainFailed = false;
   private thumbnailFailed = false;
   private currentPreloader: HTMLImageElement | null = null;
+  private lastImageSnapshot: string | null = null;
 
   constructor() {
     effect(() => {
       const img = this.image();
+      const snapshot = this.snapshotOf(img);
+      if (snapshot === this.lastImageSnapshot) {
+        return;
+      }
+      this.lastImageSnapshot = snapshot;
       this.resolveSource(img);
     });
 
     this.destroyRef.onDestroy(() => this.cancelPreload());
+  }
+
+  private snapshotOf(img: Image | null): string {
+    if (!img) {
+      return 'null';
+    }
+    return `${img.id}|${img.mainUrl ?? ''}|${img.thumbnailUrl ?? ''}`;
   }
 
   protected onImgLoad(): void {
