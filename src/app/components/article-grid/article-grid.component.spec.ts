@@ -3,7 +3,6 @@ import { provideRouter } from '@angular/router';
 
 import { BasicDialogComponent } from '@app/components/basic-dialog/basic-dialog.component';
 import { AdminControlsDirective } from '@app/directives/admin-controls.directive';
-import { ImagePreloadDirective } from '@app/directives/image-preload.directive';
 import { MOCK_ARTICLES } from '@app/mocks/articles.mock';
 import { MOCK_IMAGES } from '@app/mocks/images.mock';
 import { Article, DataPaginationOptions } from '@app/models';
@@ -33,7 +32,7 @@ describe('ArticleGridComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AdminControlsDirective, ArticleGridComponent, ImagePreloadDirective],
+      imports: [AdminControlsDirective, ArticleGridComponent],
       providers: [
         {
           provide: DialogService,
@@ -67,42 +66,28 @@ describe('ArticleGridComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('when images changes', () => {
-    it('should update the bannerImagesMap', () => {
-      component.ngOnChanges({
-        images: {
-          currentValue: MOCK_IMAGES,
-          previousValue: [],
-          firstChange: false,
-          isFirstChange: () => false,
-        },
-      });
+  describe('visibleRows', () => {
+    it('should map articles to their banner image when available', () => {
+      const matchingImage = MOCK_IMAGES.find(
+        image => image.id === MOCK_ARTICLES[0].bannerImageId,
+      );
 
-      expect(component.getBannerImage(MOCK_IMAGES[0].id)).toEqual(MOCK_IMAGES[0]);
-    });
-  });
+      fixture.componentRef.setInput('articles', [MOCK_ARTICLES[0]]);
+      fixture.componentRef.setInput('images', MOCK_IMAGES);
+      fixture.detectChanges();
 
-  describe('getBannerImage', () => {
-    it('should return the image from bannerImagesMap when available', () => {
-      const mockImage = MOCK_IMAGES[0];
-      component.ngOnChanges({
-        images: {
-          currentValue: [mockImage],
-          previousValue: [],
-          firstChange: false,
-          isFirstChange: () => false,
-        },
-      });
-
-      const result = component.getBannerImage(mockImage.id);
-      expect(result).toEqual(mockImage);
+      expect(component.visibleRows).toHaveLength(1);
+      expect(component.visibleRows[0].article).toBe(MOCK_ARTICLES[0]);
+      expect(component.visibleRows[0].bannerImage).toEqual(matchingImage ?? null);
     });
 
-    it('should return a placeholder object when image is not in map', () => {
-      const unknownId = 'unknown-id';
-      const result = component.getBannerImage(unknownId);
+    it('should set bannerImage to null when no matching image exists', () => {
+      fixture.componentRef.setInput('articles', [MOCK_ARTICLES[0]]);
+      fixture.componentRef.setInput('images', []);
+      fixture.detectChanges();
 
-      expect(result).toEqual({ id: unknownId, caption: 'Loading...' });
+      expect(component.visibleRows).toHaveLength(1);
+      expect(component.visibleRows[0].bannerImage).toBeNull();
     });
   });
 

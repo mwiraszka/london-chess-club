@@ -11,8 +11,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 
 import { BasicDialogComponent } from '@app/components/basic-dialog/basic-dialog.component';
+import { ImageComponent } from '@app/components/image/image.component';
 import { AdminControlsDirective } from '@app/directives/admin-controls.directive';
-import { ImagePreloadDirective } from '@app/directives/image-preload.directive';
 import {
   AdminControlsConfig,
   Article,
@@ -31,6 +31,12 @@ import {
 import { DialogService } from '@app/services';
 import { isDefined } from '@app/utils';
 
+interface ArticleRow {
+  article: Article;
+  bannerImage: Image | null;
+  animationDelay: number;
+}
+
 @Component({
   selector: 'lcc-article-grid',
   templateUrl: './article-grid.component.html',
@@ -40,7 +46,7 @@ import { isDefined } from '@app/utils';
     AdminControlsDirective,
     FormatDatePipe,
     HighlightPipe,
-    ImagePreloadDirective,
+    ImageComponent,
     MatIconModule,
     RouterLink,
     RouterLinkPipe,
@@ -62,45 +68,38 @@ export class ArticleGridComponent implements OnChanges {
     bookmark: boolean;
   }>();
 
+  public visibleRows: ArticleRow[] = [];
+
   private animationDelays = new Map<Id, number>();
-  private bannerImagesMap = new Map<Id, Image>();
-
-  get visibleArticles(): Article[] {
-    let articles: Article[];
-
-    if (!this.options || this.options.pageSize === -1) {
-      articles = this.articles;
-    } else {
-      articles = this.articles.slice(0, this.options.pageSize);
-    }
-
-    if (this.animationDelays.size === 0 && articles.length > 0) {
-      for (let i = 0; i < articles.length; i++) {
-        const delay = i * 0.1;
-        this.animationDelays.set(articles[i].id, delay);
-      }
-    }
-
-    return articles;
-  }
 
   constructor(private readonly dialogService: DialogService) {}
 
   public ngOnChanges(changes: SimpleChanges<ArticleGridComponent>): void {
-    if (changes.images) {
-      this.bannerImagesMap.clear();
-      this.images.forEach(image => {
-        this.bannerImagesMap.set(image.id, image);
-      });
+    if (changes.articles || changes.images || changes.options) {
+      this.visibleRows = this.buildVisibleRows();
     }
   }
 
-  public getBannerImage(imageId: Id): Partial<Image> | null {
-    return this.bannerImagesMap.get(imageId) || { id: imageId, caption: 'Loading...' };
-  }
+  private buildVisibleRows(): ArticleRow[] {
+    const sliced =
+      !this.options || this.options.pageSize === -1
+        ? this.articles
+        : this.articles.slice(0, this.options.pageSize);
 
-  public getAnimationDelay(articleId: Id): number {
-    return this.animationDelays.get(articleId) || 0;
+    if (this.animationDelays.size === 0 && sliced.length > 0) {
+      for (let i = 0; i < sliced.length; i++) {
+        this.animationDelays.set(sliced[i].id, i * 0.1);
+      }
+    }
+
+    const imagesById = new Map<Id, Image>();
+    this.images.forEach(image => imagesById.set(image.id, image));
+
+    return sliced.map(article => ({
+      article,
+      bannerImage: imagesById.get(article.bannerImageId) ?? null,
+      animationDelay: this.animationDelays.get(article.id) ?? 0,
+    }));
   }
 
   public getAdminControlsConfig(article: Article): AdminControlsConfig {

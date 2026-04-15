@@ -23,10 +23,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { BasicDialogComponent } from '@app/components/basic-dialog/basic-dialog.component';
 import { FormErrorIconComponent } from '@app/components/form-error-icon/form-error-icon.component';
 import { ImageExplorerComponent } from '@app/components/image-explorer/image-explorer.component';
+import { ImageComponent } from '@app/components/image/image.component';
 import { MarkdownRendererComponent } from '@app/components/markdown-renderer/markdown-renderer.component';
 import { ModificationInfoComponent } from '@app/components/modification-info/modification-info.component';
 import { MAX_ARTICLE_BODY_IMAGES } from '@app/constants';
-import { ImagePreloadDirective } from '@app/directives/image-preload.directive';
 import { TooltipDirective } from '@app/directives/tooltip.directive';
 import {
   Article,
@@ -48,7 +48,7 @@ import { textValidator } from '@app/validators';
   styleUrl: './article-form.component.scss',
   imports: [
     FormErrorIconComponent,
-    ImagePreloadDirective,
+    ImageComponent,
     MatIconModule,
     MarkdownRendererComponent,
     ModificationInfoComponent,

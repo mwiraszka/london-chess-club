@@ -21,8 +21,8 @@ import { MatIconModule } from '@angular/material/icon';
 
 import { BasicDialogComponent } from '@app/components/basic-dialog/basic-dialog.component';
 import { FormErrorIconComponent } from '@app/components/form-error-icon/form-error-icon.component';
+import { ImageComponent } from '@app/components/image/image.component';
 import { ModificationInfoComponent } from '@app/components/modification-info/modification-info.component';
-import { ImagePreloadDirective } from '@app/directives/image-preload.directive';
 import { TooltipDirective } from '@app/directives/tooltip.directive';
 import {
   AlbumFormGroup,
@@ -48,7 +48,7 @@ import { ordinalityValidator, textValidator } from '@app/validators';
   styleUrl: './album-form.component.scss',
   imports: [
     FormErrorIconComponent,
-    ImagePreloadDirective,
+    ImageComponent,
     MatIconModule,
     ModificationInfoComponent,
     ReactiveFormsModule,

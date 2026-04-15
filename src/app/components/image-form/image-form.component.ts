@@ -20,9 +20,9 @@ import { MatIconModule } from '@angular/material/icon';
 
 import { BasicDialogComponent } from '@app/components/basic-dialog/basic-dialog.component';
 import { FormErrorIconComponent } from '@app/components/form-error-icon/form-error-icon.component';
+import { ImageComponent } from '@app/components/image/image.component';
 import { ModificationInfoComponent } from '@app/components/modification-info/modification-info.component';
 import { INITIAL_IMAGE_FORM_DATA } from '@app/constants';
-import { ImagePreloadDirective } from '@app/directives/image-preload.directive';
 import { TooltipDirective } from '@app/directives/tooltip.directive';
 import {
   BasicDialogResult,
@@ -46,7 +46,7 @@ import { textValidator } from '@app/validators';
   styleUrl: './image-form.component.scss',
   imports: [
     FormErrorIconComponent,
-    ImagePreloadDirective,
+    ImageComponent,
     MatIconModule,
     ModificationInfoComponent,
     ReactiveFormsModule,

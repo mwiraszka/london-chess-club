@@ -26,11 +26,7 @@
         class="lcc-form-fields"
         [formGroupName]="i">
         <div class="image-container full-span">
-          <img
-            [image]="{
-              thumbnailUrl: imageEntities[i].image.thumbnailUrl,
-              mainUrl: imageEntities[i].image.mainUrl,
-            }" />
+          <lcc-image [image]="imageEntities[i].image" />
         </div>
 
         <div class="cover-image-input-container">
@@ -123,9 +119,8 @@
         [formGroupName]="i">
         <div class="image-container full-span">
           <img
-            [image]="{
-              thumbnailUrl: newImageDataUrls[imageControl.controls.id.value],
-            }" />
+            [src]="newImageDataUrls[imageControl.controls.id.value]"
+            alt="New image preview" />
           <button
             class="remove-image-button lcc-icon-button"
             type="button"

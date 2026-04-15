@@ -82,14 +82,18 @@ $side-padding: 8px;
       aspect-ratio: 3 / 2;
       border-radius: var(--lcc-borderRadius--large);
       background-color: var(--lcc-color--contentPlaceholder-background);
-    }
 
-    img {
-      object-fit: contain;
-      width: auto;
-      max-width: 100%;
-      height: auto;
-      max-height: 100%;
+      lcc-image {
+        width: auto;
+        max-width: 100%;
+        height: auto;
+        max-height: 100%;
+
+        ::ng-deep img {
+          object-fit: contain;
+          max-height: 100%;
+        }
+      }
     }
 
     .caption,

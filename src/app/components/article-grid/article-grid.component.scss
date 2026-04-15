@@ -108,13 +108,15 @@ $grid-gap: 8px;
       );
     }
 
-    img {
+    lcc-image {
       max-width: 100%;
       max-height: 100%;
       // Slightly scale up images to avoid tiny gaps around them
       transform: scale(1.02);
 
-      object-fit: contain;
+      ::ng-deep img {
+        object-fit: contain;
+      }
     }
 
     .bookmark-icon {

@@ -12,8 +12,8 @@ import { AdminToolbarComponent } from '@app/components/admin-toolbar/admin-toolb
 import { BasicDialogComponent } from '@app/components/basic-dialog/basic-dialog.component';
 import { ImageExplorerComponent } from '@app/components/image-explorer/image-explorer.component';
 import { ImageViewerComponent } from '@app/components/image-viewer/image-viewer.component';
+import { ImageComponent } from '@app/components/image/image.component';
 import { AdminControlsDirective } from '@app/directives/admin-controls.directive';
-import { ImagePreloadDirective } from '@app/directives/image-preload.directive';
 import {
   AdminButton,
   AdminControlsConfig,
@@ -33,7 +33,7 @@ import { customSort } from '@app/utils';
   imports: [
     AdminControlsDirective,
     AdminToolbarComponent,
-    ImagePreloadDirective,
+    ImageComponent,
     MatIconModule,
     UpperCasePipe,
   ],

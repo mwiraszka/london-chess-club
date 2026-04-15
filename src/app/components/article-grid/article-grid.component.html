@@ -1,41 +1,41 @@
 <div
   class="article-grid"
   [class.is-home-page]="isHomePage"
-  [attr.card-count]="visibleArticles.length">
-  @for (article of visibleArticles; track article.id) {
+  [attr.card-count]="visibleRows.length">
+  @for (row of visibleRows; track row.article.id) {
     <a
       class="article"
-      [adminControls]="isAdmin ? getAdminControlsConfig(article) : null"
-      [style.animation-delay.s]="getAnimationDelay(article.id)"
+      [adminControls]="isAdmin ? getAdminControlsConfig(row.article) : null"
+      [style.animation-delay.s]="row.animationDelay"
       [routerLink]="
-        article.title ? (['article', 'view', article.id] | routerLink) : undefined
+        row.article.title ? (['article', 'view', row.article.id] | routerLink) : undefined
       ">
-      @if (article.bookmarkDate) {
+      @if (row.article.bookmarkDate) {
         <mat-icon class="bookmark-icon">bookmark_border</mat-icon>
       }
 
       <div class="image-container">
-        <img [image]="getBannerImage(article.bannerImageId)" />
+        <lcc-image [image]="row.bannerImage" />
       </div>
 
       <div class="article-summary-container">
         <div class="article-title-wrapper">
           <h3
             class="article-title lcc-truncate-max-3-lines"
-            [innerHTML]="article.title | highlight: options?.search">
+            [innerHTML]="row.article.title | highlight: options?.search">
           </h3>
         </div>
         <hr />
         <p
           class="article-preview lcc-truncate-max-5-lines"
           [innerHTML]="
-            article.body
-              | summarizeArticle: article.title.startsWith('Blitz')
+            row.article.body
+              | summarizeArticle: row.article.title.startsWith('Blitz')
               | highlight: options?.search
           ">
         </p>
         <div class="article-creation-date">
-          {{ article.modificationInfo.dateCreated | formatDate: 'short no-time' }}
+          {{ row.article.modificationInfo.dateCreated | formatDate: 'short no-time' }}
         </div>
       </div>
     </a>

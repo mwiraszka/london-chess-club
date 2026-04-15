@@ -10,10 +10,14 @@
   justify-content: center;
   background-color: var(--lcc-color--article-bannerImageBackground);
 
-  img {
-    object-fit: contain;
+  lcc-image {
     width: 100%;
     max-height: 300px;
+
+    ::ng-deep img {
+      object-fit: contain;
+      max-height: 300px;
+    }
   }
 
   .title {
