@@ -30,7 +30,6 @@ import {
   isDefined,
   isExpired,
   isLccError,
-  isPresignedUrlExpired,
   parseError,
 } from '@app/utils';
 
@@ -235,11 +234,13 @@ export class ImagesEffects {
             ),
           ),
           filter(({ image }) => {
-            return !!(
+            // Refresh if the image is missing, has no main URL, or its presigned
+            // URL is within 2h of expiring (backend issues 12h URLs).
+            return (
               !image ||
               !image.mainUrl ||
-              isPresignedUrlExpired(image.mainUrl) ||
-              (image.urlExpirationDate && isExpired(image.urlExpirationDate))
+              !image.urlExpirationDate ||
+              moment(image.urlExpirationDate).isBefore(moment().add(2, 'hours'))
             );
           }),
           map(({ imageId }) =>
