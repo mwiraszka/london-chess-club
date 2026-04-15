@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Refresh presigned S3 image URLs based on the backend-reported expiration timestamp instead of parsing the URL, so URLs stay valid across browser sessions
 - Only retry failed article banner images while the user is actually on a page that displays them, instead of polling in the background on every route
+- Convert the largest static images on the City Champion, Lifetime Achievement Awards, and Game Archives pages to WebP, shrinking their combined weight from 3.6 MB to 264 KB (~93% smaller)
 
 ### Fixed
 

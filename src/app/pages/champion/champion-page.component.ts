@@ -25,14 +25,14 @@ export class ChampionPageComponent implements OnInit {
   public readonly photos: Partial<Image>[] = [
     {
       id: '1',
-      mainUrl: 'assets/london-chess-champion/championship-trophies.png',
+      mainUrl: 'assets/london-chess-champion/championship-trophies.webp',
       mainWidth: 957,
       mainHeight: 637,
       caption: 'Championship Trophies',
     },
     {
       id: '2',
-      mainUrl: 'assets/london-chess-champion/2023-champion.png',
+      mainUrl: 'assets/london-chess-champion/2023-champion.webp',
       mainWidth: 609,
       mainHeight: 906,
       caption: '2023 & 2024 London Chess Champion: Serhii Ivanchuk',
@@ -53,7 +53,7 @@ export class ChampionPageComponent implements OnInit {
     },
     {
       id: '5',
-      mainUrl: 'assets/london-chess-champion/2022-championship-match.png',
+      mainUrl: 'assets/london-chess-champion/2022-championship-match.webp',
       mainWidth: 600,
       mainHeight: 300,
       caption: '2022 Championship Match: Carl Ehrman vs. Geoffrey Ruelland',
