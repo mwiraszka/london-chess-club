@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 
-import { ImagePreloadDirective } from '@app/directives/image-preload.directive';
 import { TooltipDirective } from '@app/directives/tooltip.directive';
 
 import packageJson from '../../../../package.json';
@@ -11,7 +10,7 @@ import packageJson from '../../../../package.json';
   selector: 'lcc-footer',
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.scss',
-  imports: [ImagePreloadDirective, MatIconModule, RouterLink, TooltipDirective],
+  imports: [MatIconModule, RouterLink, TooltipDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FooterComponent {

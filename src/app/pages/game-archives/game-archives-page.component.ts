@@ -30,7 +30,6 @@ import {
 import { FormErrorIconComponent } from '@app/components/form-error-icon/form-error-icon.component';
 import { PageHeaderComponent } from '@app/components/page-header/page-header.component';
 import { PgnViewerComponent } from '@app/components/pgn-viewer/pgn-viewer.component';
-import { ImagePreloadDirective } from '@app/directives/image-preload.directive';
 import { FilterFormGroup, GameDetails } from '@app/models';
 import { MetaAndTitleService } from '@app/services';
 import { AppSelectors } from '@app/store/app';
@@ -58,7 +57,6 @@ import { YEARS } from './years';
     CdkVirtualScrollViewport,
     CommonModule,
     FormErrorIconComponent,
-    ImagePreloadDirective,
     PageHeaderComponent,
     PgnViewerComponent,
     ReactiveFormsModule,

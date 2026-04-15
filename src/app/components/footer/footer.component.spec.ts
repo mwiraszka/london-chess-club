@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 
-import { ImagePreloadDirective } from '@app/directives/image-preload.directive';
 import { TooltipDirective } from '@app/directives/tooltip.directive';
 import { query, queryAll, queryTextContent } from '@app/utils';
 
@@ -18,7 +17,6 @@ describe('FooterComponent', () => {
         FooterComponent,
         RouterModule.forRoot([]),
         MatIconModule,
-        ImagePreloadDirective,
         TooltipDirective,
       ],
     }).compileComponents();

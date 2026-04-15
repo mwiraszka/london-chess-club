@@ -33,12 +33,10 @@
   <figure>
     <div class="image-container">
       <img
-        [image]="{
-          mainUrl: IMAGE_PATH + '2023-recipient-gerry-litchfield.png',
-          mainWidth: 800,
-          mainHeight: 635,
-          caption: 'Inaugural Lifetime Achievement Awards in 2023',
-        }" />
+        [src]="IMAGE_PATH + '2023-recipient-gerry-litchfield.png'"
+        width="800"
+        height="635"
+        alt="Inaugural Lifetime Achievement Awards in 2023" />
     </div>
     <figcaption>
       <b>Inaugural Lifetime Achievement Awards Ceremony</b><br /><br />
@@ -59,12 +57,10 @@
           class="recipient">
           <div class="image-container">
             <img
-              [image]="{
-                mainUrl: IMAGE_PATH + (name | kebabCase) + '.png',
-                mainWidth: 100,
-                mainHeight: 100,
-                caption: name,
-              }" />
+              [src]="IMAGE_PATH + (name | kebabCase) + '.png'"
+              width="100"
+              height="100"
+              [alt]="name" />
           </div>
           <label class="lcc-truncate">{{ name }}</label>
         </div>

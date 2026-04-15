@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { ImagePreloadDirective } from '@app/directives/image-preload.directive';
 import { RangePipe } from '@app/pipes';
 
 @Component({
@@ -15,12 +14,10 @@ import { RangePipe } from '@app/pipes';
           routerLink="">
           <div class="image-container">
             <img
+              src="assets/lcc-branding.svg"
+              alt="London Chess Club"
               decoding="async"
-              fetchpriority="high"
-              [image]="{
-                mainUrl: 'assets/lcc-branding.svg',
-                caption: 'London Chess Club',
-              }" />
+              fetchpriority="high" />
           </div>
         </a>
         <a
@@ -41,7 +38,7 @@ import { RangePipe } from '@app/pipes';
     </div>
   `,
   styleUrl: './header.component.scss',
-  imports: [CommonModule, ImagePreloadDirective, RangePipe, RouterModule],
+  imports: [CommonModule, RangePipe, RouterModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {}
