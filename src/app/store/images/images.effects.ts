@@ -407,8 +407,14 @@ export class ImagesEffects {
   });
 
   retryFailedArticleBannerImages$ = createEffect(() => {
-    // Periodic check to retry failed/expired article banner images
+    // Periodic check to retry failed/expired article banner images, but only
+    // while the user is on a page that actually renders article banners.
     const periodicCheck$ = timer(5 * 60 * 1000, 10 * 60 * 1000).pipe(
+      switchMap(() => this.store.select(NavSelectors.selectCurrentPath).pipe(take(1))),
+      filter(
+        currentPath =>
+          currentPath === '' || currentPath === '/' || !!currentPath?.includes('/news'),
+      ),
       switchMap(() =>
         combineLatest([
           this.store.select(ArticlesSelectors.selectHomePageArticles),
