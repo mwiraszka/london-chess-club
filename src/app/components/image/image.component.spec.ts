@@ -7,6 +7,8 @@ import { Image } from '@app/models';
 import { ImageComponent } from './image.component';
 
 const FALLBACK_SRC = 'assets/fallback-image.png';
+const TRANSPARENT_PIXEL =
+  'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 const MAIN_URL = 'https://example.com/main.jpg';
 const THUMBNAIL_URL = 'https://example.com/thumb.jpg';
 
@@ -64,12 +66,13 @@ describe('ImageComponent', () => {
   });
 
   describe('source resolution', () => {
-    it('should show fallback when image is null', () => {
+    it('should show shimmer (not fallback) when image is null', () => {
       host.image.set(null);
       fixture.detectChanges();
 
-      expect(component.displayMode()).toBe('fallback');
-      expect(component.currentSrc()).toBe(FALLBACK_SRC);
+      expect(component.displayMode()).toBe('none');
+      expect(component.currentSrc()).toBe(TRANSPARENT_PIXEL);
+      expect(component.showShimmer()).toBe(true);
     });
 
     it('should show shimmer when image has no URLs', () => {
@@ -77,6 +80,7 @@ describe('ImageComponent', () => {
       fixture.detectChanges();
 
       expect(component.displayMode()).toBe('none');
+      expect(component.currentSrc()).toBe(TRANSPARENT_PIXEL);
       expect(component.showShimmer()).toBe(true);
     });
 
@@ -105,6 +109,46 @@ describe('ImageComponent', () => {
       expect(component.displayMode()).toBe('thumbnail');
       expect(component.currentSrc()).toBe(THUMBNAIL_URL);
       expect(component.blurred()).toBe(true);
+    });
+  });
+
+  describe('shimmer gating', () => {
+    it('should keep the shimmer visible until the img element fires load', () => {
+      host.image.set(makeImage({ mainUrl: MAIN_URL }));
+      fixture.detectChanges();
+
+      expect(component.showShimmer()).toBe(true);
+
+      componentDebug.query(By.css('img')).triggerEventHandler('load', {});
+      fixture.detectChanges();
+
+      expect(component.showShimmer()).toBe(false);
+    });
+
+    it('should ignore load events for the transparent pixel placeholder', () => {
+      host.image.set(null);
+      fixture.detectChanges();
+
+      componentDebug.query(By.css('img')).triggerEventHandler('load', {});
+      fixture.detectChanges();
+
+      expect(component.hasLoaded()).toBe(false);
+      expect(component.showShimmer()).toBe(true);
+    });
+
+    it('should re-show the shimmer when the image input changes to a new URL', () => {
+      host.image.set(makeImage({ mainUrl: MAIN_URL }));
+      fixture.detectChanges();
+      componentDebug.query(By.css('img')).triggerEventHandler('load', {});
+      fixture.detectChanges();
+      expect(component.showShimmer()).toBe(false);
+
+      host.image.set(
+        makeImage({ id: 'img-2', mainUrl: 'https://example.com/other.jpg' }),
+      );
+      fixture.detectChanges();
+
+      expect(component.showShimmer()).toBe(true);
     });
   });
 

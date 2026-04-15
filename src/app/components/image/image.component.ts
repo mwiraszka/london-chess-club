@@ -23,7 +23,9 @@ const TRANSPARENT_PIXEL: Url =
  * Renders an image with progressive loading, blur-up transition, shimmer
  * placeholder, and a deterministic fallback chain (main -> thumbnail ->
  * fallback asset). Accepts a full `Image` model; for static assets or data
- * URLs use a plain `<img>` element instead.
+ * URLs use a plain `<img>` element instead. A `null` input is treated as
+ * "unknown / still loading" and keeps the shimmer visible — the fallback
+ * asset is only shown after a load definitively fails.
  */
 @Component({
   selector: 'lcc-image',
@@ -40,6 +42,7 @@ export class ImageComponent {
   public readonly currentSrc = signal<Url>(TRANSPARENT_PIXEL);
   public readonly blurred = signal<boolean>(false);
   public readonly displayMode = signal<DisplayMode>('none');
+  public readonly hasLoaded = signal<boolean>(false);
 
   public readonly aspectRatio = computed<string | null>(() => {
     const img = this.image();
@@ -49,7 +52,9 @@ export class ImageComponent {
     return calculateAspectRatio(img.mainWidth, img.mainHeight);
   });
 
-  public readonly showShimmer = computed<boolean>(() => this.displayMode() === 'none');
+  public readonly showShimmer = computed<boolean>(
+    () => this.displayMode() === 'none' || !this.hasLoaded(),
+  );
   public readonly caption = computed<string>(() => this.image()?.caption ?? '');
 
   private readonly destroyRef = inject(DestroyRef);
@@ -68,6 +73,10 @@ export class ImageComponent {
   }
 
   protected onImgLoad(): void {
+    if (this.displayMode() === 'none') {
+      return;
+    }
+    this.hasLoaded.set(true);
     this.loaded.emit();
   }
 
@@ -77,6 +86,7 @@ export class ImageComponent {
       this.displayMode.set('fallback');
       this.currentSrc.set(FALLBACK_SRC);
       this.blurred.set(false);
+      this.hasLoaded.set(false);
       return;
     }
 
@@ -88,6 +98,7 @@ export class ImageComponent {
         this.displayMode.set('thumbnail');
         this.currentSrc.set(img.thumbnailUrl);
         this.blurred.set(false);
+        this.hasLoaded.set(false);
         return;
       }
     } else if (mode === 'thumbnail') {
@@ -96,6 +107,7 @@ export class ImageComponent {
         this.displayMode.set('main');
         this.currentSrc.set(img.mainUrl);
         this.blurred.set(false);
+        this.hasLoaded.set(false);
         return;
       }
     }
@@ -103,28 +115,23 @@ export class ImageComponent {
     this.displayMode.set('fallback');
     this.currentSrc.set(FALLBACK_SRC);
     this.blurred.set(false);
+    this.hasLoaded.set(false);
   }
 
   private resolveSource(img: Image | null): void {
     this.cancelPreload();
     this.mainFailed = false;
     this.thumbnailFailed = false;
+    this.hasLoaded.set(false);
 
-    if (!img) {
-      this.displayMode.set('fallback');
-      this.currentSrc.set(FALLBACK_SRC);
-      this.blurred.set(false);
-      return;
-    }
-
-    const { mainUrl, thumbnailUrl } = img;
-
-    if (!mainUrl && !thumbnailUrl) {
+    if (!img || (!img.mainUrl && !img.thumbnailUrl)) {
       this.displayMode.set('none');
       this.currentSrc.set(TRANSPARENT_PIXEL);
       this.blurred.set(false);
       return;
     }
+
+    const { mainUrl, thumbnailUrl } = img;
 
     if (mainUrl && thumbnailUrl) {
       this.displayMode.set('thumbnail');
@@ -158,6 +165,7 @@ export class ImageComponent {
       this.displayMode.set('main');
       this.currentSrc.set(mainUrl);
       this.blurred.set(false);
+      this.hasLoaded.set(true);
     };
 
     preloader.onerror = () => {

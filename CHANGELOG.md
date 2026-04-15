@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Keep the shimmer placeholder visible until an article banner image has actually loaded, instead of briefly flashing the fallback image while the home page warms up
 - Prevent leaked prefetch timers in the image viewer when navigating away mid-prefetch
 
 ## [v5.12.13] - 2026-04-13
