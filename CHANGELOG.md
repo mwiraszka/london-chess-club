@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v5.13.0] - 2026-04-15
+
+### Added
+
+- Introduce a shared image component that renders thumbnails immediately and then swaps in full-resolution images once they load, with a graceful fallback chain when either fails
+
+### Changed
+
+- Refresh presigned S3 image URLs based on the backend-reported expiration timestamp instead of parsing the URL, so URLs stay valid across browser sessions
+- Only retry failed article banner images while the user is actually on a page that displays them, instead of polling in the background on every route
+
+### Fixed
+
+- Prevent leaked prefetch timers in the image viewer when navigating away mid-prefetch
+
 ## [v5.12.13] - 2026-04-13
 
 ### Changed
@@ -1669,6 +1684,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Create a responsive grid layout to house photos from club meetings and club-organized events, including the functionality to enlarge photos in an image overlay 'preview' mode
 - Create a responsive grid layout to showcase only the most pertinent information from other screens (such as only the next 4 events from the schedule, and a more limited amount of photos from the photo gallery)
 
+[v5.13.0]: https://github.com/mwiraszka/london-chess-club/compare/v5.12.13...v5.13.0
 [v5.12.13]: https://github.com/mwiraszka/london-chess-club/compare/v5.12.12...v5.12.13
 [v5.12.12]: https://github.com/mwiraszka/london-chess-club/compare/v5.12.11...v5.12.12
 [v5.12.11]: https://github.com/mwiraszka/london-chess-club/compare/v5.12.10...v5.12.11
