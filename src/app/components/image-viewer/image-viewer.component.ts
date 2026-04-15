@@ -1,7 +1,7 @@
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { switchMap, take } from 'rxjs/operators';
+import { BehaviorSubject, Observable, from, timer } from 'rxjs';
+import { concatMap, map, switchMap, take } from 'rxjs/operators';
 
 import { CommonModule } from '@angular/common';
 import {
@@ -19,8 +19,8 @@ import {
 import { MatIconModule } from '@angular/material/icon';
 
 import { BasicDialogComponent } from '@app/components/basic-dialog/basic-dialog.component';
+import { ImageComponent } from '@app/components/image/image.component';
 import { AdminControlsDirective } from '@app/directives/admin-controls.directive';
-import { ImagePreloadDirective } from '@app/directives/image-preload.directive';
 import { TooltipDirective } from '@app/directives/tooltip.directive';
 import {
   AdminControlsConfig,
@@ -41,7 +41,7 @@ import { ImagesActions, ImagesSelectors } from '@app/store/images';
   imports: [
     AdminControlsDirective,
     CommonModule,
-    ImagePreloadDirective,
+    ImageComponent,
     MatIconModule,
     TooltipDirective,
   ],
@@ -154,38 +154,29 @@ export class ImageViewerComponent
       return;
     }
 
-    // Immediate next image with a small delay
-    setTimeout(() => this.fetchImage(1, true), 1000);
+    // Build a list of indices to prefetch, starting with the immediate
+    // neighbours (next, then previous) and then alternating outward.
+    const indicesToPrefetch: number[] = [1];
 
     if (this.images.length > 2) {
-      // Previous image (last index) with a bigger delay
-      setTimeout(() => this.fetchImage(this.images.length - 1, true), 2000);
+      indicesToPrefetch.push(this.images.length - 1);
     }
 
-    if (this.images.length > 3) {
-      // Stagger remaining prefetch requests to avoid overwhelming the browser
-      let index = 0;
-      const imagesToPrefetch: number[] = [];
-
-      // Build a list of indices to prefetch, alternating between next and previous
-      for (let i = 2; i <= Math.floor(this.images.length / 2); i++) {
-        imagesToPrefetch.push(i);
-        if (i !== this.images.length - i) {
-          imagesToPrefetch.push(this.images.length - i);
-        }
+    for (let i = 2; i <= Math.floor(this.images.length / 2); i++) {
+      indicesToPrefetch.push(i);
+      if (i !== this.images.length - i) {
+        indicesToPrefetch.push(this.images.length - i);
       }
-
-      const prefetchNext = () => {
-        if (index < imagesToPrefetch.length) {
-          this.fetchImage(imagesToPrefetch[index], true);
-          index++;
-          setTimeout(prefetchNext, 1000);
-        }
-      };
-
-      // Begin main prefetching process with a delay after the initial prefetches
-      setTimeout(prefetchNext, 3000);
     }
+
+    // Stagger prefetch requests by 1s each so we don't swamp the browser, and
+    // cancel the whole stream if the viewer is destroyed mid-prefetch.
+    from(indicesToPrefetch)
+      .pipe(
+        concatMap(index => timer(1000).pipe(map(() => index))),
+        untilDestroyed(this),
+      )
+      .subscribe(index => this.fetchImage(index, true));
   }
 
   private fetchImage(index: number, isPrefetch = false): void {
