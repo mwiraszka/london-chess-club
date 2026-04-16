@@ -60,6 +60,9 @@ export class HomePageComponent implements OnInit {
     homePageArticles: Article[];
     homePageEvents: Event[];
     isAdmin: boolean;
+    isLoadingArticles: boolean;
+    isLoadingEvents: boolean;
+    isLoadingImages: boolean;
     nextEvent: Event | null;
     photoImages: Image[];
   }>;
@@ -118,16 +121,33 @@ export class HomePageComponent implements OnInit {
       this.store.select(ImagesSelectors.selectAllImages),
       this.store.select(AuthSelectors.selectIsAdmin),
       this.store.select(EventsSelectors.selectNextEvent),
+      this.store.select(ArticlesSelectors.selectLastHomePageFetch),
+      this.store.select(EventsSelectors.selectLastHomePageFetch),
+      this.store.select(ImagesSelectors.selectLastMetadataFetch),
     ]).pipe(
       untilDestroyed(this),
-      map(([homePageArticles, homePageEvents, allImages, isAdmin, nextEvent]) => ({
-        homePageArticles,
-        homePageEvents,
-        allImages,
-        isAdmin,
-        nextEvent,
-        photoImages: allImages.filter(image => !image.album.startsWith('_')),
-      })),
+      map(
+        ([
+          homePageArticles,
+          homePageEvents,
+          allImages,
+          isAdmin,
+          nextEvent,
+          lastArticlesFetch,
+          lastEventsFetch,
+          lastImagesFetch,
+        ]) => ({
+          homePageArticles,
+          homePageEvents,
+          allImages,
+          isAdmin,
+          nextEvent,
+          photoImages: allImages.filter(image => !image.album.startsWith('_')),
+          isLoadingArticles: lastArticlesFetch === null,
+          isLoadingEvents: lastEventsFetch === null,
+          isLoadingImages: lastImagesFetch === null,
+        }),
+      ),
     );
   }
 

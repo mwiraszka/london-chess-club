@@ -25,6 +25,7 @@ import { ImagesActions, ImagesSelectors } from '@app/store/images';
 
       <lcc-photo-grid
         [isAdmin]="vm.isAdmin"
+        [isLoading]="vm.isLoading"
         [photoImages]="vm.photoImages"
         (requestDeleteAlbum)="onRequestDeleteAlbum($event)">
       </lcc-photo-grid>
@@ -36,6 +37,7 @@ import { ImagesActions, ImagesSelectors } from '@app/store/images';
 export class PhotoGalleryPageComponent implements OnInit {
   public viewModel$?: Observable<{
     isAdmin: boolean;
+    isLoading: boolean;
     photoImages: Image[];
   }>;
 
@@ -53,10 +55,12 @@ export class PhotoGalleryPageComponent implements OnInit {
     this.viewModel$ = combineLatest([
       this.store.select(AuthSelectors.selectIsAdmin),
       this.store.select(ImagesSelectors.selectPhotoImages),
+      this.store.select(ImagesSelectors.selectLastMetadataFetch),
     ]).pipe(
       untilDestroyed(this),
-      map(([isAdmin, photoImages]) => ({
+      map(([isAdmin, photoImages, lastMetadataFetch]) => ({
         isAdmin,
+        isLoading: lastMetadataFetch === null,
         photoImages,
       })),
     );
