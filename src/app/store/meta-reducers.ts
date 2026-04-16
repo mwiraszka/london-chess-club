@@ -49,8 +49,11 @@ export function updateStateVersionsInLocalStorageMetaReducer(
     return (hydratedStates as string[]).includes(stateName) && version !== currentVersion;
   });
 
+  let migrated = false;
+
   return (state, action) => {
-    if (keysToUpdate.length) {
+    if (!migrated && keysToUpdate.length) {
+      migrated = true;
       console.info(`[LCC] Welcome to version ${currentVersion}`);
 
       const imagesStateRemoved = keysToUpdate.some(key =>
