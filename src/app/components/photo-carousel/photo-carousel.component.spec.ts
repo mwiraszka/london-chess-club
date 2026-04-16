@@ -252,9 +252,8 @@ describe('PhotoCarouselComponent', () => {
     it('should move to next photo on arrow right keydown', () => {
       const keydownEvent = new KeyboardEvent('keydown', { key: 'ArrowRight' });
 
-      query(fixture.debugElement, '.image-wrapper.active').nativeElement.dispatchEvent(
-        keydownEvent,
-      );
+      fixture.nativeElement.dispatchEvent(keydownEvent);
+
       expect(component.currentIndex).toBe(1);
     });
 
@@ -264,18 +263,28 @@ describe('PhotoCarouselComponent', () => {
 
       const keydownEvent = new KeyboardEvent('keydown', { key: 'ArrowLeft' });
 
-      query(fixture.debugElement, '.image-wrapper.active').nativeElement.dispatchEvent(
-        keydownEvent,
-      );
+      fixture.nativeElement.dispatchEvent(keydownEvent);
+
       expect(component.currentIndex).toBe(0);
     });
 
     it('should move to next photo on enter keydown', () => {
       const keydownEvent = new KeyboardEvent('keydown', { key: 'Enter' });
 
-      query(fixture.debugElement, '.image-wrapper.active').nativeElement.dispatchEvent(
-        keydownEvent,
-      );
+      fixture.nativeElement.dispatchEvent(keydownEvent);
+
+      expect(component.currentIndex).toBe(1);
+    });
+
+    it('should handle keyboard events from any focused child element', () => {
+      const dotButton = query(fixture.debugElement, '.dot-button');
+      const keydownEvent = new KeyboardEvent('keydown', {
+        key: 'ArrowRight',
+        bubbles: true,
+      });
+
+      dotButton.nativeElement.dispatchEvent(keydownEvent);
+
       expect(component.currentIndex).toBe(1);
     });
   });
