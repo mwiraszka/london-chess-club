@@ -23,9 +23,11 @@ const TRANSPARENT_PIXEL: Url =
  * Renders an image with progressive loading, blur-up transition, shimmer
  * placeholder, and a deterministic fallback chain (main -> thumbnail ->
  * fallback asset). Accepts a full `Image` model; for static assets or data
- * URLs use a plain `<img>` element instead. A `null` input is treated as
- * "unknown / still loading" and keeps the shimmer visible — the fallback
- * asset is only shown after a load definitively fails.
+ * URLs use a plain `<img>` element instead.
+ *
+ * A `null` input means "no image" and shows the fallback asset immediately.
+ * Parent components handle any "still loading" state externally (e.g. via
+ * skeleton placeholders) before rendering this component.
  */
 @Component({
   selector: 'lcc-image',
@@ -137,7 +139,14 @@ export class ImageComponent {
     this.thumbnailFailed = false;
     this.hasLoaded.set(false);
 
-    if (!img || (!img.mainUrl && !img.thumbnailUrl)) {
+    if (!img) {
+      this.displayMode.set('fallback');
+      this.currentSrc.set(FALLBACK_SRC);
+      this.blurred.set(false);
+      return;
+    }
+
+    if (!img.mainUrl && !img.thumbnailUrl) {
       this.displayMode.set('none');
       this.currentSrc.set(TRANSPARENT_PIXEL);
       this.blurred.set(false);
