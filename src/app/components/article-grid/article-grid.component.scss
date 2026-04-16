@@ -43,9 +43,9 @@ $grid-gap: 8px;
     justify-content: center;
 
     .article {
+      flex-shrink: 0;
       min-width: $card-min-width;
       max-width: $card-min-width;
-      flex-shrink: 0;
 
       @include respond-to('lt-xs') {
         min-width: 100cqi;
@@ -64,7 +64,6 @@ $grid-gap: 8px;
   }
 
   .article {
-    opacity: 0;
     display: flex;
     flex-flow: column nowrap;
     gap: 4px;
@@ -77,9 +76,13 @@ $grid-gap: 8px;
       transform 0.3s ease,
       box-shadow 0.3s ease,
       background-color 0.3s ease;
-    animation: fade-in-up 1s ease-out forwards;
 
-    &:hover {
+    &.skeleton {
+      opacity: 0;
+      animation: fade-in-over 0.6s ease-out forwards;
+    }
+
+    &:not(.skeleton):hover {
       background-color: var(--lcc-color--articleGrid-cardBackgroundOnHover);
       cursor: pointer;
       box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.35);
@@ -96,25 +99,30 @@ $grid-gap: 8px;
       border-top-left-radius: var(--lcc-borderRadius--large);
       border-top-right-radius: var(--lcc-borderRadius--large);
       background-color: var(--lcc-color--contentPlaceholder-background);
-      mask-image: radial-gradient(
-        ellipse 90% 90% at 50% 45%,
-        black 50%,
-        transparent 100%
-      );
-      -webkit-mask-image: radial-gradient(
-        ellipse 90% 90% at 50% 45%,
-        black 50%,
-        transparent 100%
-      );
+
+      &:not(.lcc-content-placeholder-wrapper) {
+        mask-image: radial-gradient(
+          ellipse 95% 95% at 50% 45%,
+          black 30%,
+          transparent 100%
+        );
+        -webkit-mask-image: radial-gradient(
+          ellipse 95% 95% at 50% 45%,
+          black 30%,
+          transparent 100%
+        );
+      }
     }
 
-    img {
+    lcc-image {
       max-width: 100%;
       max-height: 100%;
       // Slightly scale up images to avoid tiny gaps around them
       transform: scale(1.02);
 
-      object-fit: contain;
+      ::ng-deep img {
+        object-fit: contain;
+      }
     }
 
     .bookmark-icon {
@@ -177,14 +185,21 @@ $grid-gap: 8px;
         text-align: center;
         color: var(--lcc-color--articleGrid-articleCreationDateText);
       }
+
+      .skeleton-date {
+        width: 40%;
+        height: 11px;
+        margin: 16px auto 0;
+        border-radius: 4px;
+      }
     }
   }
 }
 
-@keyframes fade-in-up {
+@keyframes fade-in-over {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateX(20px);
   }
   to {
     opacity: 1;

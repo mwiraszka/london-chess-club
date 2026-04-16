@@ -4,7 +4,9 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -12,8 +14,8 @@ import { AdminToolbarComponent } from '@app/components/admin-toolbar/admin-toolb
 import { BasicDialogComponent } from '@app/components/basic-dialog/basic-dialog.component';
 import { ImageExplorerComponent } from '@app/components/image-explorer/image-explorer.component';
 import { ImageViewerComponent } from '@app/components/image-viewer/image-viewer.component';
+import { ImageComponent } from '@app/components/image/image.component';
 import { AdminControlsDirective } from '@app/directives/admin-controls.directive';
-import { ImagePreloadDirective } from '@app/directives/image-preload.directive';
 import {
   AdminButton,
   AdminControlsConfig,
@@ -33,19 +35,28 @@ import { customSort } from '@app/utils';
   imports: [
     AdminControlsDirective,
     AdminToolbarComponent,
-    ImagePreloadDirective,
+    ImageComponent,
     MatIconModule,
     UpperCasePipe,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PhotoGridComponent {
+export class PhotoGridComponent implements OnChanges {
   @Input({ required: true }) public isAdmin!: boolean;
   @Input({ required: true }) public photoImages!: Image[];
 
+  @Input() public isLoading?: boolean;
   @Input() public maxAlbums?: number;
 
   @Output() public readonly requestDeleteAlbum = new EventEmitter<string>();
+
+  public visibleAlbumCovers: Image[] = [];
+
+  private readonly defaultSkeletonCovers: Image[] = Array.from({ length: 20 }, () => ({
+    ...({} as Image),
+    id: '',
+    album: '',
+  }));
 
   public readonly openImageExplorerButton: AdminButton = {
     id: 'open-image-explorer',
@@ -68,9 +79,24 @@ export class PhotoGridComponent {
 
   constructor(private readonly dialogService: DialogService) {}
 
-  private animationDelays: Map<string, number> = new Map();
+  public get showSkeleton(): boolean {
+    return !!this.isLoading;
+  }
 
-  public get albumCovers(): Image[] {
+  public get displayCovers(): Image[] {
+    if (this.showSkeleton) {
+      return this.defaultSkeletonCovers;
+    }
+    return this.visibleAlbumCovers;
+  }
+
+  public ngOnChanges(changes: SimpleChanges<PhotoGridComponent>): void {
+    if (changes.photoImages || changes.maxAlbums) {
+      this.visibleAlbumCovers = this.buildVisibleAlbumCovers();
+    }
+  }
+
+  private buildVisibleAlbumCovers(): Image[] {
     const covers = this.photoImages
       .filter(image => image.albumCover)
       .map(image => ({
@@ -80,24 +106,7 @@ export class PhotoGridComponent {
         caption: image.caption || 'Loading...',
       }));
 
-    // Generate randomized animation delays (2 items at a time)
-    if (this.animationDelays.size === 0 && covers.length > 0) {
-      const shuffledIndices = Array.from({ length: covers.length }, (_, i) => i).sort(
-        () => Math.random() - 0.5,
-      );
-
-      shuffledIndices.forEach((originalIndex, shuffledPosition) => {
-        const pairIndex = Math.floor(shuffledPosition / 2);
-        const delay = pairIndex * 0.15; // 150ms between pairs
-        this.animationDelays.set(covers[originalIndex].id, delay);
-      });
-    }
-
-    return covers;
-  }
-
-  public getAnimationDelay(imageId: Id): number {
-    return this.animationDelays.get(imageId) || 0;
+    return this.maxAlbums != null ? covers.slice(0, this.maxAlbums) : covers;
   }
 
   public async onClickAlbumCover(album: string): Promise<void> {

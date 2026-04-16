@@ -43,6 +43,7 @@ import { ImagesSelectors } from '@app/store/images';
         [articles]="vm.filteredArticles"
         [images]="vm.images"
         [isAdmin]="vm.isAdmin"
+        [isLoading]="vm.isLoading"
         [options]="vm.options"
         (requestDeleteArticle)="onRequestDeleteArticle($event)"
         (requestUpdateArticleBookmark)="onRequestUpdateArticleBookmark($event)">
@@ -70,6 +71,7 @@ export class NewsPageComponent implements OnInit {
     filteredCount: number | null;
     images: Image[];
     isAdmin: boolean;
+    isLoading: boolean;
     options: DataPaginationOptions<Article>;
   }>;
 
@@ -90,15 +92,28 @@ export class NewsPageComponent implements OnInit {
       this.store.select(ImagesSelectors.selectAllImages),
       this.store.select(AuthSelectors.selectIsAdmin),
       this.store.select(ArticlesSelectors.selectOptions),
+      this.store.select(ArticlesSelectors.selectLastFilteredFetch),
+      this.store.select(ImagesSelectors.selectLastMetadataFetch),
     ]).pipe(
       untilDestroyed(this),
-      map(([filteredArticles, filteredCount, images, isAdmin, options]) => ({
-        filteredArticles,
-        filteredCount,
-        images,
-        isAdmin,
-        options,
-      })),
+      map(
+        ([
+          filteredArticles,
+          filteredCount,
+          images,
+          isAdmin,
+          options,
+          lastArticlesFetch,
+          lastImagesFetch,
+        ]) => ({
+          filteredArticles,
+          filteredCount,
+          images,
+          isAdmin,
+          isLoading: lastArticlesFetch === null || lastImagesFetch === null,
+          options,
+        }),
+      ),
     );
   }
 

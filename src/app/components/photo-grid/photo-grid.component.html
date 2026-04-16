@@ -7,24 +7,40 @@
 
 <section class="grid-container">
   <div class="album-covers">
-    @for (
-      image of albumCovers.slice(0, maxAlbums ?? albumCovers.length);
-      track image.id
-    ) {
+    @for (image of displayCovers; track $index) {
       <button
         class="album-cover"
-        [adminControls]="isAdmin ? getAdminControlsConfig(image.album) : null"
-        [style.animation-delay.s]="getAnimationDelay(image.id)"
-        (click)="onClickAlbumCover(image.album)">
+        [class.skeleton]="showSkeleton"
+        [style.animation-delay.s]="showSkeleton ? $index * 0.08 : null"
+        [attr.aria-hidden]="showSkeleton || null"
+        [adminControls]="
+          !showSkeleton && isAdmin ? getAdminControlsConfig(image.album) : null
+        "
+        (click)="showSkeleton ? null : onClickAlbumCover(image.album)">
         <figure>
-          <div class="album-image-container">
-            <img [image]="image" />
-          </div>
-          <figcaption>
-            <div class="album-name lcc-truncate-max-3-lines">{{ image.album }}</div>
-            <div class="photo-count">
-              {{ getAlbumPhotoCountText(image.album) | uppercase }}
+          @if (showSkeleton) {
+            <div class="album-image-container lcc-content-placeholder-wrapper">
+              <div class="lcc-content-placeholder"></div>
             </div>
+          } @else {
+            <div class="album-image-container">
+              <lcc-image [image]="image" />
+            </div>
+          }
+          <figcaption>
+            @if (showSkeleton) {
+              <div class="skeleton-album-name lcc-content-placeholder-wrapper">
+                <div class="lcc-content-placeholder"></div>
+              </div>
+              <div class="skeleton-photo-count lcc-content-placeholder-wrapper">
+                <div class="lcc-content-placeholder"></div>
+              </div>
+            } @else {
+              <div class="album-name lcc-truncate-max-3-lines">{{ image.album }}</div>
+              <div class="photo-count">
+                {{ getAlbumPhotoCountText(image.album) | uppercase }}
+              </div>
+            }
           </figcaption>
         </figure>
       </button>

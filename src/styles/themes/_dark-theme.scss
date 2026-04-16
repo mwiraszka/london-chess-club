@@ -95,9 +95,9 @@ body[data-theme='dark'] {
   --lcc-color--clubLinks-boxShadow: #{clr(grayscale, black-10, 0.7)};
 
   --lcc-color--contentPlaceholder-background: #{clr(grayscale, gray-75)};
-  --lcc-color--contentPlaceholder-foreground1: #{clr(grayscale, gray-65, 0.05)};
-  --lcc-color--contentPlaceholder-foreground2: #{clr(grayscale, gray-65, 0.3)};
-  --lcc-color--contentPlaceholder-foreground3: #{clr(grayscale, gray-65, 0.6)};
+  --lcc-color--contentPlaceholder-foreground1: #{clr(grayscale, gray-65, 0.02)};
+  --lcc-color--contentPlaceholder-foreground2: #{clr(grayscale, gray-65, 0.08)};
+  --lcc-color--contentPlaceholder-foreground3: #{clr(grayscale, gray-65, 0.18)};
 
   --lcc-color--dataToolbar-background: #{clr(primary, darker)};
   --lcc-color--dataToolbar-buttonBorder: #{clr(grayscale, gray-75)};

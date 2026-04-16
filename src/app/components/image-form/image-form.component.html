@@ -5,7 +5,7 @@
   <div class="lcc-form-fields">
     @if (imageEntity) {
       <div class="image-container full-span">
-        <img [image]="imageEntity.image" />
+        <lcc-image [image]="imageEntity.image" />
       </div>
     } @else {
       <label
@@ -16,10 +16,8 @@
       <div class="file-and-preview-container">
         <div class="image-container">
           <img
-            [image]="{
-              caption: 'Image preview',
-              mainUrl: newImageDataUrl || 'assets/fallback-image.png',
-            }" />
+            [src]="newImageDataUrl || 'assets/fallback-image.png'"
+            alt="Image preview" />
         </div>
         <label
           class="choose-file-button lcc-secondary-button"

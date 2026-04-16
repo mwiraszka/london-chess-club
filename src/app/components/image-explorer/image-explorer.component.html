@@ -22,7 +22,7 @@
           [adminControls]="getAdminControlsConfig(image)"
           (click)="selectable ? dialogResult.emit(image.id) : null">
           <div class="image-container">
-            <img [image]="image" />
+            <lcc-image [image]="image" />
           </div>
 
           <div class="caption">

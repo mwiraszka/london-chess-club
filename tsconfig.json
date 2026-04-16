@@ -30,6 +30,7 @@
     "sourceMap": true,
     "strict": true,
     "target": "ES2022",
+    "types": ["google.maps", "jest"],
     "useDefineForClassFields": false
   }
 }

@@ -114,13 +114,14 @@ describe('ArticleComponent', () => {
         );
       });
 
-      it('should default to the placeholder image when bannerImage is null', () => {
+      it('should show the fallback image with shimmer overlay when bannerImage is null', () => {
         fixture.componentRef.setInput('bannerImage', null);
         fixture.detectChanges();
 
         expect(query(fixture.debugElement, 'img').attributes['src']).toBe(
           'assets/fallback-image.png',
         );
+        expect(query(fixture.debugElement, '.shimmer-overlay')).toBeTruthy();
       });
     });
   });

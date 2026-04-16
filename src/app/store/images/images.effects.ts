@@ -30,7 +30,6 @@ import {
   isDefined,
   isExpired,
   isLccError,
-  isPresignedUrlExpired,
   parseError,
 } from '@app/utils';
 
@@ -235,11 +234,13 @@ export class ImagesEffects {
             ),
           ),
           filter(({ image }) => {
-            return !!(
+            // Refresh if the image is missing, has no main URL, or its presigned
+            // URL is within 2h of expiring (backend issues 12h URLs).
+            return (
               !image ||
               !image.mainUrl ||
-              isPresignedUrlExpired(image.mainUrl) ||
-              (image.urlExpirationDate && isExpired(image.urlExpirationDate))
+              !image.urlExpirationDate ||
+              moment(image.urlExpirationDate).isBefore(moment().add(2, 'hours'))
             );
           }),
           map(({ imageId }) =>
@@ -406,8 +407,14 @@ export class ImagesEffects {
   });
 
   retryFailedArticleBannerImages$ = createEffect(() => {
-    // Periodic check to retry failed/expired article banner images
+    // Periodic check to retry failed/expired article banner images, but only
+    // while the user is on a page that actually renders article banners.
     const periodicCheck$ = timer(5 * 60 * 1000, 10 * 60 * 1000).pipe(
+      switchMap(() => this.store.select(NavSelectors.selectCurrentPath).pipe(take(1))),
+      filter(
+        currentPath =>
+          currentPath === '' || currentPath === '/' || !!currentPath?.includes('/news'),
+      ),
       switchMap(() =>
         combineLatest([
           this.store.select(ArticlesSelectors.selectHomePageArticles),

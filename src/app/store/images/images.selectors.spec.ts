@@ -452,7 +452,12 @@ describe('Images Selectors', () => {
       ];
       const allImages = [
         { ...MOCK_IMAGES[0], id: 'img-1', thumbnailUrl: undefined },
-        { ...MOCK_IMAGES[1], id: 'img-2', thumbnailUrl: 'https://example.com/thumb.jpg' },
+        {
+          ...MOCK_IMAGES[1],
+          id: 'img-2',
+          thumbnailUrl: 'https://example.com/thumb.jpg',
+          urlExpirationDate: '2025-11-15T22:00:00Z',
+        },
       ];
       const selector =
         ImagesSelectors.selectIdsOfArticleBannerImagesWithMissingOrExpiredThumbnailUrls(
@@ -462,32 +467,33 @@ describe('Images Selectors', () => {
       expect(result).toEqual(['img-1']);
     });
 
-    it('should return ids of banner images with expired AWS presigned URLs (>10 hours old)', () => {
+    it('should return ids of banner images whose presigned URLs are within the 2h safety buffer', () => {
       const articles = [
         { ...MOCK_ARTICLES[0], bannerImageId: 'img-1' },
         { ...MOCK_ARTICLES[1], bannerImageId: 'img-2' },
         { ...MOCK_ARTICLES[2], bannerImageId: 'img-3' },
       ];
-      // img-1: expired URL (created Nov 12 at 01:06, >10 hours ago)
-      // img-2: recent URL (created Nov 15 at 10:00, only 2 hours ago)
-      // img-3: regular non-presigned URL
+      // img-1: urlExpirationDate 1 hour from now (inside 2h buffer -> refresh)
+      // img-2: urlExpirationDate 6 hours from now (outside buffer -> keep)
+      // img-3: urlExpirationDate already in the past (-> refresh)
       const allImages = [
         {
           ...MOCK_IMAGES[0],
           id: 'img-1',
-          thumbnailUrl:
-            'https://s3.amazonaws.com/image-thumb?X-Amz-Date=20251112T010607Z&X-Amz-Expires=43200',
+          thumbnailUrl: 'https://example.com/thumb-1.jpg',
+          urlExpirationDate: '2025-11-15T13:00:00Z',
         },
         {
           ...MOCK_IMAGES[1],
           id: 'img-2',
-          thumbnailUrl:
-            'https://s3.amazonaws.com/image-thumb?X-Amz-Date=20251115T100000Z&X-Amz-Expires=43200',
+          thumbnailUrl: 'https://example.com/thumb-2.jpg',
+          urlExpirationDate: '2025-11-15T18:00:00Z',
         },
         {
           ...MOCK_IMAGES[2],
           id: 'img-3',
-          thumbnailUrl: 'https://example.com/regular-thumb.jpg',
+          thumbnailUrl: 'https://example.com/thumb-3.jpg',
+          urlExpirationDate: '2025-11-15T11:00:00Z',
         },
       ];
       const selector =
@@ -495,8 +501,7 @@ describe('Images Selectors', () => {
           articles,
         );
       const result = selector.projector(allImages);
-      // Only img-1 should be returned (>10 hours old)
-      expect(result).toEqual(['img-1']);
+      expect(result).toEqual(['img-1', 'img-3']);
     });
 
     it('should return both missing and expired thumbnail URLs', () => {
@@ -510,17 +515,21 @@ describe('Images Selectors', () => {
         {
           ...MOCK_IMAGES[1],
           id: 'img-2',
-          thumbnailUrl:
-            'https://s3.amazonaws.com/image-thumb?X-Amz-Date=20251112T010607Z&X-Amz-Expires=43200',
+          thumbnailUrl: 'https://example.com/thumb-2.jpg',
+          urlExpirationDate: '2025-11-15T11:00:00Z',
         },
-        { ...MOCK_IMAGES[2], id: 'img-3', thumbnailUrl: 'https://example.com/valid.jpg' },
+        {
+          ...MOCK_IMAGES[2],
+          id: 'img-3',
+          thumbnailUrl: 'https://example.com/valid.jpg',
+          urlExpirationDate: '2025-11-15T22:00:00Z',
+        },
       ];
       const selector =
         ImagesSelectors.selectIdsOfArticleBannerImagesWithMissingOrExpiredThumbnailUrls(
           articles,
         );
       const result = selector.projector(allImages);
-      // Both img-1 (missing) and img-2 (expired) should be returned
       expect(result).toEqual(['img-1', 'img-2']);
     });
   });

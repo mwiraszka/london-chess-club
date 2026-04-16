@@ -38,12 +38,13 @@
         [adminButtons]="[exportToCsvButton]">
       </lcc-admin-toolbar>
     }
-    @if (vm.homePageEvents.length) {
+    @if (vm.isLoadingEvents || vm.homePageEvents.length) {
       <div class="events-table-wrapper">
         <lcc-events-table
           [dateLimit]="5"
           [events]="vm.homePageEvents"
           [isAdmin]="vm.isAdmin"
+          [isLoading]="vm.isLoadingEvents"
           [nextEvent]="vm.nextEvent"
           (requestDeleteEvent)="onRequestDeleteEvent($event)">
         </lcc-events-table>
@@ -62,6 +63,7 @@
       [images]="vm.allImages"
       [isAdmin]="vm.isAdmin"
       [isHomePage]="true"
+      [isLoading]="vm.isLoadingArticles || vm.isLoadingImages"
       (requestDeleteArticle)="onRequestDeleteArticle($event)"
       (requestUpdateArticleBookmark)="onRequestUpdateArticleBookmark($event)">
     </lcc-article-grid>
@@ -71,6 +73,7 @@
   <section class="photos-section">
     <lcc-photo-grid
       [isAdmin]="vm.isAdmin"
+      [isLoading]="vm.isLoadingImages"
       [maxAlbums]="20"
       [photoImages]="vm.photoImages"
       (requestDeleteAlbum)="onRequestDeleteAlbum($event)">

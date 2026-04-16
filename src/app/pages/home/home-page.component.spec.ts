@@ -83,6 +83,18 @@ describe('HomePageComponent', () => {
     store.overrideSelector(AuthSelectors.selectIsAdmin, mockIsAdmin);
     store.overrideSelector(EventsSelectors.selectNextEvent, mockNextEvent);
     store.overrideSelector(EventsSelectors.selectTotalCount, mockTotalCount);
+    store.overrideSelector(
+      ArticlesSelectors.selectLastHomePageFetch,
+      '2026-01-01T00:00:00.000Z',
+    );
+    store.overrideSelector(
+      EventsSelectors.selectLastHomePageFetch,
+      '2026-01-01T00:00:00.000Z',
+    );
+    store.overrideSelector(
+      ImagesSelectors.selectLastMetadataFetch,
+      '2026-01-01T00:00:00.000Z',
+    );
     store.refreshState();
   });
 
@@ -111,7 +123,42 @@ describe('HomePageComponent', () => {
         isAdmin: mockIsAdmin,
         nextEvent: mockNextEvent,
         photoImages: mockPhotoImages,
+        isLoadingArticles: false,
+        isLoadingEvents: false,
+        isLoadingImages: false,
       });
+    });
+  });
+
+  describe('isLoading states', () => {
+    it('should set isLoadingArticles to true when articles have not been fetched', async () => {
+      store.overrideSelector(ArticlesSelectors.selectLastHomePageFetch, null);
+      store.refreshState();
+      component.ngOnInit();
+
+      const vm = await firstValueFrom(component.viewModel$!.pipe(take(1)));
+
+      expect(vm.isLoadingArticles).toBe(true);
+    });
+
+    it('should set isLoadingEvents to true when events have not been fetched', async () => {
+      store.overrideSelector(EventsSelectors.selectLastHomePageFetch, null);
+      store.refreshState();
+      component.ngOnInit();
+
+      const vm = await firstValueFrom(component.viewModel$!.pipe(take(1)));
+
+      expect(vm.isLoadingEvents).toBe(true);
+    });
+
+    it('should set isLoadingImages to true when images have not been fetched', async () => {
+      store.overrideSelector(ImagesSelectors.selectLastMetadataFetch, null);
+      store.refreshState();
+      component.ngOnInit();
+
+      const vm = await firstValueFrom(component.viewModel$!.pipe(take(1)));
+
+      expect(vm.isLoadingImages).toBe(true);
     });
   });
 

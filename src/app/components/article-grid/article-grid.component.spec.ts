@@ -3,7 +3,6 @@ import { provideRouter } from '@angular/router';
 
 import { BasicDialogComponent } from '@app/components/basic-dialog/basic-dialog.component';
 import { AdminControlsDirective } from '@app/directives/admin-controls.directive';
-import { ImagePreloadDirective } from '@app/directives/image-preload.directive';
 import { MOCK_ARTICLES } from '@app/mocks/articles.mock';
 import { MOCK_IMAGES } from '@app/mocks/images.mock';
 import { Article, DataPaginationOptions } from '@app/models';
@@ -33,7 +32,7 @@ describe('ArticleGridComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AdminControlsDirective, ArticleGridComponent, ImagePreloadDirective],
+      imports: [AdminControlsDirective, ArticleGridComponent],
       providers: [
         {
           provide: DialogService,
@@ -67,42 +66,82 @@ describe('ArticleGridComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('when images changes', () => {
-    it('should update the bannerImagesMap', () => {
-      component.ngOnChanges({
-        images: {
-          currentValue: MOCK_IMAGES,
-          previousValue: [],
-          firstChange: false,
-          isFirstChange: () => false,
-        },
-      });
+  describe('showSkeleton', () => {
+    it('should return true when isLoading is true', () => {
+      fixture.componentRef.setInput('isLoading', true);
 
-      expect(component.getBannerImage(MOCK_IMAGES[0].id)).toEqual(MOCK_IMAGES[0]);
+      expect(component.showSkeleton).toBe(true);
+    });
+
+    it('should return false when isLoading is false', () => {
+      fixture.componentRef.setInput('isLoading', false);
+
+      expect(component.showSkeleton).toBe(false);
+    });
+
+    it('should return false when isLoading is undefined', () => {
+      expect(component.showSkeleton).toBe(false);
     });
   });
 
-  describe('getBannerImage', () => {
-    it('should return the image from bannerImagesMap when available', () => {
-      const mockImage = MOCK_IMAGES[0];
-      component.ngOnChanges({
-        images: {
-          currentValue: [mockImage],
-          previousValue: [],
-          firstChange: false,
-          isFirstChange: () => false,
-        },
-      });
+  describe('displayItems', () => {
+    it('should return visibleRows when not loading', () => {
+      fixture.componentRef.setInput('isLoading', false);
 
-      const result = component.getBannerImage(mockImage.id);
-      expect(result).toEqual(mockImage);
+      expect(component.displayItems).toBe(component.visibleRows);
     });
 
-    it('should return a placeholder object when image is not in map', () => {
-      const unknownId = 'unknown-id';
-      const result = component.getBannerImage(unknownId);
+    it('should return 10 skeleton rows when loading on home page', () => {
+      fixture.componentRef.setInput('isLoading', true);
+      fixture.componentRef.setInput('isHomePage', true);
 
-      expect(result).toEqual({ id: unknownId, caption: 'Loading...' });
+      expect(component.displayItems).toHaveLength(10);
+    });
+
+    it('should return pageSize skeleton rows when loading with specific pageSize', () => {
+      fixture.componentRef.setInput('isLoading', true);
+      fixture.componentRef.setInput('options', { ...mockOptions, pageSize: 25 });
+
+      expect(component.displayItems).toHaveLength(25);
+    });
+
+    it('should return 100 skeleton rows when loading with pageSize -1', () => {
+      fixture.componentRef.setInput('isLoading', true);
+      fixture.componentRef.setInput('options', { ...mockOptions, pageSize: -1 });
+
+      expect(component.displayItems).toHaveLength(100);
+    });
+
+    it('should return 100 skeleton rows when loading with no options', () => {
+      fixture.componentRef.setInput('isLoading', true);
+      fixture.componentRef.setInput('options', undefined);
+
+      expect(component.displayItems).toHaveLength(100);
+    });
+  });
+
+  describe('visibleRows', () => {
+    it('should map articles to their banner image when available', () => {
+      const matchingImage = MOCK_IMAGES.find(
+        image => image.id === MOCK_ARTICLES[0].bannerImageId,
+      );
+
+      fixture.componentRef.setInput('articles', [MOCK_ARTICLES[0]]);
+      fixture.componentRef.setInput('images', MOCK_IMAGES);
+      fixture.detectChanges();
+
+      expect(component.visibleRows).toHaveLength(1);
+      expect(component.visibleRows[0].article).toBe(MOCK_ARTICLES[0]);
+      expect(component.visibleRows[0].bannerImage).toEqual(matchingImage ?? null);
+    });
+
+    it('should set bannerImage to null when no matching image exists', () => {
+      fixture.componentRef.setInput('articles', [MOCK_ARTICLES[0]]);
+      fixture.componentRef.setInput('images', []);
+      fixture.detectChanges();
+
+      expect(component.visibleRows).toHaveLength(1);
+      expect(component.visibleRows[0].bannerImage).toBeNull();
     });
   });
 
@@ -347,6 +386,47 @@ describe('ArticleGridComponent', () => {
       expect(bodyPreview).toContain('1. Fry, P.');
       expect(bodyPreview).toContain('\u2013 1.0');
       expect(bodyPreview).not.toContain('Round');
+    });
+
+    describe('when loading', () => {
+      beforeEach(() => {
+        fixture.componentRef.setInput('isLoading', true);
+        fixture.componentRef.setInput('options', { ...mockOptions, pageSize: 3 });
+        fixture.detectChanges();
+      });
+
+      it('should render skeleton cards with placeholder elements', () => {
+        const skeletonCards = queryAll(fixture.debugElement, '.article.skeleton');
+
+        expect(skeletonCards.length).toBe(3);
+      });
+
+      it('should render image placeholders instead of real images', () => {
+        expect(
+          query(fixture.debugElement, '.image-container.lcc-content-placeholder-wrapper'),
+        ).toBeTruthy();
+        expect(query(fixture.debugElement, 'lcc-image')).toBeFalsy();
+      });
+
+      it('should render title placeholders instead of real titles', () => {
+        expect(
+          query(
+            fixture.debugElement,
+            '.article-title-wrapper.lcc-content-placeholder-wrapper',
+          ),
+        ).toBeTruthy();
+        expect(query(fixture.debugElement, '.article-title')).toBeFalsy();
+      });
+
+      it('should not render bookmark icons', () => {
+        expect(query(fixture.debugElement, '.bookmark-icon')).toBeFalsy();
+      });
+
+      it('should not attach routerLink to skeleton cards', () => {
+        const card = query(fixture.debugElement, '.article');
+
+        expect(card.nativeElement.getAttribute('href')).toBeNull();
+      });
     });
 
     it('should apply search highlighting when search term is present', () => {

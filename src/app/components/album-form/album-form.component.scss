@@ -37,6 +37,18 @@
       max-height: 180px;
     }
 
+    lcc-image {
+      width: auto;
+      max-width: 100%;
+      height: auto;
+      max-height: 180px;
+
+      ::ng-deep img {
+        object-fit: contain;
+        max-height: 180px;
+      }
+    }
+
     &:hover .remove-image-button {
       display: flex;
     }

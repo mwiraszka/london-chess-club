@@ -17,8 +17,8 @@ import {
 import { AdminToolbarComponent } from '@app/components/admin-toolbar/admin-toolbar.component';
 import { BasicDialogComponent } from '@app/components/basic-dialog/basic-dialog.component';
 import { DataToolbarComponent } from '@app/components/data-toolbar/data-toolbar.component';
+import { ImageComponent } from '@app/components/image/image.component';
 import { AdminControlsDirective } from '@app/directives/admin-controls.directive';
-import { ImagePreloadDirective } from '@app/directives/image-preload.directive';
 import {
   AdminControlsConfig,
   BasicDialogResult,
@@ -48,7 +48,7 @@ import * as ImagesSelectors from '@app/store/images/images.selectors';
     FormatBytesPipe,
     FormatDatePipe,
     HighlightPipe,
-    ImagePreloadDirective,
+    ImageComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   hostDirectives: [CdkScrollable],

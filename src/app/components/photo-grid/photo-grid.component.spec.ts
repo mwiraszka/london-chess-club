@@ -53,14 +53,49 @@ describe('PhotoGridComponent', () => {
     onClickAlbumCoverSpy = jest.spyOn(component, 'onClickAlbumCover');
     requestDeleteAlbumSpy = jest.spyOn(component.requestDeleteAlbum, 'emit');
 
-    component.isAdmin = true;
-    component.photoImages = MOCK_IMAGES;
+    fixture.componentRef.setInput('isAdmin', true);
+    fixture.componentRef.setInput('photoImages', MOCK_IMAGES);
 
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('showSkeleton', () => {
+    it('should return true when isLoading is true', () => {
+      fixture.componentRef.setInput('isLoading', true);
+
+      expect(component.showSkeleton).toBe(true);
+    });
+
+    it('should return false when isLoading is false', () => {
+      fixture.componentRef.setInput('isLoading', false);
+
+      expect(component.showSkeleton).toBe(false);
+    });
+
+    it('should return false when isLoading is undefined', () => {
+      expect(component.showSkeleton).toBe(false);
+    });
+  });
+
+  describe('displayCovers', () => {
+    it('should return visibleAlbumCovers when not loading', () => {
+      fixture.componentRef.setInput('isLoading', false);
+
+      expect(component.displayCovers).toBe(component.visibleAlbumCovers);
+    });
+
+    it('should return 20 skeleton covers when loading', () => {
+      fixture.componentRef.setInput('isLoading', true);
+
+      const covers = component.displayCovers;
+
+      expect(covers).toHaveLength(20);
+      expect(covers.every(c => c.id === '' && c.album === '')).toBe(true);
+    });
   });
 
   describe('onClickAlbumCover', () => {
@@ -187,6 +222,42 @@ describe('PhotoGridComponent', () => {
       fixture.detectChanges();
 
       expect(query(fixture.debugElement, 'lcc-admin-toolbar')).toBeFalsy();
+    });
+
+    describe('when loading', () => {
+      beforeEach(() => {
+        fixture.componentRef.setInput('isLoading', true);
+        fixture.detectChanges();
+      });
+
+      it('should render 20 skeleton album covers', () => {
+        const skeletonCards = queryAll(fixture.debugElement, '.album-cover.skeleton');
+
+        expect(skeletonCards.length).toBe(20);
+      });
+
+      it('should render image placeholders instead of real images', () => {
+        expect(
+          query(
+            fixture.debugElement,
+            '.album-image-container.lcc-content-placeholder-wrapper',
+          ),
+        ).toBeTruthy();
+        expect(query(fixture.debugElement, 'lcc-image')).toBeFalsy();
+      });
+
+      it('should render name and count placeholders instead of real text', () => {
+        expect(query(fixture.debugElement, '.skeleton-album-name')).toBeTruthy();
+        expect(query(fixture.debugElement, '.skeleton-photo-count')).toBeTruthy();
+        expect(query(fixture.debugElement, '.album-name')).toBeFalsy();
+        expect(query(fixture.debugElement, '.photo-count')).toBeFalsy();
+      });
+
+      it('should not call onClickAlbumCover when skeleton cover is clicked', () => {
+        query(fixture.debugElement, '.album-cover').triggerEventHandler('click');
+
+        expect(onClickAlbumCoverSpy).not.toHaveBeenCalled();
+      });
     });
 
     it('should display album covers with correct information', () => {

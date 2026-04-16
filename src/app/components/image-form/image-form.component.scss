@@ -49,6 +49,18 @@
       height: auto;
       max-height: 300px;
     }
+
+    lcc-image {
+      width: auto;
+      max-width: 100%;
+      height: auto;
+      max-height: 300px;
+
+      ::ng-deep img {
+        object-fit: contain;
+        max-height: 300px;
+      }
+    }
   }
 
   .existing-albums-fieldset {

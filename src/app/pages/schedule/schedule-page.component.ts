@@ -58,12 +58,13 @@ import { EventsActions, EventsSelectors } from '@app/store/events';
         (toggleScheduleView)="onToggleScheduleView()">
       </lcc-schedule-toolbar>
 
-      @if (vm.filteredCount) {
+      @if (vm.filteredCount || vm.isLoadingEvents) {
         <lcc-events-table
           class="schedule-view"
           [class.active]="vm.scheduleView === 'list'"
           [events]="vm.filteredEvents"
           [isAdmin]="vm.isAdmin"
+          [isLoading]="vm.isLoadingEvents"
           [nextEvent]="vm.nextEvent"
           [options]="vm.options"
           [showModificationInfo]="vm.isAdmin"
@@ -125,6 +126,7 @@ export class SchedulePageComponent implements OnInit {
     filteredCount: number | null;
     filteredEvents: Event[];
     isAdmin: boolean;
+    isLoadingEvents: boolean;
     nextEvent: Event | null;
     options: DataPaginationOptions<Event>;
     scheduleView: 'list' | 'calendar';
@@ -151,6 +153,7 @@ export class SchedulePageComponent implements OnInit {
       this.store.select(EventsSelectors.selectOptions),
       this.store.select(EventsSelectors.selectScheduleView),
       this.store.select(EventsSelectors.selectTotalCount),
+      this.store.select(EventsSelectors.selectLastFilteredFetch),
     ]).pipe(
       untilDestroyed(this),
       map(
@@ -162,10 +165,12 @@ export class SchedulePageComponent implements OnInit {
           options,
           scheduleView,
           totalCount,
+          lastFilteredFetch,
         ]) => ({
           filteredCount,
           filteredEvents,
           isAdmin,
+          isLoadingEvents: lastFilteredFetch === null,
           nextEvent,
           options,
           scheduleView,
