@@ -45,11 +45,18 @@ export class PhotoGridComponent implements OnChanges {
   @Input({ required: true }) public isAdmin!: boolean;
   @Input({ required: true }) public photoImages!: Image[];
 
+  @Input() public isLoading?: boolean;
   @Input() public maxAlbums?: number;
 
   @Output() public readonly requestDeleteAlbum = new EventEmitter<string>();
 
   public visibleAlbumCovers: Image[] = [];
+
+  private readonly defaultSkeletonCovers: Image[] = Array.from({ length: 20 }, () => ({
+    ...({} as Image),
+    id: '',
+    album: '',
+  }));
 
   public readonly openImageExplorerButton: AdminButton = {
     id: 'open-image-explorer',
@@ -70,9 +77,18 @@ export class PhotoGridComponent implements OnChanges {
     icon: 'add_circle_outline',
   };
 
-  private animationDelays: Map<string, number> = new Map();
-
   constructor(private readonly dialogService: DialogService) {}
+
+  public get showSkeleton(): boolean {
+    return !!this.isLoading;
+  }
+
+  public get displayCovers(): Image[] {
+    if (this.showSkeleton) {
+      return this.defaultSkeletonCovers;
+    }
+    return this.visibleAlbumCovers;
+  }
 
   public ngOnChanges(changes: SimpleChanges<PhotoGridComponent>): void {
     if (changes.photoImages || changes.maxAlbums) {
@@ -90,23 +106,7 @@ export class PhotoGridComponent implements OnChanges {
         caption: image.caption || 'Loading...',
       }));
 
-    if (this.animationDelays.size === 0 && covers.length > 0) {
-      const shuffledIndices = Array.from({ length: covers.length }, (_, i) => i).sort(
-        () => Math.random() - 0.5,
-      );
-
-      shuffledIndices.forEach((originalIndex, shuffledPosition) => {
-        const pairIndex = Math.floor(shuffledPosition / 2);
-        const delay = pairIndex * 0.15;
-        this.animationDelays.set(covers[originalIndex].id, delay);
-      });
-    }
-
     return this.maxAlbums != null ? covers.slice(0, this.maxAlbums) : covers;
-  }
-
-  public getAnimationDelay(imageId: Id): number {
-    return this.animationDelays.get(imageId) || 0;
   }
 
   public async onClickAlbumCover(album: string): Promise<void> {

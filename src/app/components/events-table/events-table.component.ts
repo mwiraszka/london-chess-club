@@ -43,12 +43,42 @@ export class EventsTableComponent {
   @Input({ required: true }) public nextEvent!: Event | null;
 
   @Input() public dateLimit?: number;
+  @Input() public isLoading?: boolean;
   @Input() public options?: DataPaginationOptions<Event>;
   @Input() public showModificationInfo?: boolean;
 
   @Output() public requestDeleteEvent = new EventEmitter<Event>();
 
+  private readonly skeletonGroup = (i: number) => ({
+    dateKey: `skeleton-${i}`,
+    events: [{ id: `skeleton-${i}` } as Event],
+    hasNextEvent: false,
+  });
+
   constructor(private readonly dialogService: DialogService) {}
+
+  public get showSkeleton(): boolean {
+    return !!this.isLoading;
+  }
+
+  public get displayGroups(): {
+    dateKey: string;
+    events: Event[];
+    hasNextEvent: boolean;
+  }[] {
+    if (this.showSkeleton) {
+      let count: number;
+      if (this.dateLimit != null) {
+        count = this.dateLimit;
+      } else if (!this.options || this.options.pageSize === -1) {
+        count = this.options?.filters?.showPastEvents?.value ? 200 : 50;
+      } else {
+        count = this.options.pageSize;
+      }
+      return Array.from({ length: count }, (_, i) => this.skeletonGroup(i));
+    }
+    return this.groupedEvents;
+  }
 
   public get groupedEvents(): {
     dateKey: string;

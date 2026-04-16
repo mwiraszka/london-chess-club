@@ -34,7 +34,6 @@ import { isDefined } from '@app/utils';
 interface ArticleRow {
   article: Article;
   bannerImage: Image | null;
-  animationDelay: number;
 }
 
 @Component({
@@ -60,6 +59,7 @@ export class ArticleGridComponent implements OnChanges {
   @Input({ required: true }) isAdmin!: boolean;
 
   @Input() isHomePage?: boolean;
+  @Input() isLoading?: boolean;
   @Input() options?: DataPaginationOptions<Article>;
 
   @Output() requestDeleteArticle = new EventEmitter<Article>();
@@ -70,9 +70,28 @@ export class ArticleGridComponent implements OnChanges {
 
   public visibleRows: ArticleRow[] = [];
 
-  private animationDelays = new Map<Id, number>();
+  private readonly skeletonRow: ArticleRow = {
+    article: {} as Article,
+    bannerImage: null,
+  };
 
   constructor(private readonly dialogService: DialogService) {}
+
+  public get showSkeleton(): boolean {
+    return !!this.isLoading;
+  }
+
+  public get displayItems(): ArticleRow[] {
+    if (this.showSkeleton) {
+      const count = this.isHomePage
+        ? 10
+        : this.options?.pageSize !== -1
+          ? (this.options?.pageSize ?? 100)
+          : 100;
+      return Array.from({ length: count }, () => this.skeletonRow);
+    }
+    return this.visibleRows;
+  }
 
   public ngOnChanges(changes: SimpleChanges<ArticleGridComponent>): void {
     if (changes.articles || changes.images || changes.options) {
@@ -86,19 +105,12 @@ export class ArticleGridComponent implements OnChanges {
         ? this.articles
         : this.articles.slice(0, this.options.pageSize);
 
-    if (this.animationDelays.size === 0 && sliced.length > 0) {
-      for (let i = 0; i < sliced.length; i++) {
-        this.animationDelays.set(sliced[i].id, i * 0.1);
-      }
-    }
-
     const imagesById = new Map<Id, Image>();
     this.images.forEach(image => imagesById.set(image.id, image));
 
     return sliced.map(article => ({
       article,
       bannerImage: imagesById.get(article.bannerImageId) ?? null,
-      animationDelay: this.animationDelays.get(article.id) ?? 0,
     }));
   }
 

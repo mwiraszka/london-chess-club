@@ -37,7 +37,6 @@
   }
 
   .album-cover {
-    opacity: 0;
     display: block;
     width: calc(100% - 16px);
     padding: 6px;
@@ -46,16 +45,19 @@
     border-radius: var(--lcc-borderRadius--small);
     box-shadow: 3px 3px 5px var(--lcc-color--photoGrid-boxShadow);
     background-color: var(--lcc-color--general-cardBackground);
-    animation: fade-in-up 0.6s ease-out forwards;
+    break-inside: avoid;
+    page-break-inside: avoid;
 
     &:first-child {
       margin-top: 0;
     }
 
-    break-inside: avoid;
-    page-break-inside: avoid;
+    &.skeleton {
+      opacity: 0;
+      animation: fade-in-up 0.6s ease-out forwards;
+    }
 
-    &:hover {
+    &:not(.skeleton):hover {
       box-shadow: 4px 4px 8px var(--lcc-color--photoGrid-boxShadow);
       transition:
         transform 0.2s ease,
@@ -67,6 +69,13 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
+
+      .album-image-container {
+        width: 100%;
+        aspect-ratio: 1;
+        margin-bottom: 2px;
+        border-radius: var(--lcc-borderRadius--small);
+      }
 
       lcc-image {
         display: block;
@@ -101,17 +110,21 @@
             line-height: 18px;
           }
         }
+
+        .skeleton-album-name {
+          width: 75%;
+          height: 16px;
+          margin-bottom: 8px;
+          border-radius: 4px;
+        }
+
+        .skeleton-photo-count {
+          width: 40%;
+          height: 12px;
+          border-radius: 4px;
+        }
       }
     }
-  }
-}
-
-@keyframes raise {
-  0% {
-    transform: scale(1);
-  }
-  100% {
-    transform: scale(1.015);
   }
 }
 
