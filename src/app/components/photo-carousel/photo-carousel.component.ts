@@ -6,6 +6,8 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  HostListener,
+  inject,
   Input,
   OnInit,
 } from '@angular/core';
@@ -18,15 +20,15 @@ import { Image } from '@app/models';
   templateUrl: './photo-carousel.component.html',
   styleUrl: './photo-carousel.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { tabindex: '0' },
 })
 export class PhotoCarouselComponent implements OnInit {
   @Input({ required: true }) public photos!: Partial<Image>[];
 
   public currentIndex = 0;
 
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly autoCycleSubject$ = new Subject<void>();
-
-  constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
 
   public ngOnInit(): void {
     this.autoCycleSubject$
@@ -41,11 +43,14 @@ export class PhotoCarouselComponent implements OnInit {
       });
   }
 
+  @HostListener('keydown.arrowleft')
   public onPreviousPhoto(): void {
     this.currentIndex = (this.currentIndex - 1 + this.photos.length) % this.photos.length;
     this.autoCycleSubject$.next();
   }
 
+  @HostListener('keydown.arrowright')
+  @HostListener('keydown.enter')
   public onNextPhoto(): void {
     this.currentIndex = (this.currentIndex + 1) % this.photos.length;
     this.autoCycleSubject$.next();

@@ -7,9 +7,6 @@
       class="image-wrapper"
       [class.active]="i === currentIndex"
       (click)="onNextPhoto()"
-      (keydown.arrowright)="onNextPhoto()"
-      (keydown.arrowleft)="onPreviousPhoto()"
-      (keydown.enter)="onNextPhoto()"
       [tabindex]="i === currentIndex ? 0 : -1"
       role="button"
       [attr.aria-label]="'View next photo, currently showing ' + photo.caption">
