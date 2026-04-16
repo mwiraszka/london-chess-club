@@ -16,11 +16,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refresh presigned S3 image URLs based on the backend-reported expiration timestamp instead of parsing the URL, so URLs stay valid across browser sessions
 - Only retry failed article banner images while the user is actually on a page that displays them, instead of polling in the background on every route
 - Convert the largest static images on the City Champion, Lifetime Achievement Awards, and Game Archives pages to WebP, shrinking their combined weight from 3.6 MB to 264 KB (~93% smaller)
+- Build shimmer skeleton loading states into the article grid, photo grid, and events table so every page that uses them shows contextual placeholders while data loads
 
 ### Fixed
 
 - Keep the shimmer placeholder visible until an article banner image has actually loaded, instead of briefly flashing the fallback image while the home page warms up
 - Prevent leaked prefetch timers in the image viewer when navigating away mid-prefetch
+- Show the image component fallback asset immediately when no image is provided, instead of leaving the shimmer running indefinitely
 
 ## [v5.12.13] - 2026-04-13
 
