@@ -137,9 +137,9 @@ export class ImageComponent {
     this.cancelPreload();
     this.mainFailed = false;
     this.thumbnailFailed = false;
-    this.hasLoaded.set(false);
 
     if (!img) {
+      this.hasLoaded.set(false);
       this.displayMode.set('fallback');
       this.currentSrc.set(FALLBACK_SRC);
       this.blurred.set(false);
@@ -147,6 +147,7 @@ export class ImageComponent {
     }
 
     if (!img.mainUrl && !img.thumbnailUrl) {
+      this.hasLoaded.set(false);
       this.displayMode.set('none');
       this.currentSrc.set(TRANSPARENT_PIXEL);
       this.blurred.set(false);
@@ -156,6 +157,13 @@ export class ImageComponent {
     const { mainUrl, thumbnailUrl } = img;
 
     if (mainUrl && thumbnailUrl) {
+      if (this.currentSrc() === thumbnailUrl && this.hasLoaded()) {
+        this.displayMode.set('thumbnail');
+        this.preloadMain(mainUrl);
+        return;
+      }
+
+      this.hasLoaded.set(false);
       this.displayMode.set('thumbnail');
       this.currentSrc.set(thumbnailUrl);
       this.blurred.set(true);
@@ -164,12 +172,14 @@ export class ImageComponent {
     }
 
     if (mainUrl) {
+      this.hasLoaded.set(false);
       this.displayMode.set('main');
       this.currentSrc.set(mainUrl);
       this.blurred.set(false);
       return;
     }
 
+    this.hasLoaded.set(false);
     this.displayMode.set('thumbnail');
     this.currentSrc.set(thumbnailUrl!);
     this.blurred.set(false);

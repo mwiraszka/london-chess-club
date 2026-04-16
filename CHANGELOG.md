@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v5.13.2] - 2026-04-16
+
+### Fixed
+
+- Ensure article cards span the full available width on mobile instead of shrinking to their text content
+- Remove forced square aspect ratio on photo grid album covers so images display at their natural proportions
+- Prevent the image component's shimmer overlay from flickering between the thumbnail and full-size image when the main URL loads asynchronously from the store
+
 ## [v5.13.1] - 2026-04-16
 
 ### Fixed
@@ -1700,6 +1708,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Create a responsive grid layout to house photos from club meetings and club-organized events, including the functionality to enlarge photos in an image overlay 'preview' mode
 - Create a responsive grid layout to showcase only the most pertinent information from other screens (such as only the next 4 events from the schedule, and a more limited amount of photos from the photo gallery)
 
+[v5.13.2]: https://github.com/mwiraszka/london-chess-club/compare/v5.13.1...v5.13.2
 [v5.13.1]: https://github.com/mwiraszka/london-chess-club/compare/v5.13.0...v5.13.1
 [v5.13.0]: https://github.com/mwiraszka/london-chess-club/compare/v5.12.13...v5.13.0
 [v5.12.13]: https://github.com/mwiraszka/london-chess-club/compare/v5.12.12...v5.12.13
