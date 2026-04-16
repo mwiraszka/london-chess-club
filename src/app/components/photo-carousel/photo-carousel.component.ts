@@ -6,7 +6,6 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef,
   HostListener,
   inject,
   Input,
@@ -29,7 +28,6 @@ export class PhotoCarouselComponent implements OnInit {
   public currentIndex = 0;
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
-  private readonly elementRef = inject(ElementRef<HTMLElement>);
   private readonly autoCycleSubject$ = new Subject<void>();
 
   public ngOnInit(): void {
