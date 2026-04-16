@@ -69,6 +69,90 @@ describe('EventsTableComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  describe('showSkeleton', () => {
+    it('should return true when isLoading is true', () => {
+      fixture.componentRef.setInput('isLoading', true);
+
+      expect(component.showSkeleton).toBe(true);
+    });
+
+    it('should return false when isLoading is false', () => {
+      fixture.componentRef.setInput('isLoading', false);
+
+      expect(component.showSkeleton).toBe(false);
+    });
+
+    it('should return false when isLoading is undefined', () => {
+      expect(component.showSkeleton).toBe(false);
+    });
+  });
+
+  describe('displayGroups', () => {
+    it('should return groupedEvents when not loading', () => {
+      fixture.componentRef.setInput('isLoading', false);
+
+      expect(component.displayGroups).toEqual(component.groupedEvents);
+    });
+
+    it('should return dateLimit skeleton groups when loading with dateLimit', () => {
+      fixture.componentRef.setInput('isLoading', true);
+      fixture.componentRef.setInput('dateLimit', 5);
+
+      expect(component.displayGroups).toHaveLength(5);
+    });
+
+    it('should return pageSize skeleton groups when loading with specific pageSize', () => {
+      fixture.componentRef.setInput('isLoading', true);
+      fixture.componentRef.setInput('options', { ...mockOptions, pageSize: 15 });
+
+      expect(component.displayGroups).toHaveLength(15);
+    });
+
+    it('should return 50 skeleton groups when loading with pageSize -1 and showPastEvents false', () => {
+      fixture.componentRef.setInput('isLoading', true);
+      fixture.componentRef.setInput('options', {
+        ...mockOptions,
+        pageSize: -1,
+        filters: { showPastEvents: { label: 'Show past events', value: false } },
+      });
+
+      expect(component.displayGroups).toHaveLength(50);
+    });
+
+    it('should return 200 skeleton groups when loading with pageSize -1 and showPastEvents true', () => {
+      fixture.componentRef.setInput('isLoading', true);
+      fixture.componentRef.setInput('options', {
+        ...mockOptions,
+        pageSize: -1,
+        filters: { showPastEvents: { label: 'Show past events', value: true } },
+      });
+
+      expect(component.displayGroups).toHaveLength(200);
+    });
+
+    it('should return 50 skeleton groups when loading with no options', () => {
+      fixture.componentRef.setInput('isLoading', true);
+      fixture.componentRef.setInput('options', undefined);
+
+      expect(component.displayGroups).toHaveLength(50);
+    });
+
+    it('should create skeleton groups with unique dateKeys and one event each', () => {
+      fixture.componentRef.setInput('isLoading', true);
+      fixture.componentRef.setInput('dateLimit', 3);
+
+      const groups = component.displayGroups;
+
+      expect(groups[0].dateKey).toBe('skeleton-0');
+      expect(groups[1].dateKey).toBe('skeleton-1');
+      expect(groups[2].dateKey).toBe('skeleton-2');
+      groups.forEach(group => {
+        expect(group.events).toHaveLength(1);
+        expect(group.hasNextEvent).toBe(false);
+      });
+    });
+  });
+
   describe('groupedEvents', () => {
     it('should return one group per unique date when all events are on different dates', () => {
       const groups = component.groupedEvents;
@@ -166,6 +250,31 @@ describe('EventsTableComponent', () => {
   describe('template rendering', () => {
     beforeEach(() => {
       fixture.detectChanges();
+    });
+
+    describe('when loading', () => {
+      beforeEach(() => {
+        fixture.componentRef.setInput('isLoading', true);
+        fixture.componentRef.setInput('dateLimit', 3);
+        fixture.detectChanges();
+      });
+
+      it('should render skeleton rows with placeholder elements', () => {
+        expect(query(fixture.debugElement, '.skeleton-date-widget')).toBeTruthy();
+        expect(query(fixture.debugElement, '.skeleton-main-content')).toBeTruthy();
+      });
+
+      it('should not render real date widgets or event entries', () => {
+        expect(query(fixture.debugElement, '.date-text')).toBeFalsy();
+        expect(query(fixture.debugElement, '.title')).toBeFalsy();
+        expect(query(fixture.debugElement, '.event-details')).toBeFalsy();
+      });
+
+      it('should render the correct number of skeleton rows', () => {
+        const rows = queryAll(fixture.debugElement, 'tbody tr[id]');
+
+        expect(rows.length).toBe(3);
+      });
     });
 
     describe('events table', () => {

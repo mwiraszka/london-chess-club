@@ -70,6 +70,14 @@ describe('NewsPageComponent', () => {
     store.overrideSelector(ImagesSelectors.selectAllImages, mockImages);
     store.overrideSelector(AuthSelectors.selectIsAdmin, mockIsAdmin);
     store.overrideSelector(ArticlesSelectors.selectOptions, mockOptions);
+    store.overrideSelector(
+      ArticlesSelectors.selectLastFilteredFetch,
+      '2026-01-01T00:00:00.000Z',
+    );
+    store.overrideSelector(
+      ImagesSelectors.selectLastMetadataFetch,
+      '2026-01-01T00:00:00.000Z',
+    );
     store.refreshState();
   });
 
@@ -96,8 +104,39 @@ describe('NewsPageComponent', () => {
         filteredCount: mockFilteredCount,
         images: mockImages,
         isAdmin: mockIsAdmin,
+        isLoading: false,
         options: mockOptions,
       });
+    });
+  });
+
+  describe('isLoading', () => {
+    it('should be true when articles have not been fetched yet', async () => {
+      store.overrideSelector(ArticlesSelectors.selectLastFilteredFetch, null);
+      store.refreshState();
+      component.ngOnInit();
+
+      const vm = await firstValueFrom(component.viewModel$!.pipe(take(1)));
+
+      expect(vm.isLoading).toBe(true);
+    });
+
+    it('should be true when images have not been fetched yet', async () => {
+      store.overrideSelector(ImagesSelectors.selectLastMetadataFetch, null);
+      store.refreshState();
+      component.ngOnInit();
+
+      const vm = await firstValueFrom(component.viewModel$!.pipe(take(1)));
+
+      expect(vm.isLoading).toBe(true);
+    });
+
+    it('should be false when both articles and images have been fetched', async () => {
+      component.ngOnInit();
+
+      const vm = await firstValueFrom(component.viewModel$!.pipe(take(1)));
+
+      expect(vm.isLoading).toBe(false);
     });
   });
 

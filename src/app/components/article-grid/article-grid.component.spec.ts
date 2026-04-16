@@ -66,6 +66,60 @@ describe('ArticleGridComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  describe('showSkeleton', () => {
+    it('should return true when isLoading is true', () => {
+      fixture.componentRef.setInput('isLoading', true);
+
+      expect(component.showSkeleton).toBe(true);
+    });
+
+    it('should return false when isLoading is false', () => {
+      fixture.componentRef.setInput('isLoading', false);
+
+      expect(component.showSkeleton).toBe(false);
+    });
+
+    it('should return false when isLoading is undefined', () => {
+      expect(component.showSkeleton).toBe(false);
+    });
+  });
+
+  describe('displayItems', () => {
+    it('should return visibleRows when not loading', () => {
+      fixture.componentRef.setInput('isLoading', false);
+
+      expect(component.displayItems).toBe(component.visibleRows);
+    });
+
+    it('should return 10 skeleton rows when loading on home page', () => {
+      fixture.componentRef.setInput('isLoading', true);
+      fixture.componentRef.setInput('isHomePage', true);
+
+      expect(component.displayItems).toHaveLength(10);
+    });
+
+    it('should return pageSize skeleton rows when loading with specific pageSize', () => {
+      fixture.componentRef.setInput('isLoading', true);
+      fixture.componentRef.setInput('options', { ...mockOptions, pageSize: 25 });
+
+      expect(component.displayItems).toHaveLength(25);
+    });
+
+    it('should return 100 skeleton rows when loading with pageSize -1', () => {
+      fixture.componentRef.setInput('isLoading', true);
+      fixture.componentRef.setInput('options', { ...mockOptions, pageSize: -1 });
+
+      expect(component.displayItems).toHaveLength(100);
+    });
+
+    it('should return 100 skeleton rows when loading with no options', () => {
+      fixture.componentRef.setInput('isLoading', true);
+      fixture.componentRef.setInput('options', undefined);
+
+      expect(component.displayItems).toHaveLength(100);
+    });
+  });
+
   describe('visibleRows', () => {
     it('should map articles to their banner image when available', () => {
       const matchingImage = MOCK_IMAGES.find(
@@ -332,6 +386,47 @@ describe('ArticleGridComponent', () => {
       expect(bodyPreview).toContain('1. Fry, P.');
       expect(bodyPreview).toContain('\u2013 1.0');
       expect(bodyPreview).not.toContain('Round');
+    });
+
+    describe('when loading', () => {
+      beforeEach(() => {
+        fixture.componentRef.setInput('isLoading', true);
+        fixture.componentRef.setInput('options', { ...mockOptions, pageSize: 3 });
+        fixture.detectChanges();
+      });
+
+      it('should render skeleton cards with placeholder elements', () => {
+        const skeletonCards = queryAll(fixture.debugElement, '.article.skeleton');
+
+        expect(skeletonCards.length).toBe(3);
+      });
+
+      it('should render image placeholders instead of real images', () => {
+        expect(
+          query(fixture.debugElement, '.image-container.lcc-content-placeholder-wrapper'),
+        ).toBeTruthy();
+        expect(query(fixture.debugElement, 'lcc-image')).toBeFalsy();
+      });
+
+      it('should render title placeholders instead of real titles', () => {
+        expect(
+          query(
+            fixture.debugElement,
+            '.article-title-wrapper.lcc-content-placeholder-wrapper',
+          ),
+        ).toBeTruthy();
+        expect(query(fixture.debugElement, '.article-title')).toBeFalsy();
+      });
+
+      it('should not render bookmark icons', () => {
+        expect(query(fixture.debugElement, '.bookmark-icon')).toBeFalsy();
+      });
+
+      it('should not attach routerLink to skeleton cards', () => {
+        const card = query(fixture.debugElement, '.article');
+
+        expect(card.nativeElement.getAttribute('href')).toBeNull();
+      });
     });
 
     it('should apply search highlighting when search term is present', () => {

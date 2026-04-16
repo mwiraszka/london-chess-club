@@ -84,6 +84,10 @@ describe('SchedulePageComponent', () => {
     store.overrideSelector(EventsSelectors.selectOptions, mockOptions);
     store.overrideSelector(EventsSelectors.selectScheduleView, mockScheduleView);
     store.overrideSelector(EventsSelectors.selectTotalCount, mockTotalCount);
+    store.overrideSelector(
+      EventsSelectors.selectLastFilteredFetch,
+      '2026-01-01T00:00:00.000Z',
+    );
 
     store.refreshState();
   });
@@ -115,6 +119,7 @@ describe('SchedulePageComponent', () => {
         filteredCount: mockFilteredCount,
         filteredEvents: mockFilteredEvents,
         isAdmin: mockIsAdmin,
+        isLoadingEvents: false,
         nextEvent: mockNextEvent,
         options: mockOptions,
         scheduleView: mockScheduleView,
@@ -166,6 +171,26 @@ describe('SchedulePageComponent', () => {
         store.overrideSelector(EventsSelectors.selectFilteredCount, 88);
         store.refreshState();
       }).not.toThrow();
+    });
+  });
+
+  describe('isLoadingEvents', () => {
+    it('should be true when events have not been fetched yet', async () => {
+      store.overrideSelector(EventsSelectors.selectLastFilteredFetch, null);
+      store.refreshState();
+      component.ngOnInit();
+
+      const vm = await firstValueFrom(component.viewModel$!.pipe(take(1)));
+
+      expect(vm.isLoadingEvents).toBe(true);
+    });
+
+    it('should be false when events have been fetched', async () => {
+      component.ngOnInit();
+
+      const vm = await firstValueFrom(component.viewModel$!.pipe(take(1)));
+
+      expect(vm.isLoadingEvents).toBe(false);
     });
   });
 
@@ -344,12 +369,21 @@ describe('SchedulePageComponent', () => {
         ).not.toContain('active');
       });
 
-      it('should not render events table or events calendar grid when filteredCount is 0', () => {
+      it('should not render events table or events calendar grid when filteredCount is 0 and not loading', () => {
         store.overrideSelector(EventsSelectors.selectFilteredCount, 0);
         fixture.detectChanges();
 
         expect(query(fixture.debugElement, 'lcc-events-table')).toBeFalsy();
         expect(query(fixture.debugElement, 'lcc-events-calendar-grid')).toBeFalsy();
+      });
+
+      it('should render events table when filteredCount is 0 but isLoadingEvents is true', () => {
+        store.overrideSelector(EventsSelectors.selectFilteredCount, 0);
+        store.overrideSelector(EventsSelectors.selectLastFilteredFetch, null);
+        store.refreshState();
+        fixture.detectChanges();
+
+        expect(query(fixture.debugElement, 'lcc-events-table')).toBeTruthy();
       });
     });
   });
