@@ -66,12 +66,12 @@ describe('ImageComponent', () => {
   });
 
   describe('source resolution', () => {
-    it('should show shimmer (not fallback) when image is null', () => {
+    it('should show fallback with shimmer overlay when image is null', () => {
       host.image.set(null);
       fixture.detectChanges();
 
-      expect(component.displayMode()).toBe('none');
-      expect(component.currentSrc()).toBe(TRANSPARENT_PIXEL);
+      expect(component.displayMode()).toBe('fallback');
+      expect(component.currentSrc()).toBe(FALLBACK_SRC);
       expect(component.showShimmer()).toBe(true);
     });
 
@@ -126,7 +126,7 @@ describe('ImageComponent', () => {
     });
 
     it('should ignore load events for the transparent pixel placeholder', () => {
-      host.image.set(null);
+      host.image.set(makeImage());
       fixture.detectChanges();
 
       componentDebug.query(By.css('img')).triggerEventHandler('load', {});
