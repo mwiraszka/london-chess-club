@@ -1,10 +1,8 @@
-# The London Chess Club (LCC) Web App
+# The London Chess Club
 
-Welcome to the source code repository for the LCC web app! <https://londonchess.ca>
+<https://londonchess.ca>
 
-## Found a bug? Have a feature request?
-
-Submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on GitHub, or [email](mailto:michal@londonchess.ca?subject=LCC%20Website) me directly.
+Welcome to the source code repository for the LCC web app! For feature requests or to report a bug, submit a new [issue](https://github.com/mwiraszka/london-chess-club/issues) on GitHub, or [email](mailto:michal@londonchess.ca?subject=LCC%20Website) me directly.
 
 ## Tools & technologies
 
