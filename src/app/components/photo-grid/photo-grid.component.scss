@@ -72,9 +72,12 @@
 
       .album-image-container {
         width: 100%;
-        aspect-ratio: 1;
         margin-bottom: 2px;
         border-radius: var(--lcc-borderRadius--small);
+
+        &.lcc-content-placeholder-wrapper {
+          aspect-ratio: 1;
+        }
       }
 
       lcc-image {

@@ -66,6 +66,7 @@ $grid-gap: 8px;
   .article {
     display: flex;
     flex-flow: column nowrap;
+    flex-grow: 1;
     gap: 4px;
     max-width: $card-max-width;
     height: auto;
