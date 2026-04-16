@@ -7,9 +7,9 @@ import {
   ChangeDetectorRef,
   Component,
   HostListener,
-  inject,
   Input,
   OnInit,
+  inject,
 } from '@angular/core';
 
 import { Image } from '@app/models';
