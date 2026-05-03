@@ -22,3 +22,4 @@ Welcome to the source code repository for the LCC web app! For feature requests 
 | [![NGINX](readme-icons/nginx.png)](https://nginx.org/en)                                     | `NGINX`              | HTTP web server and reverse proxy               |
 | [![NgRx](readme-icons/ngrx.png)](https://ngrx.io)                                            | `NgRx`               | reactive state management                       |
 | [![Ngx Markdown](readme-icons/ngx-markdown.png)](https://github.com/jfcere/ngx-markdown)     | `Ngx Markdown`       | markdown parsing                                |
+| [![Sentry](readme-icons/sentry.png)](https://sentry.io)                                      | `Sentry`             | frontend and backend error tracking             |

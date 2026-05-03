@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Display the backend version in the footer next to the frontend version
+- Integrate Sentry for frontend error tracking
 
 ## [v5.13.4] - 2026-05-03
 

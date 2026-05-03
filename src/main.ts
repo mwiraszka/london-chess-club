@@ -2,6 +2,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreRouterConnectingModule, routerReducer } from '@ngrx/router-store';
 import { Action, StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import * as Sentry from '@sentry/angular';
 import { MarkdownModule } from 'ngx-markdown';
 
 import {
@@ -9,7 +10,7 @@ import {
   withInterceptorsFromDi,
   withJsonpSupport,
 } from '@angular/common/http';
-import { enableProdMode, importProvidersFrom } from '@angular/core';
+import { ErrorHandler, enableProdMode, importProvidersFrom } from '@angular/core';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
 
 import { AppRoutingModule } from '@app/app-routing.module';
@@ -36,8 +37,16 @@ if (environment.production) {
   enableProdMode();
 }
 
+Sentry.init({
+  dsn: environment.sentryDsn,
+  environment: environment.production ? 'production' : 'development',
+  enabled: !!environment.sentryDsn,
+  tracesSampleRate: 0,
+});
+
 bootstrapApplication(AppComponent, {
   providers: [
+    { provide: ErrorHandler, useValue: Sentry.createErrorHandler() },
     importProvidersFrom(
       AppRoutingModule,
       AppStoreModule,
