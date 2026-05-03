@@ -1,17 +1,34 @@
+import { Observable, of } from 'rxjs';
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 
 import { TooltipDirective } from '@app/directives/tooltip.directive';
+import { ApiResponse } from '@app/models';
+import { HealthApiService } from '@app/services';
 import { query, queryAll, queryTextContent } from '@app/utils';
 
 import { FooterComponent } from './footer.component';
 
+interface HealthApiServiceMock {
+  getVersion: jest.Mock<Observable<ApiResponse<string>>, []>;
+}
+
 describe('FooterComponent', () => {
   let fixture: ComponentFixture<FooterComponent>;
   let component: FooterComponent;
+  let healthApiServiceMock: HealthApiServiceMock;
 
-  beforeEach(async () => {
+  const setUp = async (
+    backendVersionResponse: Observable<ApiResponse<string>> = of({ data: '1.30.2' }),
+  ): Promise<void> => {
+    TestBed.resetTestingModule();
+
+    healthApiServiceMock = {
+      getVersion: jest.fn(() => backendVersionResponse),
+    };
+
     await TestBed.configureTestingModule({
       imports: [
         FooterComponent,
@@ -19,11 +36,16 @@ describe('FooterComponent', () => {
         MatIconModule,
         TooltipDirective,
       ],
+      providers: [{ provide: HealthApiService, useValue: healthApiServiceMock }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(FooterComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+  };
+
+  beforeEach(async () => {
+    await setUp();
   });
 
   it('should create', () => {
@@ -58,6 +80,25 @@ describe('FooterComponent', () => {
         const clubNameText = queryTextContent(fixture.debugElement, '.club-name');
         expect(clubNameText).toContain('London Chess Club');
         expect(clubNameText).toContain(`v${component.CURRENT_VERSION}`);
+      });
+
+      it('should display the backend version when fetched successfully', () => {
+        expect(component.backendVersion()).toBe('1.30.2');
+        expect(queryTextContent(fixture.debugElement, '.backend-version')).toBe(
+          'v1.30.2',
+        );
+        expect(queryTextContent(fixture.debugElement, '.version-divider')).toBe('|');
+      });
+
+      it('should not display the backend version when the fetch fails', async () => {
+        await setUp(
+          new Observable(subscriber => {
+            subscriber.error(new Error('Network error'));
+          }),
+        );
+
+        expect(component.backendVersion()).toBeNull();
+        expect(query(fixture.debugElement, '.backend-version')).toBeNull();
       });
     });
 

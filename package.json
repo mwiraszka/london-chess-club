@@ -1,6 +1,6 @@
 {
   "name": "lcc-frontend",
-  "version": "5.13.4",
+  "version": "5.13.5",
   "description": "Frontend for the London Chess Club website, built with Angular",
   "author": "Michal Wiraszka",
   "repository": {
@@ -45,6 +45,7 @@
     "@ngrx/router-store": "21.1.0",
     "@ngrx/store": "21.1.0",
     "@ngrx/store-devtools": "21.1.0",
+    "@sentry/angular": "10.51.0",
     "@webcomponents/webcomponentsjs": "2.8.0",
     "chart.js": "4.5.1",
     "lichess-pgn-viewer": "2.4.5",
