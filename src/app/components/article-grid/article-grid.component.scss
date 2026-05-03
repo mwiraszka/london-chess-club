@@ -31,6 +31,19 @@ $grid-gap: 8px;
   justify-content: center;
   gap: $grid-gap;
 
+  // Below the 2-column grid threshold, force a single column so skeleton
+  // cards (which have no natural minimum width) don't collapse 4-6 per row.
+  @container (width < calc(2 * #{$card-min-width} + #{$grid-gap})) {
+    &:not(.is-home-page) {
+      flex-flow: column nowrap;
+
+      .article {
+        width: 100%;
+        max-width: 100%;
+      }
+    }
+  }
+
   @container (width >= calc(2 * #{$card-min-width} + #{$grid-gap})) {
     &:not([card-count='1']):not(.is-home-page) {
       display: grid;

@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Display the backend version in the footer next to the frontend version
 - Integrate Sentry for frontend error tracking
 
+### Fixed
+
+- Stop article card skeletons from collapsing into a row of 4-6 narrow cards on mobile while banner images load
+
 ## [v5.13.4] - 2026-05-03
 
 ### Changed
