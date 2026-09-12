@@ -1,25 +1,8 @@
-import { DeleteObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { DeleteObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
+
+import { r2Client } from './storage.service';
 
 export type AvatarVariant = 'original' | 'cropped';
-
-// Resolved lazily so the app can boot (and non-avatar features work) before the
-// R2 credentials are configured.
-function createClient(): S3Client {
-  const { R2_ACCOUNT_ID, R2_AVATARS_ACCESS_KEY_ID, R2_AVATARS_SECRET_ACCESS_KEY } =
-    process.env;
-  if (!R2_ACCOUNT_ID || !R2_AVATARS_ACCESS_KEY_ID || !R2_AVATARS_SECRET_ACCESS_KEY) {
-    throw new Error('Unable to parse R2 environment variables.');
-  }
-
-  return new S3Client({
-    region: 'auto',
-    endpoint: `https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
-    credentials: {
-      accessKeyId: R2_AVATARS_ACCESS_KEY_ID,
-      secretAccessKey: R2_AVATARS_SECRET_ACCESS_KEY,
-    },
-  });
-}
 
 export function avatarPublicUrlPrefix(): string {
   const { R2_AVATARS_PUBLIC_URL } = process.env;
@@ -39,7 +22,7 @@ export async function uploadAvatar(
   contentType: string,
   variant: AvatarVariant = 'original',
 ): Promise<string> {
-  const s3 = createClient();
+  const s3 = r2Client();
   const key = avatarKey(userId, variant);
 
   await s3.send(
@@ -55,7 +38,7 @@ export async function uploadAvatar(
 }
 
 export async function deleteAvatar(userId: string): Promise<void> {
-  const s3 = createClient();
+  const s3 = r2Client();
 
   await Promise.all(
     (['original', 'cropped'] as const).map(variant =>

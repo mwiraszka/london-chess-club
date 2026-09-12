@@ -19,14 +19,9 @@ import {
   ImageModel,
   imagesSortingConfig,
 } from '../models/image.model';
-import { s3Client } from '../services/s3.service';
+import { imagesBucket, r2Client } from '../services/storage.service';
 import { isDefined } from '../util/is-defined.util';
 import { buildPaginationQuery, parsePaginationParams } from '../util/pagination.util';
-
-const { AWS_S3_BUCKET_NAME } = process.env;
-if (!AWS_S3_BUCKET_NAME) {
-  throw new Error('Unable to parse AWS bucket name from environment variables');
-}
 
 const URL_EXPIRY_SECONDS = 12 * 3600;
 
@@ -180,7 +175,7 @@ export async function getThumbnailImages(
   } catch (error) {
     if (error instanceof S3ServiceException) {
       res.status(error.$metadata?.httpStatusCode ?? 500).json({
-        message: `[IM-2.3] Unable to retrieve thumbnail images object data from S3 bucket: ${error?.message}`,
+        message: `[IM-2.3] Unable to retrieve thumbnail images object data from storage bucket: ${error?.message}`,
       });
     } else {
       res.status(500).json({
@@ -267,7 +262,7 @@ export async function getBatchThumbnailImages(
   } catch (error) {
     if (error instanceof S3ServiceException) {
       res.status(error.$metadata?.httpStatusCode ?? 500).json({
-        message: `[IM-3.7] Unable to retrieve batch image data from S3 bucket: ${error?.message}`,
+        message: `[IM-3.7] Unable to retrieve batch image data from storage bucket: ${error?.message}`,
       });
     } else {
       res.status(500).json({
@@ -303,7 +298,7 @@ export async function getMainImage(
   } catch (error) {
     if (error instanceof S3ServiceException) {
       res.status(error.$metadata?.httpStatusCode ?? 500).json({
-        message: `[IM-4.2] Unable to retrieve image object data from S3 bucket: ${error?.message}`,
+        message: `[IM-4.2] Unable to retrieve image object data from storage bucket: ${error?.message}`,
       });
     } else {
       res.status(500).json({
@@ -444,18 +439,18 @@ export async function deleteImage(
   try {
     const { id } = req.params;
     const mainCommand = new DeleteObjectCommand({
-      Bucket: AWS_S3_BUCKET_NAME,
+      Bucket: imagesBucket(),
       Key: id,
     });
-    const mainResponse = await s3Client.send(mainCommand);
+    const mainResponse = await r2Client().send(mainCommand);
 
     const thumbnailCommand = new DeleteObjectCommand({
-      Bucket: AWS_S3_BUCKET_NAME,
+      Bucket: imagesBucket(),
       Key: `${id}-thumb`,
     });
-    const thumbnailResponse = await s3Client.send(thumbnailCommand);
+    const thumbnailResponse = await r2Client().send(thumbnailCommand);
 
-    // Status 204 (no content) response from AWS means that the resource was either successfully
+    // Status 204 (no content) response means that the resource was either successfully
     // deleted or that it could not be found; assume that it succeeded
     if (
       mainResponse.$metadata.httpStatusCode === 204 &&
@@ -474,7 +469,9 @@ export async function deleteImage(
       return;
     }
 
-    res.status(500).json({ message: '[IM-7.2] Unable to delete image from S3 bucket' });
+    res
+      .status(500)
+      .json({ message: '[IM-7.2] Unable to delete image from storage bucket' });
   } catch (error) {
     res.status(500).json({ message: `[IM-7.3] Unknown error: ${error}` });
   }
@@ -516,11 +513,9 @@ export async function deleteAlbum(
         const id = image._id.toString();
         try {
           await Promise.all([
-            s3Client.send(
-              new DeleteObjectCommand({ Bucket: AWS_S3_BUCKET_NAME, Key: id }),
-            ),
-            s3Client.send(
-              new DeleteObjectCommand({ Bucket: AWS_S3_BUCKET_NAME, Key: `${id}-thumb` }),
+            r2Client().send(new DeleteObjectCommand({ Bucket: imagesBucket(), Key: id })),
+            r2Client().send(
+              new DeleteObjectCommand({ Bucket: imagesBucket(), Key: `${id}-thumb` }),
             ),
           ]);
 
@@ -571,10 +566,10 @@ async function _getCombinedImage(
     const s3Key = imageSize === 'thumbnail' ? `${id}-thumb` : id;
 
     const getCommand = new GetObjectCommand({
-      Bucket: AWS_S3_BUCKET_NAME,
+      Bucket: imagesBucket(),
       Key: s3Key,
     });
-    const signedUrl = await getSignedUrl(s3Client, getCommand, {
+    const signedUrl = await getSignedUrl(r2Client(), getCommand, {
       expiresIn: URL_EXPIRY_SECONDS,
     });
 
@@ -666,17 +661,17 @@ async function _processNewImages(
   await Promise.all(
     savedImages.map(async saved => {
       const [mainResponse, thumbnailResponse] = await Promise.all([
-        s3Client.send(
+        r2Client().send(
           new PutObjectCommand({
-            Bucket: AWS_S3_BUCKET_NAME,
+            Bucket: imagesBucket(),
             Body: saved.mainBuffer,
             Key: saved.id,
             ContentType: saved.mimetype,
           }),
         ),
-        s3Client.send(
+        r2Client().send(
           new PutObjectCommand({
-            Bucket: AWS_S3_BUCKET_NAME,
+            Bucket: imagesBucket(),
             Body: saved.thumbnailBuffer,
             Key: `${saved.id}-thumb`,
             ContentType: saved.mimetype,
@@ -688,7 +683,7 @@ async function _processNewImages(
         mainResponse.$metadata.httpStatusCode !== 200 ||
         thumbnailResponse.$metadata.httpStatusCode !== 200
       ) {
-        throw new Error(`[IM-10.1] Unable to upload image to S3 bucket`);
+        throw new Error(`[IM-10.1] Unable to upload image to storage bucket`);
       }
     }),
   );
@@ -697,13 +692,13 @@ async function _processNewImages(
     savedImages.map(async saved => {
       const [mainUrl, thumbnailUrl] = await Promise.all([
         getSignedUrl(
-          s3Client,
-          new GetObjectCommand({ Bucket: AWS_S3_BUCKET_NAME, Key: saved.id }),
+          r2Client(),
+          new GetObjectCommand({ Bucket: imagesBucket(), Key: saved.id }),
           { expiresIn: URL_EXPIRY_SECONDS },
         ),
         getSignedUrl(
-          s3Client,
-          new GetObjectCommand({ Bucket: AWS_S3_BUCKET_NAME, Key: `${saved.id}-thumb` }),
+          r2Client(),
+          new GetObjectCommand({ Bucket: imagesBucket(), Key: `${saved.id}-thumb` }),
           { expiresIn: URL_EXPIRY_SECONDS },
         ),
       ]);
