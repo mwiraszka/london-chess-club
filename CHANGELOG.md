@@ -30,6 +30,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Centre the footer logo above the club name
 - Keep login and logout confirmation toasts visible by completing auth redirects inside the app
 
+## [v5.13.8] - 2026-09-12
+
+### Fixed
+
+- Prevent the upcoming event banner from continuing to show an event that has been deleted
+
 ## [v5.13.7] - 2026-06-18
 
 ### Fixed
@@ -1779,6 +1785,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Create a responsive grid layout to showcase only the most pertinent information from other screens (such as only the next 4 events from the schedule, and a more limited amount of photos from the photo gallery)
 
 [v6.0.0]: https://github.com/mwiraszka/london-chess-club/compare/v5.13.7...v6.0.0
+[v5.13.8]: https://github.com/mwiraszka/london-chess-club/compare/v5.13.7...v5.13.8
 [v5.13.7]: https://github.com/mwiraszka/london-chess-club/compare/v5.13.6...v5.13.7
 [v5.13.6]: https://github.com/mwiraszka/london-chess-club/compare/v5.13.5...v5.13.6
 [v5.13.5]: https://github.com/mwiraszka/london-chess-club/compare/v5.13.4...v5.13.5
