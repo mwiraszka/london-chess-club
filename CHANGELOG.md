@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Build out an account page for managing your profile, avatar, email address, password, and active sessions, including an avatar editor that keeps the original photo for future re-cropping
 - Support admin and non-admin user roles, with admin-only editing controls enforced across the site and API
 - Let visitors request a member account from the login drawer, with requests emailed to the club for review
+- Back up the database and photo storage weekly to encrypted off-site storage
 
 ### Changed
 
@@ -24,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Swap every Material icon for an Eagami UI icon across the site
 - Make the table paginator buttons uniform squares
 - Cap photo gallery album covers at 200px wide so wide view no longer stretches them
+- Move photo storage from AWS S3 to Cloudflare R2
 
 ### Fixed
 
