@@ -8,7 +8,7 @@ The website and API for the London Chess Club: club news, event schedules, membe
 photo galleries, and game archives, live at **[londonchess.ca](https://londonchess.ca)**.
 
 For feature requests or to report a bug, open an
-[issue](https://github.com/mwiraszka/london-chess-club/issues) on GitHub, or
+[issue](https://github.com/mwiraszka/london-chess/issues) on GitHub, or
 [email](mailto:michal@londonchess.ca?subject=LCC%20Website) me directly.
 
 ---
@@ -37,7 +37,7 @@ For feature requests or to report a bug, open an
 ## Project layout
 
 ```
-london-chess-club/
+london-chess/
 ├─ frontend/   # Angular single-page app
 └─ backend/    # Node + Express REST API
 ```

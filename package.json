@@ -1,5 +1,5 @@
 {
-  "name": "london-chess-club",
+  "name": "london-chess",
   "version": "6.0.0",
   "description": "London Chess Club monorepo: Angular frontend + Node/Express backend",
   "author": "Michal Wiraszka",
@@ -7,7 +7,7 @@
   "private": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/mwiraszka/london-chess-club.git"
+    "url": "https://github.com/mwiraszka/london-chess.git"
   },
   "scripts": {
     "backup": "pnpm -C backend run backup",
