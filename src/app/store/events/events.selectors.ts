@@ -94,9 +94,9 @@ export const selectHasUnsavedChanges = (id: Id | null) =>
     },
   );
 
-export const selectNextEvent = createSelector(selectAllEvents, allEvents => {
+export const selectNextEvent = createSelector(selectHomePageEvents, homePageEvents => {
   return (
-    allEvents
+    [...homePageEvents]
       .sort((a, b) =>
         customSort(a, b, 'eventDate', false, 'modificationInfo.dateLastEdited', true),
       )
@@ -106,16 +106,19 @@ export const selectNextEvent = createSelector(selectAllEvents, allEvents => {
   );
 });
 
-export const selectConcurrentNextEvents = createSelector(selectAllEvents, allEvents => {
-  const sortedFutureEvents = allEvents
-    .sort((a, b) =>
-      customSort(a, b, 'eventDate', false, 'modificationInfo.dateLastEdited', true),
-    )
-    .filter(event =>
-      moment(event.eventDate).add(3, 'hours').isAfter(moment.tz('America/Toronto')),
-    );
+export const selectConcurrentNextEvents = createSelector(
+  selectHomePageEvents,
+  homePageEvents => {
+    const sortedFutureEvents = [...homePageEvents]
+      .sort((a, b) =>
+        customSort(a, b, 'eventDate', false, 'modificationInfo.dateLastEdited', true),
+      )
+      .filter(event =>
+        moment(event.eventDate).add(3, 'hours').isAfter(moment.tz('America/Toronto')),
+      );
 
-  return sortedFutureEvents.filter(
-    event => event.eventDate === sortedFutureEvents[0].eventDate,
-  );
-});
+    return sortedFutureEvents.filter(
+      event => event.eventDate === sortedFutureEvents[0].eventDate,
+    );
+  },
+);

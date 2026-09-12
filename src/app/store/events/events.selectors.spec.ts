@@ -262,6 +262,22 @@ describe('Events Selectors', () => {
 
       expect(result).toEqual([]);
     });
+
+    it('should ignore a cached event that is no longer among the home page events', () => {
+      const deletedEvent: Event = {
+        ...MOCK_EVENTS[2],
+        id: 'deleted-event-id',
+        eventDate: moment('2049-12-01').toISOString(),
+      };
+      const state = eventsAdapter.upsertOne(
+        { event: deletedEvent, formData: INITIAL_EVENT_FORM_DATA },
+        mockEventsState,
+      );
+
+      const result = EventsSelectors.selectConcurrentNextEvents({ eventsState: state });
+
+      expect(result).toEqual([MOCK_EVENTS[0]]);
+    });
   });
 
   describe('selectNextEvent', () => {
@@ -310,6 +326,22 @@ describe('Events Selectors', () => {
       ];
       const result = EventsSelectors.selectNextEvent.projector(events);
       expect(result?.id).toBe(MOCK_EVENTS[1].id);
+    });
+
+    it('should ignore a cached event that is no longer among the home page events', () => {
+      const deletedEvent: Event = {
+        ...MOCK_EVENTS[2],
+        id: 'deleted-event-id',
+        eventDate: moment('2049-12-01').toISOString(),
+      };
+      const state = eventsAdapter.upsertOne(
+        { event: deletedEvent, formData: INITIAL_EVENT_FORM_DATA },
+        mockEventsState,
+      );
+
+      const result = EventsSelectors.selectNextEvent({ eventsState: state });
+
+      expect(result).toEqual(MOCK_EVENTS[0]);
     });
   });
 });
